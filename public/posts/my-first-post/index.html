@@ -124,8 +124,8 @@ Visual Question Answering (VQA) is about answering questions directly from image
 <p>Using the<a href="https://huggingface.co/datasets/howard-hou/OCR-VQA"> OCR-VQA dataset</a>, I tested 1,000 book cover questions across a range of temperatures. Accuracy was measured against gold answers. Questions were clustered into groups (most open ended questions, medium open ended questions, least open ended questions, and wh-questions), and I plotted accuracy vs. temperature for each cluster.</p>
 <p><img alt="Sample dataset" loading="lazy" src="/blog/images/sample_dataset_blog_1.png"></p>
 <p><strong>Most open ended questions (1 option)</strong> - Asked the LLM to give a binary answer based on one requirement. Such as, is this book a romance novel?</p>
-<p><strong>Medium open ended questions (2 options)</strong> - Asked the LLM to give a binary answer based on 2 requirements. Such as, is this book a teen romance &amp; adult romance novel?</p>
-<p><strong>Least open ended questions (3 options)</strong> - Asked the LLM to give a binary answer based on 2 requirements. Such as, is this book a teen romance, adult romance, &amp; high school romance novel?</p>
+<p><strong>Medium open ended questions (2 options)</strong> - Asked the LLM to give a binary answer based on 2 options. Such as, is this book a teen romance &amp; adult romance novel?</p>
+<p><strong>Least open ended questions (3 options)</strong> - Asked the LLM to give a binary answer based on 3 options. Such as, is this book a teen romance, adult romance, &amp; high school romance novel?</p>
 <p><strong>Wh question</strong>- Questions that start with “Wh”, such as What edition is this book?</p>
 <p>I used an LLM judge to score a 1 or a 0 if the predicted answer was close to the golden answer with a high accuracy being 1.</p>
 <h3 id="results"><strong>Results</strong><a hidden class="anchor" aria-hidden="true" href="#results">#</a></h3>
