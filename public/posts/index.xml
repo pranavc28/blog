@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on The Daily Pranav</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on The Daily Pranav</description>
+    <generator>Hugo -- 0.150.1</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 27 Sep 2025 07:07:07 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Temperature Sampling for OCR-VQA: Does It Matter?</title>
+      <link>http://localhost:1313/posts/my-first-post/</link>
+      <pubDate>Sat, 27 Sep 2025 07:07:07 +0100</pubDate>
+      <guid>http://localhost:1313/posts/my-first-post/</guid>
+      <description>&lt;h3 id=&#34;definitions&#34;&gt;&lt;strong&gt;Definitions&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Temperature in LLMs&lt;/strong&gt; controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Visual Question Answering (VQA)&lt;/strong&gt; is about answering questions directly from images. For OCR tasks, like reading a book cover, VQA can outperform raw OCR because it focuses only on what’s asked (e.g., &lt;em&gt;“Who’s the author?”&lt;/em&gt;) instead of dumping every piece of text.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

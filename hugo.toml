@@ -1,0 +1,23 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'The Daily Pranav'
+theme = 'PaperMod'
+
+[params]
+    [params.homeInfoParams]
+        Title = "👋 Welcome to my orbit"
+        Content = """
+
+Hey! This is Pranav. Pls blame ChatGPT for any errors :) Jkkkk. I work iatn Google Labs, building gen AI agents to power the next wave of workforce AI agents for Google.
+All research that I post about is stuff that I can't find online, and wanted to explore for fun.
+"""
+
+    [[params.socialIcons]]
+        name = "github"
+        title = "View Source on Github"
+        url = "https://github.com/pranavc28"
+
+    [[params.socialIcons]]
+        name = "LinkedIn"
+        title = "Connect with me on LinkedIn"
+        url = "https://www.linkedin.com/in/thepranavchaudhary/"
