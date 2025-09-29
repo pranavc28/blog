@@ -10,9 +10,9 @@
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Temperature Sampling for OCR-VQA: Does It Matter?</title>
-      <link>http://localhost:1313/blog/posts/my-first-post/</link>
+      <link>http://localhost:1313/blog/posts/temperature-ocr-vqa/</link>
       <pubDate>Sat, 27 Sep 2025 07:07:07 +0100</pubDate>
-      <guid>http://localhost:1313/blog/posts/my-first-post/</guid>
+      <guid>http://localhost:1313/blog/posts/temperature-ocr-vqa/</guid>
       <description>&lt;h3 id=&#34;definitions&#34;&gt;&lt;strong&gt;Definitions&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;Temperature in LLMs&lt;/strong&gt; controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Visual Question Answering (VQA)&lt;/strong&gt; is about answering questions directly from images. For OCR tasks, like reading a book cover, VQA can outperform raw OCR because it focuses only on what’s asked (e.g., &lt;em&gt;“Who’s the author?”&lt;/em&gt;) instead of dumping every piece of text.&lt;/p&gt;</description>

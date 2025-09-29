@@ -5,11 +5,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Posts | The Daily Pranav</title>
+<title>Temperature Sampling for OCR-VQA: Does It Matter? | The Daily Pranav</title>
 <meta name="keywords" content="">
-<meta name="description" content="Posts - The Daily Pranav">
+<meta name="description" content="Definitions
+Temperature in LLMs controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.
+Visual Question Answering (VQA) is about answering questions directly from images. For OCR tasks, like reading a book cover, VQA can outperform raw OCR because it focuses only on what’s asked (e.g., “Who’s the author?”) instead of dumping every piece of text.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/blog/posts/">
+<link rel="canonical" href="http://localhost:1313/blog/posts/temperature-ocr-vqa/">
 <link crossorigin="anonymous" href="/blog/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css" integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn&#43;yY=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/blog/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
@@ -18,8 +20,7 @@
 <link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/blog/posts/index.xml" title="rss">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/temperature-ocr-vqa/">
 <noscript>
     <style>
         #theme-toggle,
@@ -59,7 +60,7 @@
 </noscript>
 </head>
 
-<body class="list" id="top">
+<body class="" id="top">
 <script>
     if (localStorage.getItem("pref-theme") === "dark") {
         document.body.classList.add('dark');
@@ -102,25 +103,56 @@
         </ul>
     </nav>
 </header>
-<main class="main"> 
-<header class="page-header">
-  <h1>
-    Posts
-  </h1>
-</header>
+<main class="main">
 
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Temperature Sampling for OCR-VQA: Does It Matter?
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Definitions Temperature in LLMs controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.
-Visual Question Answering (VQA) is about answering questions directly from images. For OCR tasks, like reading a book cover, VQA can outperform raw OCR because it focuses only on what’s asked (e.g., “Who’s the author?”) instead of dumping every piece of text.
-...</p>
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Temperature Sampling for OCR-VQA: Does It Matter?
+    </h1>
+    <div class="post-meta"><span title='2025-09-27 07:07:07 +0100 +0100'>September 27, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h3 id="definitions"><strong>Definitions</strong><a hidden class="anchor" aria-hidden="true" href="#definitions">#</a></h3>
+<p><strong>Temperature in LLMs</strong> controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.</p>
+<p><strong>Visual Question Answering (VQA)</strong> is about answering questions directly from images. For OCR tasks, like reading a book cover, VQA can outperform raw OCR because it focuses only on what’s asked (e.g., <em>“Who’s the author?”</em>) instead of dumping every piece of text.</p>
+<h3 id="background"><strong>Background</strong><a hidden class="anchor" aria-hidden="true" href="#background">#</a></h3>
+<p>Temperature tuning is often used to improve generative tasks like writing or summarization. But most of that research is text-only. I wanted to see if the same effect shows up in multimodal tasks, specifically VQA for OCR-heavy images. The hypothesis: maybe more “randomness” helps with broad or open-ended questions, especially “What” vs. “Is” types.</p>
+<h3 id="experiment"><strong>Experiment</strong><a hidden class="anchor" aria-hidden="true" href="#experiment">#</a></h3>
+<p>Using the<a href="https://huggingface.co/datasets/howard-hou/OCR-VQA"> OCR-VQA dataset</a>, I tested 1,000 book cover questions across a range of temperatures. Accuracy was measured against gold answers. Questions were clustered into groups (most open ended questions, medium open ended questions, least open ended questions, and wh-questions), and I plotted accuracy vs. temperature for each cluster.</p>
+<p><img alt="Sample dataset" loading="lazy" src="/blog/images/sample_dataset_blog_1.png"></p>
+<p><strong>Most open ended questions (1 option)</strong> - Asked the LLM to give a binary answer based on one requirement. Such as, is this book a romance novel?</p>
+<p><strong>Medium open ended questions (2 options)</strong> - Asked the LLM to give a binary answer based on 2 options. Such as, is this book a teen romance &amp; adult romance novel?</p>
+<p><strong>Least open ended questions (3 options)</strong> - Asked the LLM to give a binary answer based on 3 options. Such as, is this book a teen romance, adult romance, &amp; high school romance novel?</p>
+<p><strong>Wh question</strong>- Questions that start with “Wh”, such as What edition is this book?</p>
+<p>I used an LLM judge to score a 1 or a 0 if the predicted answer was close to the golden answer with a high accuracy being 1.</p>
+<h3 id="results"><strong>Results</strong><a hidden class="anchor" aria-hidden="true" href="#results">#</a></h3>
+<p>The outcome was clear: <strong>temperature had little to no effect</strong>. Accuracy curves across all question types stayed nearly flat. Whether the model was asked <em>“Is this a romance?”</em> or <em>“What edition is this?”</em>, increasing randomness didn’t improve results.</p>
+<h4 id="most-open-ended-questions-accuracy-vs-temperature-plot">Most open-ended questions accuracy vs temperature plot<a hidden class="anchor" aria-hidden="true" href="#most-open-ended-questions-accuracy-vs-temperature-plot">#</a></h4>
+<p><img alt="Most open-ended: avg" loading="lazy" src="/blog/images/most_open_ended_questions_avg.png"></p>
+<h4 id="medium-open-ended-questions-accuracy-vs-temperature-plot">Medium open-ended questions accuracy vs temperature plot<a hidden class="anchor" aria-hidden="true" href="#medium-open-ended-questions-accuracy-vs-temperature-plot">#</a></h4>
+<p><img alt="Medium open-ended: avg" loading="lazy" src="/blog/images/medium_open_ended_questions_avg.png"></p>
+<h4 id="least-open-ended-questions-accuracy-vs-temperature-plot">Least open-ended questions accuracy vs temperature plot<a hidden class="anchor" aria-hidden="true" href="#least-open-ended-questions-accuracy-vs-temperature-plot">#</a></h4>
+<p><img alt="Least open-ended: avg" loading="lazy" src="/blog/images/least_open_ended_questions_avg.png"></p>
+<h4 id="wh-open-ended-questions-accuracy-vs-temperature-plot">&ldquo;Wh&rdquo; open-ended questions accuracy vs temperature plot<a hidden class="anchor" aria-hidden="true" href="#wh-open-ended-questions-accuracy-vs-temperature-plot">#</a></h4>
+<p><img alt="Wh-questions: avg" loading="lazy" src="/blog/images/wh_questions_avg.png"></p>
+<p>So, why did this happen? OCR-based VQA is about precision. The correct answer is often a single string, like an author’s name or edition number. In such cases, more sampling doesn’t add useful variation—it just risks introducing errors. The bottleneck seems to lie in the OCR pipeline itself; if characters are misread, temperature won’t fix that.</p>
+<p><strong>Takeaway:</strong> For OCR-focused VQA, temperature tuning isn’t the right lever. Gains will likely come from better OCR integration, data augmentation, or fine-tuning—not from adjusting sampling randomness.</p>
+<h3 id="appendix---heatmaps">Appendix - heatmaps<a hidden class="anchor" aria-hidden="true" href="#appendix---heatmaps">#</a></h3>
+<p><img alt="Most open-ended: heatmap" loading="lazy" src="/blog/images/most_open_ended_questions_heatmap.png"></p>
+<p><img alt="Medium open-ended: heatmap" loading="lazy" src="/blog/images/medium_open_ended_questions_heatmap.png"></p>
+<p><img alt="Least open-ended: heatmap" loading="lazy" src="/blog/images/least_open_ended_questions_heatmap.png"></p>
+<p><img alt="Wh-questions: heatmap" loading="lazy" src="/blog/images/wh_questions_heatmap.png"></p>
+
+
   </div>
-  <footer class="entry-footer"><span title='2025-09-27 07:07:07 +0100 +0100'>September 27, 2025</span></footer>
-  <a class="entry-link" aria-label="post link to Temperature Sampling for OCR-VQA: Does It Matter?" href="http://localhost:1313/blog/posts/temperature-ocr-vqa/"></a>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
 </article>
     </main>
     
