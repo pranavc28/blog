@@ -25,9 +25,9 @@ Using the[ OCR-VQA dataset](https://huggingface.co/datasets/howard-hou/OCR-VQA),
 
 **Most open ended questions (1 option)** - Asked the LLM to give a binary answer based on one requirement. Such as, is this book a romance novel?
 
-**Medium open ended questions (2 options)** - Asked the LLM to give a binary answer based on 2 requirements. Such as, is this book a teen romance & adult romance novel?
+**Medium open ended questions (2 options)** - Asked the LLM to give a binary answer based on 2 options. Such as, is this book a teen romance & adult romance novel?
 
-**Least open ended questions (3 options)** - Asked the LLM to give a binary answer based on 2 requirements. Such as, is this book a teen romance, adult romance, & high school romance novel?
+**Least open ended questions (3 options)** - Asked the LLM to give a binary answer based on 3 options. Such as, is this book a teen romance, adult romance, & high school romance novel?
 
 **Wh question**- Questions that start with “Wh”, such as What edition is this book?
 
