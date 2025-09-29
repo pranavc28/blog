@@ -4,10 +4,9 @@ date = 2025-09-27T07:07:07+01:00
 draft = false
 +++
 
+Research code: https://github.com/pranavc28/temperature-ocr-vqa
 
 ### **Definitions**
-
-Research code: https://github.com/pranavc28/temperature-ocr-vqa
 
 **Temperature in LLMs** controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.
 
