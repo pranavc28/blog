@@ -7,6 +7,8 @@ draft = false
 
 ### **Definitions**
 
+Research code: https://github.com/pranavc28/temperature-ocr-vqa
+
 **Temperature in LLMs** controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.
 
 **Visual Question Answering (VQA)** is about answering questions directly from images. For OCR tasks, like reading a book cover, VQA can outperform raw OCR because it focuses only on what’s asked (e.g., *“Who’s the author?”*) instead of dumping every piece of text.
