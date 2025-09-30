@@ -8,7 +8,7 @@ theme = 'PaperMod'
         Title = "👋 Welcome to my blog"
         Content = """
 
-Hey! This is Pranav. Pls blame ChatGPT for any errors, jk :). I work at Google Labs, building generative AI agents to power the next-generation of Google's workforce with Enterprise Agents.
+Hey! This is Pranav. Pls blame ChatGPT for any errors, jk :). I work at Google Labs, building generative AI agents for internal entrprise use cases.
 All research that I post about is stuff that I can't find online, and wanted to explore for fun.
 """
 
