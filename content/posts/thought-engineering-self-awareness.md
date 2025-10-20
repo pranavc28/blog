@@ -1,5 +1,5 @@
 +++
-title = 'From Thinking to Knowing: Measuring Confidence in LLM Thought Processes'
+title = 'From Thinking to Knowing: Measuring Natural Language Confidence in LLM Thought Processes'
 date = 2025-10-19T07:07:07+01:00
 draft = true
 +++
