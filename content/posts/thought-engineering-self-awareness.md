@@ -1,5 +1,5 @@
 +++
-title = 'Are LLMs "self-aware" in their thought process?'
+title = 'From Thinking to Knowing: Measuring Confidence in LLM Thought Processes'
 date = 2025-10-19T07:07:07+01:00
 draft = true
 +++
@@ -12,50 +12,45 @@ Research code: https://github.com/pranavc28/thought-engineering-and-self-awarene
 
 ## Motivation
 
-With the rise of thinking and reasoning models, there does not seem to be much research on how confident an LLM is in its thought - or how one can test that. This blog aims to propose a novel framework for these models regarding self-awareness: automated confidence refin post hoc thinking. Also, we will have a deep dive on what it means for an LLM to be self-aware, and why this matters in the context of what I propose as confidence maximization.
+With the rise of thinking and reasoning models, there appears to be limited research on how confident Large Language Models (LLMs) are in their reasoning processes and how such confidence can be systematically evaluated. This paper proposes a novel framework for enhancing model self-awareness through automated confidence refinement in post-hoc thinking. We provide a comprehensive analysis of what constitutes self-awareness in LLMs and demonstrate why this capability is critical in the context of confidence maximization and trustworthy AI systems.
 
 ## Background
 
-Most researchers and engineers typically prompt LLMs to reason/think. They may also use several muti-agent reasoning architectures, such as Chain of Thought (CoT), or multi shot LLM calls picking the most frequent answer for a multi classification problem.
+Contemporary research and engineering practices typically employ prompting strategies to elicit reasoning from LLMs. Common approaches include multi-agent reasoning architectures such as Chain of Thought (CoT) and ensemble methods that aggregate predictions across multiple model invocations to determine consensus for classification tasks.
 
-However, as humans, we do not simply involve thinking as a multi-step process, breaking down each reason to a new step. We also spend time analyzing how confident we are in our thoughts. For example, a junior software engineer is expected to know when to ask for more context when solving a project, or look for exisitng solutions when solving their projects in situations that they are not as confident.
+However, human cognition extends beyond sequential reasoning; it encompasses metacognitive processes that evaluate confidence in our conclusions. For instance, a junior software engineer demonstrates professional maturity by recognizing knowledge gaps and seeking additional context or consulting existing solutions when faced with uncertainty.
 
-As we add more context to our thoughts, for example new websites to scrape solutions from or from talking to other people, our thought process becomes more succinct, and we gain more confidence in our solutions. Thus, one of the best ways to build trust and gage the effectiveness of an individual is in their ability to articulate their condience in their proposition towards a thought.
+As humans acquire additional context—through research, consultation with peers, or examination of reference materials—their reasoning becomes more refined and their confidence in conclusions increases. Consequently, one of the most reliable indicators of competence and trustworthiness is an individual's capacity to accurately articulate their confidence level in their assertions and identify areas of uncertainty.
 
-## Past research and inspiration
+## Related Work
 
-In the past, we can see that several researchers at Anthropic, IBM research AI, and FAIR @ Meta have proposed self-evaluation, metacoginition (Overthinking and underthinking), and self-reflection frameworks to better understand how LLMs think.
+Recent work from research groups at Anthropic, IBM Research AI, and Meta FAIR has explored self-evaluation, metacognition (including phenomena of overthinking and underthinking), and self-reflection frameworks to better understand LLM reasoning processes. These foundational studies have established the importance of model introspection and confidence calibration in building reliable AI systems.
 
-(Add context from previous papers here: https://arxiv.org/pdf/2508.13141v1, https://arxiv.org/pdf/2207.05221, file:///Users/pranavchaudhary/Desktop/Canada%20B1:B2%202026/2310.11511v1.pdf)
+Prior research has demonstrated that LLMs can benefit from explicit self-evaluation mechanisms, though systematic frameworks for confidence-aware reasoning remain underexplored. Our work builds upon these foundations by proposing a structured approach to automated confidence refinement that enables models to recognize when additional context is necessary for reliable predictions.
 
-Talk about lilian wang's blog as well
+## Problem Formulation
 
-## Problem overview and generalization
+Before examining our experimental methodology, we must first establish the significance of measuring confidence in reasoning processes and its implications for practical AI systems.
 
-Before we dive into the experiment, and how it was conducted, one may argue about the impact of measuring confidence in thought. Why does this matter?
+The emergence of reasoning-capable models (e.g., GPT-4o, GPT-5, O3, Gemini 2.5, Claude) provides unprecedented visibility into token-level attention patterns and step-by-step problem decomposition. Consider a simple geographical query: "Which continent is the US in?" A reasoning model might generate the following thought chain:
 
-With the rise of thinking models, such as gpt-5, o3, gemini 2.5, claude etc.. we have access to which tokens the LLM focuses on, and how it breaks the problem down into several steps. For example, if one were to prompt ChatGPT: Which continent is the US in? One could expect the following thought chain:
+- **Thought 1**: What are the total number of continents in the world?
+- **Thought 2**: What are the countries per continent?
+- **Thought 3**: Is the US part of any of those continents?
 
-Thought 1 - What are the total number of continents in the world?
-Thought 2 - What are the countries per continent?
-Thought 3 - Is the US part of any of those continents?
+If we augment the prompt to elicit confidence scores for each reasoning step ("How confident are you in your answer for this thought?"), we might observe the following:
 
-Let's say I also add confidence scores as a natural language question in part of the prompts: "How confident are you in your answer for this thought?" This would mean, I could expect the following responses:
+- **Thought 1**: What are the total number of continents in the world? → 7 continents. **Confidence: 90%**
+- **Thought 2**: What are the countries per continent? → [Lists countries per continent]. **Confidence: 40%**
+- **Thought 3**: Is the US part of any of those continents? → Yes, it is part of South America. **Confidence: 90%**
 
-Thought 1 - What are the total number of continents in the world? How confident am I in my answer for this thought?
-Thought 1 - 7 continents in the world. 90% confident. 
-Thought 2 - What are the countries per continent? How confident am I in my answer for this thought?
-Thought 2 - [*List all the countries per continent]. 40% confident.
-Thought 3 - Is the US part of any of those continents? How confident am I in my answer for this thought?
-Answer 3 - Yes, it is part of South America. 90% confident.
+This reasoning chain produces an incorrect conclusion: "The US is part of South America." Without confidence scores, practitioners face significant challenges in diagnosing where the reasoning failed and how to improve the prompt or provide additional context through context engineering [1].
 
-The answer could be: The US is part of south-america. However, we know that to be incorrect. As a developer, I would not be sure where the LLM went wrong, and how to improve the prompt/add more context per context engineering [1].
+Confidence scores become critical in this scenario. If the model possessed accurate self-awareness and recognized its knowledge gap at Thought 2 ("What are the countries per continent?"), a system could automatically provide additional context through tool calls [2]—such as querying a geographical database or API—to resolve the uncertainty before proceeding to subsequent reasoning steps.
 
-This is where the confidence scores **could** be highly impactful. If the LLM was truly self-aware, and knew where it lacked context or data to come to a conclusion, which in our case is thought 2 or "What are the countries per continent?" I could provide it with a tool [2] such as a wesbite or an API call to another service that lists all the countries per continent.
+Accurate confidence calibration directly impacts trust in AI systems. Just as senior engineers place greater trust in junior colleagues who clearly articulate their knowledge boundaries, users will trust LLMs that reliably signal uncertainty. Organizations that develop LLMs with accurate confidence assessment capabilities will establish user trust more rapidly than those without this feature. This phenomenon reflects fundamental principles of human trust formation and their applicability to human-AI interaction.
 
-By being more accurate in its confidence scores, developers will without doubt trust that LLM more. In fact, we see this in modern economies and marketplaces already. A senior engineer will trust a junior engineer more if they are very vocal about what they know/don't know. The same will apply to workforces of agents being maintained by developers/other roles. The company that can accurately relay confidence in thought for its LLM will gain the trust of their users faster than those that cannot build this ability. In some sense, this blog post is more around the metaphysical or psychological nature of how humans gain trust in other people - and how this should be applied to LLMs.
-
-This experiment evaluates how self-awareness in confidence has changed with new models developed by OpenAI. I will also propose calling idea of handling and measuring confidence self-awareness in an LLM as thought engineering. I will also highlight a method that I developed called automated confidence refinement to determine at which confidence thereshold, for a reason, an additional tool call could be made to add more context for the prompt.
+This study evaluates how confidence self-awareness has evolved across successive generations of OpenAI models. We introduce the concept of **thought engineering**—the systematic approach to managing and measuring confidence self-awareness in LLMs. Furthermore, we present **automated confidence refinement**, a novel method that determines optimal confidence thresholds for triggering additional context retrieval during the reasoning process.
 
 ## Experiment
 
