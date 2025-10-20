@@ -4,19 +4,17 @@ date = 2025-10-19T07:07:07+01:00
 draft = true
 +++
 
-Research code: https://github.com/pranavc28/thought-engineering-and-self-awareness
-
 "And this is wisdom and temperance and self-knowledge — for a man to know what he knows, and what he does not know." - Plato, Charmides
 
 "To say you know when you know, and to say you do not when you do not — that is knowledge." - Confucius
 
 Research code: https://github.com/pranavc28/thought-engineering-and-self-awareness
 
-### **Motivation**
+## Motivation
 
 With the rise of thinking and reasoning models, there does not seem to be much research on how confident an LLM is in its thought - or how one can test that. This blog aims to propose a novel framework for these models regarding self-awareness: automated confidence refin post hoc thinking. Also, we will have a deep dive on what it means for an LLM to be self-aware, and why this matters in the context of what I propose as confidence maximization.
 
-### **Background**
+## Background
 
 Most researchers and engineers typically prompt LLMs to reason/think. They may also use several muti-agent reasoning architectures, such as Chain of Thought (CoT), or multi shot LLM calls picking the most frequent answer for a multi classification problem.
 
@@ -24,7 +22,7 @@ However, as humans, we do not simply involve thinking as a multi-step process, b
 
 As we add more context to our thoughts, for example new websites to scrape solutions from or from talking to other people, our thought process becomes more succinct, and we gain more confidence in our solutions. Thus, one of the best ways to build trust and gage the effectiveness of an individual is in their ability to articulate their condience in their proposition towards a thought.
 
-### **Past research and inspiration**
+## Past research and inspiration
 
 In the past, we can see that several researchers at Anthropic, IBM research AI, and FAIR @ Meta have proposed self-evaluation, metacoginition (Overthinking and underthinking), and self-reflection frameworks to better understand how LLMs think.
 
@@ -32,7 +30,7 @@ In the past, we can see that several researchers at Anthropic, IBM research AI, 
 
 Talk about lilian wang's blog as well
 
-### **Problem overview and generalization**
+## Problem overview and generalization
 
 Before we dive into the experiment, and how it was conducted, one may argue about the impact of measuring confidence in thought. Why does this matter?
 
@@ -59,9 +57,9 @@ By being more accurate in its confidence scores, developers will without doubt t
 
 This experiment evaluates how self-awareness in confidence has changed with new models developed by OpenAI. I will also propose calling idea of handling and measuring confidence self-awareness in an LLM as thought engineering. I will also highlight a method that I developed called automated confidence refinement to determine at which confidence thereshold, for a reason, an additional tool call could be made to add more context for the prompt.
 
-### **Experiment**
+## Experiment
 
-#### **Dataset**
+### Dataset
 
 We evaluate our framework on the SciFact dataset, a scientific claim verification benchmark. The dataset contains scientific claims paired with research paper abstracts, requiring models to classify relationships as:
 - **SUPPORT**: Evidence confirms the claim
@@ -70,9 +68,9 @@ We evaluate our framework on the SciFact dataset, a scientific claim verificatio
 
 We sampled 200 claims from cross-validation folds to test across multiple models. Each claim requires both retrieving relevant papers from a corpus of 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must first identify relevant context before reasoning about it.
 
-#### **Evaluation Methodology**
+### Evaluation Methodology
 
-##### **Retrieval and Search Process**
+#### Retrieval and Search Process
 
 Unlike traditional classification tasks where context is provided, our experiment requires the LLM to **actively query** the corpus to find relevant papers. This is crucial because it tests whether the model can:
 1. Formulate effective search queries from a claim
@@ -81,7 +79,7 @@ Unlike traditional classification tasks where context is provided, our experimen
 
 We implement a simple term-overlap retrieval system (matching 4+ character words between queries and documents, with 2x weight for title matches). While basic, this ensures all strategies operate on the same retrieval backend, isolating the effect of confidence-aware reasoning rather than retrieval quality.
 
-##### **Three Retrieval Strategies**
+#### Three Retrieval Strategies
 
 We compare three retrieval strategies to test how confidence-aware reasoning affects performance:
 
@@ -184,7 +182,7 @@ Return JSON: \{"refined_queries": ["query1", "query2"]\}
 
 **Key insight**: This framework directly tests whether LLMs can accurately self-assess their confidence and know when to seek additional context—analogous to a junior engineer knowing when to ask for help.
 
-##### **Models and Optimization**
+#### Models and Optimization
 
 We test five models across all strategies: **o3**, **o4-mini**, **gpt-4o**, **gpt-5-mini**, and **gpt-5**.
 
@@ -205,7 +203,7 @@ This is impactful because:
 
 The grid search tests 6 classification thresholds × 6 post-hoc thresholds = 36 configurations per model per strategy, totaling 540 evaluations across the experiment.
 
-##### **Evaluation Metrics**
+#### Evaluation Metrics
 
 We use **macro F1 score** as the primary metric rather than accuracy because:
 
@@ -219,12 +217,12 @@ We use **macro F1 score** as the primary metric rather than accuracy because:
 
 The experiment uses 200 parallel workers for efficient processing across the 1,000 total predictions (200 claims × 5 models).
 
-#### **Results**
+### Results
 
-##### **Overall Performance (Macro F1)**
+#### Overall Performance (Macro F1)
 
-![Retrieval Strategy Comparison - Bar Chart](/assets/images/thought_vs_naive_bar.png)
-![Retrieval Strategy Comparison - Line Plot](/assets/images/thought_vs_naive_line.png)
+![Retrieval Strategy Comparison - Bar Chart](/blog/images/thought_vs_naive_bar.png)
+![Retrieval Strategy Comparison - Line Plot](/blog/images/thought_vs_naive_line.png)
 
 The macro F1 trends reveal distinct patterns across model generations:
 
@@ -234,10 +232,10 @@ The macro F1 trends reveal distinct patterns across model generations:
 
 - **Advanced model (gpt-5)**: POST-HOC dramatically outperforms (0.799 F1), with NAIVE (0.779) and OVERTHINKING (0.752) trailing. This represents a **2.1 point improvement** over naive retrieval and demonstrates effective self-awareness in confidence assessment.
 
-##### **Per-Class Analysis**
+#### Per-Class Analysis
 
 **NOINFO Classification:**
-![NOINFO F1 Comparison](/assets/images/noinfo_f1_comparison.png)
+![NOINFO F1 Comparison](/blog/images/noinfo_f1_comparison.png)
 
 NOINFO is the most challenging class, requiring models to recognize when evidence is insufficient:
 
@@ -246,7 +244,7 @@ NOINFO is the most challenging class, requiring models to recognize when evidenc
 - **gpt-5**: POST-HOC achieves highest NOINFO F1 (0.793), significantly outperforming NAIVE (0.774) and OVERTHINKING (0.747)
 
 **SUPPORT Classification:**
-![SUPPORT F1 Comparison](/assets/images/support_f1_comparison.png)
+![SUPPORT F1 Comparison](/blog/images/support_f1_comparison.png)
 
 Support classification shows the clearest evidence of improved confidence awareness:
 
@@ -255,7 +253,7 @@ Support classification shows the clearest evidence of improved confidence awaren
 - **gpt-5**: POST-HOC achieves exceptional performance (0.817 F1), with NAIVE (0.797) and OVERTHINKING (0.745) trailing
 
 **CONTRADICT Classification:**
-![CONTRADICT F1 Comparison](/assets/images/contradict_f1_comparison.png)
+![CONTRADICT F1 Comparison](/blog/images/contradict_f1_comparison.png)
 
 Contradict shows the most volatile patterns:
 
@@ -266,11 +264,11 @@ Contradict shows the most volatile patterns:
 
 The per-class analysis reveals that **gpt-5 with POST-HOC** achieves the most balanced performance across all three classes, suggesting better confidence calibration enables knowing when additional context is needed versus when initial evidence suffices.
 
-### **Assumptions**
+## Assumptions
 
 The developer has access to an additional API/tool that can be used to add more context where the LLM is not confident about the reason.
 
-### **Refrences**
+## References
 
 [1] - Context engineering
 
