@@ -22,7 +22,7 @@ Temperature tuning is often used to improve generative tasks like writing or sum
 
 Using the[ OCR-VQA dataset](https://huggingface.co/datasets/howard-hou/OCR-VQA), I tested 1,000 book cover questions across a range of temperatures. Accuracy was measured against gold answers. Questions were clustered into groups (most open ended questions, medium open ended questions, least open ended questions, and wh-questions), and I plotted accuracy vs. temperature for each cluster.
 
-![Sample dataset](/images/sample_dataset_blog_1.png)
+![Sample dataset](/blog/images/sample_dataset_blog_1.png)
 
 **Most open ended questions (1 option)** - Asked the LLM to give a binary answer based on one requirement. Such as, is this book a romance novel?
 
@@ -41,19 +41,19 @@ The outcome was clear: **temperature had little to no effect**. Accuracy curves 
 
 #### Most open-ended questions accuracy vs temperature plot 
 
-![Most open-ended: avg](/images/most_open_ended_questions_avg.png)
+![Most open-ended: avg](/blog/images/most_open_ended_questions_avg.png)
 
 #### Medium open-ended questions accuracy vs temperature plot 
 
-![Medium open-ended: avg](/images/medium_open_ended_questions_avg.png)
+![Medium open-ended: avg](/blog/images/medium_open_ended_questions_avg.png)
 
 #### Least open-ended questions accuracy vs temperature plot
 
-![Least open-ended: avg](/images/least_open_ended_questions_avg.png)
+![Least open-ended: avg](/blog/images/least_open_ended_questions_avg.png)
 
 #### "Wh" open-ended questions accuracy vs temperature plot 
 
-![Wh-questions: avg](/images/wh_questions_avg.png)
+![Wh-questions: avg](/blog/images/wh_questions_avg.png)
 
 So, why did this happen? OCR-based VQA is about precision. The correct answer is often a single string, like an author’s name or edition number. In such cases, more sampling doesn’t add useful variation—it just risks introducing errors. The bottleneck seems to lie in the OCR pipeline itself; if characters are misread, temperature won’t fix that.
 
@@ -62,11 +62,11 @@ So, why did this happen? OCR-based VQA is about precision. The correct answer is
 
 ### Appendix - heatmaps
 
-![Most open-ended: heatmap](/images/most_open_ended_questions_heatmap.png)
+![Most open-ended: heatmap](/blog/images/most_open_ended_questions_heatmap.png)
 
-![Medium open-ended: heatmap](/images/medium_open_ended_questions_heatmap.png)
+![Medium open-ended: heatmap](/blog/images/medium_open_ended_questions_heatmap.png)
 
-![Least open-ended: heatmap](/images/least_open_ended_questions_heatmap.png)
+![Least open-ended: heatmap](/blog/images/least_open_ended_questions_heatmap.png)
 
-![Wh-questions: heatmap](/images/wh_questions_heatmap.png)
+![Wh-questions: heatmap](/blog/images/wh_questions_heatmap.png)
 
