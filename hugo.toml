@@ -4,7 +4,9 @@ title = 'Pranav on a Tangent'
 theme = 'PaperMod'
 
 [params]
-    assets.favicon = "🏎️"
+    [params.assets]
+        favicon = "/favicon.svg"
+    
     [params.homeInfoParams]
         Title = "👋 Welcome to my blog"
         Content = """
