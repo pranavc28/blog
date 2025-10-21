@@ -211,6 +211,23 @@ This is impactful because:
 - **Maximizes real-world utility**: Finds the sweet spot between conservative (too much NOINFO) and aggressive (wrong classifications)
 
 The grid search tests 6 classification thresholds × 6 iterative refinement thresholds = 36 configurations per model per strategy, totaling 540 evaluations across the experiment.
+### **Automated Threshold Optimization via Grid Search**
+
+After running the initial experiments, we developed `optimize_thresholds.py` to automatically discover optimal confidence thresholds for each model. The optimizer performs **exhaustive grid search** across two dimensions: classification thresholds (0.50, 0.55, 0.60, 0.65, 0.70, 0.75) and post computation refinement thresholds (0.70, 0.75, 0.80, 0.85, 0.90, 0.95). For each of the 36 threshold combinations per model, the algorithm:
+
+1. **Applies classification threshold**: For any prediction where `confidence < threshold` and `label ≠ NOINFO`, converts the label to NOINFO
+2. **Simulates iterative refinement**: For iterative strategy, if `initial_confidence < refinement_threshold`, uses the refined result; otherwise falls back to naive (simulating what would happen if refinement hadn't triggered)
+3. **Computes macro F1**: Calculates F1 score for each class (SUPPORT, CONTRADICT, NOINFO) using:
+   - Precision = TP / (TP + FP)
+   - Recall = TP / (TP + FN)
+   - F1 = 2 × (Precision × Recall) / (Precision + Recall)
+   - Macro F1 = (F1_SUPPORT + F1_CONTRADICT + F1_NOINFO) / 3
+4. **Selects best configuration**: Identifies the threshold pair maximizing macro F1 for each model
+
+![Grid Search Visualization](/blog/images/grid_search_diagram.png)
+*Figure: Grid search explores all combinations of classification and iterative thresholds, selecting the configuration that maximizes F1 score. Each cell represents one tested configuration with its F1 score. The red star marks the optimal threshold pair. Darker green indicates better performance.*
+
+This automated approach is critical because **different models have fundamentally different confidence calibration**. For example, our optimizer discovered that o3 performs best with a classification threshold of 0.60, while gpt-4o requires 0.50—suggesting o3 tends to be overconfident while gpt-4o is better calibrated. Similarly, iterative refinement thresholds vary from 0.70 (o4-mini, o3) to 0.95 (gpt-4o), revealing that some models need aggressive refinement triggers while others benefit from conservative ones. **Without this optimization, manually tuning 5 models × 3 strategies × 2 thresholds = 30 configurations would be impractical and likely suboptimal** [5]. The grid search objectively identifies each model's "sweet spot" between being too conservative (excessive NOINFO predictions) and too aggressive (incorrect SUPPORT/CONTRADICT labels), improving F1 scores by 0.01-0.03 points per model.
 
 ### Evaluation Metrics
 
@@ -282,8 +299,13 @@ We used a sample size n of size 200. The primary reason is that it is costly to 
 A sample size of 1000+ images would be ideal. Yet, 200 images should not be overlooked as insignifcant or a reason enough to ignore this. I want to emphasize that one must not see a pattern between how each label's F1 score changes per model. For example, it is not important to anlyze how o3 performs better in NAIVE classification over gpt-5. Instead, one must analyze the results where o3 performs very poorly on an overthinkig or thought engineering related methods. Yet, GPT-5 outperforms o3 when it comes to thought engineering such as overthinking and using confidence scores. It is the latter learning whihc is more frequent as can be seen with the newer models.
 
 
-# Conclusion
+# **Conclusion**
 
+Our results demonstrate a clear evolutionary trend in LLM reasoning capabilities: **as models advance, they develop more accurate self-awareness in their confidence assessments**. While older models (o3, o4-mini) performed best with naive retrieval (F1: 0.801, 0.758), achieving 0.801 and 0.758 respectively, gpt-5 with automated confidence refinement achieved the highest performance (F1: 0.799), outperforming both naive (0.779) and overthinking (0.752) approaches. This progression validates our central hypothesis: **modern LLMs can be engineered to recognize when their reasoning is insufficient and proactively seek additional context**. The automated confidence refinement framework provides a systematic mechanism for thought engineering — enabling models to operate like experienced professionals who know precisely when to request more information. As models improve, this metacognitive ability becomes more reliable, transforming confidence scores from noisy estimates into actionable signals that developers can use to optimize multi-classification outcomes through threshold tuning and conditional retrieval.
+
+Notably, the **overthinking strategy exhibited high variability across models**, mirroring a fundamental human cognitive bias. While overthinking improved o4-mini's performance (+0.028 F1), it degraded o3 (-0.034 F1) and gpt-5 (-0.027 F1) results. This inconsistency reflects how pre-reasoning can introduce nois — models may overanalyze simple claims or generate overly complex search strategies that miss relevant evidence as seen by research posted by FAIR [1]. In contrast, automated confidence refinement showed more stable behavior: it either matched baseline performance or, in the case of gpt-5, significantly exceeded it.
+
+This stability advantage is critical for production systems where predictable behavior matters more than occasional high performance. Just as effective engineers learn to balance careful analysis with decisive action, effective thought engineering requires accounting for the variability that overthinking introduces. Our framework offers a principled alternative: let models reason naturally first, then assess their confidence post prediction to determine if additional context is needed. As LLMs continue advancing, I expect this pattern to strengthen—future models will exhibit even better confidence calibration, making automated refinement reliable strategy for high-stakes reasoning tasks requiring both accuracy and self-awareness.
 
 
 # References
@@ -295,6 +317,8 @@ A sample size of 1000+ images would be ideal. Yet, 200 images should not be over
 [3] - Prompt Engineering; Weng, Lilian, (https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/)
 
 [4] - Tool Use; Weng Lilian, (https://lilianweng.github.io/posts/2023-06-23-agent/#component-three-tool-use)
+
+[5] Grid Search, Random Search, Genetic Algorithm: A Big Comparison for NAS; Department of Computer Engineering Ternopil National Economic University, (https://arxiv.org/pdf/1912.06059)
 
 
 
