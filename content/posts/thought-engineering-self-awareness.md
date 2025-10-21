@@ -1,7 +1,7 @@
 +++
 title = 'From Thinking to Knowing: Using Natural Language Confidence From LLM Thought Processes'
 date = 2025-10-19T07:07:07+01:00
-draft = true
+draft = false
 +++
 
 "And this is wisdom and temperance and self-knowledge — for a man to know what he knows, and what he does not know." - Plato, Charmides
