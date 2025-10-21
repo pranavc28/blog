@@ -9,15 +9,15 @@
     <lastBuildDate>Sun, 19 Oct 2025 07:07:07 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>From Thinking to Knowing: Measuring Natural Language Confidence in LLM Thought Processes</title>
+      <title>From Thinking to Knowing: Using Natural Language Confidence From LLM Thought Processes</title>
       <link>http://localhost:1313/blog/posts/thought-engineering-self-awareness/</link>
       <pubDate>Sun, 19 Oct 2025 07:07:07 +0100</pubDate>
       <guid>http://localhost:1313/blog/posts/thought-engineering-self-awareness/</guid>
       <description>&lt;p&gt;&amp;ldquo;And this is wisdom and temperance and self-knowledge — for a man to know what he knows, and what he does not know.&amp;rdquo; - Plato, Charmides&lt;/p&gt;
 &lt;p&gt;&amp;ldquo;To say you know when you know, and to say you do not when you do not — that is knowledge.&amp;rdquo; - Confucius&lt;/p&gt;
 &lt;p&gt;Research code: &lt;a href=&#34;https://github.com/pranavc28/thought-engineering-and-self-awareness&#34;&gt;https://github.com/pranavc28/thought-engineering-and-self-awareness&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;motivation&#34;&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;With the rise of thinking and reasoning models, there appears to be limited research on how confident Large Language Models (LLMs) are in their reasoning processes and how such confidence can be systematically evaluated. This paper proposes a novel framework for enhancing model self-awareness through automated confidence refinement in post-hoc thinking. We provide a comprehensive analysis of what constitutes self-awareness in LLMs and demonstrate why this capability is critical in the context of confidence maximization and trustworthy AI systems.&lt;/p&gt;</description>
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;With the rise of thinking and reasoning models, there appears to be limited research on how confident Large Language Models (LLMs) are in their reasoning processes and how such confidence can be systematically prompted and evaluated as natural language - similar to humans. This idea of confidence in their reasoning is what we term &lt;strong&gt;self-awareness&lt;/strong&gt;. This blog proposes a method for evaluating model self-awareness using natural language confidence score, and implementing a novel frameowrk that we have coined &lt;strong&gt;automated confidence refinement&lt;/strong&gt; to improve LLM accuracy in multi-classification problems. For now, &lt;strong&gt;automated confidence refinement&lt;/strong&gt; will be the first tool explored under the overarching umbrella of &lt;strong&gt;thought engineering&lt;/strong&gt;, as the industry begins to release more powerful thinking models.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Temperature Sampling for OCR-VQA: Does It Matter?</title>
