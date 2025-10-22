@@ -2,28 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Pranav on a Tangent</title>
-    <link>http://localhost:50906/blog/</link>
+    <link>http://localhost:1313/blog/</link>
     <description>Recent content on Pranav on a Tangent</description>
     <generator>Hugo -- 0.150.1</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 19 Oct 2025 07:07:07 +0100</lastBuildDate>
-    <atom:link href="http://localhost:50906/blog/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>From Thinking to Knowing: Using Natural Language Confidence From LLM Thought Processes</title>
-      <link>http://localhost:50906/blog/posts/thought-engineering-self-awareness/</link>
+      <link>http://localhost:1313/blog/posts/thought-engineering-self-awareness/</link>
       <pubDate>Sun, 19 Oct 2025 07:07:07 +0100</pubDate>
-      <guid>http://localhost:50906/blog/posts/thought-engineering-self-awareness/</guid>
+      <guid>http://localhost:1313/blog/posts/thought-engineering-self-awareness/</guid>
       <description>&lt;p&gt;&amp;ldquo;And this is wisdom and temperance and self-knowledge — for a man to know what he knows, and what he does not know.&amp;rdquo; - Plato, Charmides&lt;/p&gt;
 &lt;p&gt;&amp;ldquo;To say you know when you know, and to say you do not when you do not — that is knowledge.&amp;rdquo; - Confucius&lt;/p&gt;
 &lt;p&gt;Research code: &lt;a href=&#34;https://github.com/pranavc28/thought-engineering-and-self-awareness&#34;&gt;https://github.com/pranavc28/thought-engineering-and-self-awareness&lt;/a&gt;&lt;/p&gt;
 &lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
-&lt;p&gt;With the rise of thinking and reasoning models, there appears to be limited research on how confident Large Language Models (LLMs) are in their reasoning processes and how such confidence can be systematically prompted and evaluated as natural language - similar to humans. This idea of confidence in their reasoning is what we term &lt;strong&gt;self-awareness&lt;/strong&gt;. This blog proposes a method for evaluating model self-awareness using natural language confidence score, and implementing a novel frameowrk that we have coined &lt;strong&gt;automated confidence refinement&lt;/strong&gt; to improve LLM accuracy in multi-classification problems. For now, &lt;strong&gt;automated confidence refinement&lt;/strong&gt; will be the first tool explored under the overarching umbrella of &lt;strong&gt;thought engineering&lt;/strong&gt;, as the industry begins to release more powerful thinking models.&lt;/p&gt;</description>
+&lt;p&gt;Despite the rise of reasoning models, limited research exists on how confident LLMs are in their reasoning processes and whether this confidence can be systematically evaluated through natural language—similar to humans. We term this capability &lt;strong&gt;self-awareness&lt;/strong&gt;. This blog proposes a method for evaluating model self-awareness using natural language confidence scores and introduces &lt;strong&gt;automated confidence refinement&lt;/strong&gt;, a novel framework to improve LLM accuracy in multi-classification problems. This represents the first exploration under the broader umbrella of &lt;strong&gt;thought engineering&lt;/strong&gt; as the industry releases more powerful thinking models.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Temperature Sampling for OCR-VQA: Does It Matter?</title>
-      <link>http://localhost:50906/blog/posts/temperature-ocr-vqa/</link>
+      <link>http://localhost:1313/blog/posts/temperature-ocr-vqa/</link>
       <pubDate>Sat, 27 Sep 2025 07:07:07 +0100</pubDate>
-      <guid>http://localhost:50906/blog/posts/temperature-ocr-vqa/</guid>
+      <guid>http://localhost:1313/blog/posts/temperature-ocr-vqa/</guid>
       <description>&lt;p&gt;Research code: &lt;a href=&#34;https://github.com/pranavc28/temperature-ocr-vqa&#34;&gt;https://github.com/pranavc28/temperature-ocr-vqa&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;definitions&#34;&gt;&lt;strong&gt;Definitions&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;Temperature in LLMs&lt;/strong&gt; controls how predictable or exploratory a model’s outputs are. Low temperature = consistent and factual, good for precise tasks. High temperature = more diverse, good for creative tasks—but also riskier.&lt;/p&gt;
