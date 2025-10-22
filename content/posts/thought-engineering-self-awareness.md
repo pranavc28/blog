@@ -48,7 +48,7 @@ Reasoning-capable models (GPT-4o, GPT-5, o3, Gemini 2.5, Claude) provide visibil
 
 This produces an incorrect conclusion. Without confidence scores, diagnosing where reasoning failed is difficult. However, if the model recognized its knowledge gap at Thought 2 (40% confidence), a system could automatically provide context via tool calls—such as querying a geographical database—before proceeding [3].
 
-Accurate confidence calibration directly impacts trust. Just as senior employees trust junior colleagues who articulate knowledge boundaries, users trust LLMs that signal uncertainty reliably. Organizations developing LLMs with accurate confidence assessment will establish trust faster.
+Accurate confidence calibration directly impacts trust. Just as senior employees trust junior colleagues who articulate knowledge boundaries, users trust LLMs that signal uncertainty reliably. **Hypothesis: Organizations developing LLMs with accurate confidence assessment will establish trust faster**.
 
 This study evaluates how confidence self-awareness has evolved across OpenAI model generations. We introduce **thought engineering**—the systematic approach to managing and measuring confidence self-awareness in LLMs—and present **automated confidence refinement**, determining optimal confidence thresholds for triggering additional context retrieval, or resorting to a default classification outcome when the natural language confidence score is too low.
 
