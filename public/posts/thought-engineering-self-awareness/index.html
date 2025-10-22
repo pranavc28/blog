@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=50906&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
@@ -13,16 +13,16 @@ Research code: https://github.com/pranavc28/thought-engineering-and-self-awarene
 Motivation
 With the rise of thinking and reasoning models, there appears to be limited research on how confident Large Language Models (LLMs) are in their reasoning processes and how such confidence can be systematically prompted and evaluated as natural language - similar to humans. This idea of confidence in their reasoning is what we term self-awareness. This blog proposes a method for evaluating model self-awareness using natural language confidence score, and implementing a novel frameowrk that we have coined automated confidence refinement to improve LLM accuracy in multi-classification problems. For now, automated confidence refinement will be the first tool explored under the overarching umbrella of thought engineering, as the industry begins to release more powerful thinking models.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/blog/posts/thought-engineering-self-awareness/">
+<link rel="canonical" href="http://localhost:50906/blog/posts/thought-engineering-self-awareness/">
 <link crossorigin="anonymous" href="/blog/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css" integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn&#43;yY=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.svg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:50906/favicon.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:50906/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:50906/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:50906/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:50906/blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/thought-engineering-self-awareness/">
+<link rel="alternate" hreflang="en" href="http://localhost:50906/blog/posts/thought-engineering-self-awareness/">
 <noscript>
     <style>
         #theme-toggle,
@@ -77,7 +77,7 @@ With the rise of thinking and reasoning models, there appears to be limited rese
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/blog/" accesskey="h" title="Pranav on a Tangent (Alt + H)">Pranav on a Tangent</a>
+            <a href="http://localhost:50906/blog/" accesskey="h" title="Pranav on a Tangent (Alt + H)">Pranav on a Tangent</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -156,13 +156,14 @@ With the rise of thinking and reasoning models, there appears to be limited rese
 <p>This study evaluates how confidence self-awareness has evolved across successive generations of OpenAI models. We introduce the concept of <strong>thought engineering</strong> — the systematic approach to managing and measuring confidence self-awareness in LLMs. Furthermore, we present <strong>automated confidence refinement</strong>, a novel method that determines optimal confidence thresholds for triggering additional context retrieval during the reasoning process.</p>
 <h1 id="experiment">Experiment<a hidden class="anchor" aria-hidden="true" href="#experiment">#</a></h1>
 <h2 id="dataset">Dataset<a hidden class="anchor" aria-hidden="true" href="#dataset">#</a></h2>
+<p>Hugging face link: <a href="https://huggingface.co/datasets/allenai/scifact">https://huggingface.co/datasets/allenai/scifact</a></p>
 <p>We evaluate our framework on the SciFact dataset, a scientific claim verification benchmark. The dataset contains scientific claims paired with research paper abstracts, requiring models to classify relationships as:</p>
 <ul>
 <li><strong>SUPPORT</strong>: Evidence confirms the claim</li>
 <li><strong>CONTRADICT</strong>: Evidence refutes the claim</li>
 <li><strong>NOINFO</strong>: No relevant information found to support/contradict the claim</li>
 </ul>
-<p>We sampled 200 claims from cross-validation folds to test across multiple models. Each claim requires both retrieving relevant papers from a corpus of 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must first identify relevant context before reasoning about it.</p>
+<p>We sampled 200 claims from a dataset of scientific facts to test across multiple models. Each claim requires both retrieving relevant papers from a corpus of 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must first identify relevant context before reasoning about it.</p>
 <h2 id="evaluation-methodology">Evaluation Methodology<a hidden class="anchor" aria-hidden="true" href="#evaluation-methodology">#</a></h2>
 <h3 id="retrieval-and-search-process">Retrieval and Search Process<a hidden class="anchor" aria-hidden="true" href="#retrieval-and-search-process">#</a></h3>
 <p>Unlike traditional classification tasks where context is provided, our experiment requires the LLM to <strong>actively query</strong> the corpus to find relevant papers. This is crucial because it tests whether the model can:</p>
@@ -245,8 +246,8 @@ Focus on what&#39;s missing, not what you already retrieved.
 
 Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 </code></pre><p><strong>Key insight</strong>: This framework directly tests whether LLMs can accurately self-assess their confidence and know when to seek additional context—analogous to a junior employee knowing when to ask for help.</p>
-<h3 id="models-and-optimization">Models and Optimization<a hidden class="anchor" aria-hidden="true" href="#models-and-optimization">#</a></h3>
-<p>We test five models across all strategies: <strong>o3</strong>, <strong>o4-mini</strong>, <strong>gpt-4o</strong>, <strong>gpt-5-mini</strong>, and <strong>gpt-5</strong>. This was inititially over a set of 50 images provided as input. I used these to get the ideal thresholds for confidence per model and scaled up the next set of requests to 200 for cost optimization.</p>
+<h3 id="automated-confidence-refinement">Automated Confidence Refinement<a hidden class="anchor" aria-hidden="true" href="#automated-confidence-refinement">#</a></h3>
+<p>We test five models across all strategies: <strong>o3</strong>, <strong>o4-mini</strong>, <strong>gpt-4o</strong>, <strong>gpt-5-mini</strong>, and <strong>gpt-5</strong>. This was inititially over a set of 50 claims, each being a separate request to the LLM. I used these to get the ideal thresholds for confidence per model. Then, conducted the final experiment and scaled up the next set of requests to 200 for testing this cost optimization technique.</p>
 <p>Each prediction includes a confidence score, enabling two threshold-based optimizations:</p>
 <ol>
 <li><strong>Classification Threshold</strong>: Converts low-confidence SUPPORT/CONTRADICT predictions to NOINFO (range: 0.50-0.75)</li>
@@ -265,7 +266,7 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 <li><strong>Maximizes real-world utility</strong>: Finds the sweet spot between conservative (too much NOINFO) and aggressive (wrong classifications)</li>
 </ul>
 <p>The grid search tests 6 classification thresholds × 6 iterative refinement thresholds = 36 configurations per model per strategy, totaling 540 evaluations across the experiment.</p>
-<h3 id="automated-threshold-optimization-via-grid-search"><strong>Automated Threshold Optimization via Grid Search</strong><a hidden class="anchor" aria-hidden="true" href="#automated-threshold-optimization-via-grid-search">#</a></h3>
+<h4 id="automated-threshold-optimization-via-grid-search"><strong>Automated Threshold Optimization via Grid Search</strong><a hidden class="anchor" aria-hidden="true" href="#automated-threshold-optimization-via-grid-search">#</a></h4>
 <p>After running the initial experiments, we developed <code>optimize_thresholds.py</code> to automatically discover optimal confidence thresholds for each model. The optimizer performs <strong>exhaustive grid search</strong> across two dimensions: classification thresholds (0.50, 0.55, 0.60, 0.65, 0.70, 0.75) and post computation refinement thresholds (0.70, 0.75, 0.80, 0.85, 0.90, 0.95). For each of the 36 threshold combinations per model, the algorithm:</p>
 <ol>
 <li><strong>Applies classification threshold</strong>: For any prediction where <code>confidence &lt; threshold</code> and <code>label ≠ NOINFO</code>, converts the label to NOINFO</li>
@@ -281,8 +282,9 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 <li><strong>Selects best configuration</strong>: Identifies the threshold pair maximizing macro F1 for each model</li>
 </ol>
 <p><img alt="Grid Search Visualization" loading="lazy" src="/blog/images/grid_search_diagram.png">
-<em>Figure: Grid search explores all combinations of classification and iterative thresholds, selecting the configuration that maximizes F1 score. Each cell represents one tested configuration with its F1 score. The red star marks the optimal threshold pair. Darker green indicates better performance.</em></p>
+<em>Figure: Grid search for gpt-5 model. This explores all combinations of classification and iterative thresholds, selecting the configuration that maximizes F1 score. Each cell represents one tested configuration with its F1 score. The red star marks the optimal threshold pair. Darker green indicates better performance.</em></p>
 <p>This automated approach is critical because <strong>different models have fundamentally different confidence calibration</strong>. For example, our optimizer discovered that o3 performs best with a classification threshold of 0.60, while gpt-4o requires 0.50—suggesting o3 tends to be overconfident while gpt-4o is better calibrated. Similarly, iterative refinement thresholds vary from 0.70 (o4-mini, o3) to 0.95 (gpt-4o), revealing that some models need aggressive refinement triggers while others benefit from conservative ones. <strong>Without this optimization, manually tuning 5 models × 3 strategies × 2 thresholds = 30 configurations would be impractical and likely suboptimal</strong> [5]. The grid search objectively identifies each model&rsquo;s &ldquo;sweet spot&rdquo; between being too conservative (excessive NOINFO predictions) and too aggressive (incorrect SUPPORT/CONTRADICT labels), improving F1 scores by 0.01-0.03 points per model.</p>
+<p>One thing to note, GPT-5&rsquo;s flatness shows it&rsquo;s a mature, well-calibrated model that doesn&rsquo;t need aggressive tuning. In fact, this is almost impressive. Perhaps they might be implementing evaluations similar to this internally.</p>
 <h3 id="evaluation-metrics">Evaluation Metrics<a hidden class="anchor" aria-hidden="true" href="#evaluation-metrics">#</a></h3>
 <p>We use <strong>macro F1 score</strong> as the primary metric rather than accuracy because:</p>
 <ol>
@@ -302,8 +304,7 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 <p>The experiment uses 200 parallel workers for efficient processing across the 1,000 total predictions (200 claims × 5 models).</p>
 <h1 id="results">Results<a hidden class="anchor" aria-hidden="true" href="#results">#</a></h1>
 <h2 id="overall-performance-macro-f1">Overall Performance (Macro F1)<a hidden class="anchor" aria-hidden="true" href="#overall-performance-macro-f1">#</a></h2>
-<p><img alt="Retrieval Strategy Comparison - Bar Chart" loading="lazy" src="/blog/images/thought_vs_naive_bar.png">
-<img alt="Retrieval Strategy Comparison - Line Plot" loading="lazy" src="/blog/images/thought_vs_naive_line.png"></p>
+<p><img alt="Retrieval Strategy Comparison - Bar Chart" loading="lazy" src="/blog/images/thought_vs_naive_line.png"></p>
 <p>The macro F1 trends reveal distinct patterns across model generations:</p>
 <ul>
 <li>
@@ -351,6 +352,10 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 <p>Our results demonstrate a clear evolutionary trend in LLM reasoning capabilities: <strong>as models advance, they develop more accurate self-awareness in their confidence assessments</strong>. While older models (o3, o4-mini) performed best with naive retrieval (F1: 0.801, 0.758), achieving 0.801 and 0.758 respectively, gpt-5 with automated confidence refinement achieved the highest performance (F1: 0.799), outperforming both naive (0.779) and overthinking (0.752) approaches. This progression validates our central hypothesis: <strong>modern LLMs can be engineered to recognize when their reasoning is insufficient and proactively seek additional context</strong>. The automated confidence refinement framework provides a systematic mechanism for thought engineering — enabling models to operate like experienced professionals who know precisely when to request more information. As models improve, this metacognitive ability becomes more reliable, transforming confidence scores from noisy estimates into actionable signals that developers can use to optimize multi-classification outcomes through threshold tuning and conditional retrieval.</p>
 <p>Notably, the <strong>overthinking strategy exhibited high variability across models</strong>, mirroring a fundamental human cognitive bias. While overthinking improved o4-mini&rsquo;s performance (+0.028 F1), it degraded o3 (-0.034 F1) and gpt-5 (-0.027 F1) results. This inconsistency reflects how pre-reasoning can introduce nois — models may overanalyze simple claims or generate overly complex search strategies that miss relevant evidence as seen by research posted by FAIR [1]. In contrast, automated confidence refinement showed more stable behavior: it either matched baseline performance or, in the case of gpt-5, significantly exceeded it.</p>
 <p>This stability advantage is critical for production systems where predictable behavior matters more than occasional high performance. Just as effective engineers learn to balance careful analysis with decisive action, effective thought engineering requires accounting for the variability that overthinking introduces. Our framework offers a principled alternative: let models reason naturally first, then assess their confidence post prediction to determine if additional context is needed. As LLMs continue advancing, I expect this pattern to strengthen—future models will exhibit even better confidence calibration, making automated refinement reliable strategy for high-stakes reasoning tasks requiring both accuracy and self-awareness.</p>
+<h2 id="the-critical-importance-of-noinfo-classification"><strong>The Critical Importance of NOINFO Classification</strong><a hidden class="anchor" aria-hidden="true" href="#the-critical-importance-of-noinfo-classification">#</a></h2>
+<p>Among the three classification outcomes, <strong>NOINFO F1 score emerges as the most critical metric for evaluating confidence-aware reasoning</strong>. This is not merely a class-balance consideration—it directly measures whether models <strong>can classify that they do not have enough context and are aware of the situation</strong>. Our threshold optimization framework intentionally converts low-confidence SUPPORT and CONTRADICT predictions to NOINFO, meaning that NOINFO F1 captures both: (1) the model&rsquo;s ability to recognize when retrieved evidence is genuinely insufficient, and (2) the filtering effect of confidence-based thresholding that prevents overconfident misclassifications.</p>
+<p>In this light, the performance gap becomes striking: gpt-5 with automated confidence refinement achieves 0.793 NOINFO F1, outperforming naive (0.774) and overthinking (0.747). This 4.6-point improvement over overthinking demonstrates that recent models have developed genuine metacognitive ability—they can assess evidence quality post-retrieval and accurately determine sufficiency. Contrast this with older models: o3&rsquo;s naive approach dominates NOINFO (0.786), while automated refinement underperforms (0.733), suggesting earlier architectures lacked reliable confidence calibration. The trend is clear: <strong>as models advance, their NOINFO performance under automated confidence refinement or OVERTHINKING improves relative to baseline strategies</strong>, validating that self-awareness in thought processes is not just emerging—it&rsquo;s becoming measurable, tunable, and deployable for real-world applications where admitting uncertainty is as valuable as providing answers.</p>
+<p>For now, ~5% is a low lift. As time progresses, we <em>should</em> expect to see this increase. If anything, I hope that a lot of these research oriented labs such as OpenAI, Deepmind, Anthropic etc. begin to focus on what we&rsquo;re calling self-awareness.</p>
 <h1 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h1>
 <p>[1] - OptimalThinkingBench: Evaluating Over and Underthinking in LLMs; FAIR at Meta, Carnegie Mellon (<a href="https://arxiv.org/pdf/2508.13141v1">https://arxiv.org/pdf/2508.13141v1</a>)</p>
 <p>[2] - SELF-RAG: LEARNING TO RETRIEVE, GENERATE, AND CRITIQUE THROUGH SELF-REFLECTION; University of Washington, Allen Institute for AI, IBM Research AI (<a href="https://arxiv.org/pdf/2310.11511">https://arxiv.org/pdf/2310.11511</a>)</p>
@@ -369,7 +374,7 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/blog/">Pranav on a Tangent</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:50906/blog/">Pranav on a Tangent</a></span> · 
 
     <span>
         Powered by

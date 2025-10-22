@@ -70,12 +70,14 @@ This study evaluates how confidence self-awareness has evolved across successive
 
 ## Dataset
 
+Hugging face link: https://huggingface.co/datasets/allenai/scifact
+
 We evaluate our framework on the SciFact dataset, a scientific claim verification benchmark. The dataset contains scientific claims paired with research paper abstracts, requiring models to classify relationships as:
 - **SUPPORT**: Evidence confirms the claim
 - **CONTRADICT**: Evidence refutes the claim  
 - **NOINFO**: No relevant information found to support/contradict the claim
 
-We sampled 200 claims from cross-validation folds to test across multiple models. Each claim requires both retrieving relevant papers from a corpus of 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must first identify relevant context before reasoning about it.
+We sampled 200 claims from a dataset of scientific facts to test across multiple models. Each claim requires both retrieving relevant papers from a corpus of 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must first identify relevant context before reasoning about it.
 
 ## Evaluation Methodology
 
@@ -191,9 +193,9 @@ Return JSON: \{"refined_queries": ["query1", "query2"]\}
 
 **Key insight**: This framework directly tests whether LLMs can accurately self-assess their confidence and know when to seek additional context—analogous to a junior employee knowing when to ask for help.
 
-### Models and Optimization
+### Automated Confidence Refinement
 
-We test five models across all strategies: **o3**, **o4-mini**, **gpt-4o**, **gpt-5-mini**, and **gpt-5**. This was inititially over a set of 50 images provided as input. I used these to get the ideal thresholds for confidence per model and scaled up the next set of requests to 200 for cost optimization.
+We test five models across all strategies: **o3**, **o4-mini**, **gpt-4o**, **gpt-5-mini**, and **gpt-5**. This was inititially over a set of 50 claims, each being a separate request to the LLM. I used these to get the ideal thresholds for confidence per model. Then, conducted the final experiment and scaled up the next set of requests to 200 for testing this cost optimization technique.
 
 Each prediction includes a confidence score, enabling two threshold-based optimizations:
 
@@ -211,7 +213,9 @@ This is impactful because:
 - **Maximizes real-world utility**: Finds the sweet spot between conservative (too much NOINFO) and aggressive (wrong classifications)
 
 The grid search tests 6 classification thresholds × 6 iterative refinement thresholds = 36 configurations per model per strategy, totaling 540 evaluations across the experiment.
-### **Automated Threshold Optimization via Grid Search**
+
+
+#### **Automated Threshold Optimization via Grid Search**
 
 After running the initial experiments, we developed `optimize_thresholds.py` to automatically discover optimal confidence thresholds for each model. The optimizer performs **exhaustive grid search** across two dimensions: classification thresholds (0.50, 0.55, 0.60, 0.65, 0.70, 0.75) and post computation refinement thresholds (0.70, 0.75, 0.80, 0.85, 0.90, 0.95). For each of the 36 threshold combinations per model, the algorithm:
 
@@ -225,9 +229,11 @@ After running the initial experiments, we developed `optimize_thresholds.py` to 
 4. **Selects best configuration**: Identifies the threshold pair maximizing macro F1 for each model
 
 ![Grid Search Visualization](/blog/images/grid_search_diagram.png)
-*Figure: Grid search explores all combinations of classification and iterative thresholds, selecting the configuration that maximizes F1 score. Each cell represents one tested configuration with its F1 score. The red star marks the optimal threshold pair. Darker green indicates better performance.*
+*Figure: Grid search for gpt-5 model. This explores all combinations of classification and iterative thresholds, selecting the configuration that maximizes F1 score. Each cell represents one tested configuration with its F1 score. The red star marks the optimal threshold pair. Darker green indicates better performance.*
 
 This automated approach is critical because **different models have fundamentally different confidence calibration**. For example, our optimizer discovered that o3 performs best with a classification threshold of 0.60, while gpt-4o requires 0.50—suggesting o3 tends to be overconfident while gpt-4o is better calibrated. Similarly, iterative refinement thresholds vary from 0.70 (o4-mini, o3) to 0.95 (gpt-4o), revealing that some models need aggressive refinement triggers while others benefit from conservative ones. **Without this optimization, manually tuning 5 models × 3 strategies × 2 thresholds = 30 configurations would be impractical and likely suboptimal** [5]. The grid search objectively identifies each model's "sweet spot" between being too conservative (excessive NOINFO predictions) and too aggressive (incorrect SUPPORT/CONTRADICT labels), improving F1 scores by 0.01-0.03 points per model.
+
+One thing to note, GPT-5's flatness shows it's a mature, well-calibrated model that doesn't need aggressive tuning. In fact, this is almost impressive. Perhaps they might be implementing evaluations similar to this internally.
 
 ### Evaluation Metrics
 
@@ -247,8 +253,7 @@ The experiment uses 200 parallel workers for efficient processing across the 1,0
 
 ## Overall Performance (Macro F1)
 
-![Retrieval Strategy Comparison - Bar Chart](/blog/images/thought_vs_naive_bar.png)
-![Retrieval Strategy Comparison - Line Plot](/blog/images/thought_vs_naive_line.png)
+![Retrieval Strategy Comparison - Bar Chart](/blog/images/thought_vs_naive_line.png)
 
 The macro F1 trends reveal distinct patterns across model generations:
 
@@ -307,6 +312,13 @@ Notably, the **overthinking strategy exhibited high variability across models**,
 
 This stability advantage is critical for production systems where predictable behavior matters more than occasional high performance. Just as effective engineers learn to balance careful analysis with decisive action, effective thought engineering requires accounting for the variability that overthinking introduces. Our framework offers a principled alternative: let models reason naturally first, then assess their confidence post prediction to determine if additional context is needed. As LLMs continue advancing, I expect this pattern to strengthen—future models will exhibit even better confidence calibration, making automated refinement reliable strategy for high-stakes reasoning tasks requiring both accuracy and self-awareness.
 
+## **The Critical Importance of NOINFO Classification**
+
+Among the three classification outcomes, **NOINFO F1 score emerges as the most critical metric for evaluating confidence-aware reasoning**. This is not merely a class-balance consideration—it directly measures whether models **can classify that they do not have enough context and are aware of the situation**. Our threshold optimization framework intentionally converts low-confidence SUPPORT and CONTRADICT predictions to NOINFO, meaning that NOINFO F1 captures both: (1) the model's ability to recognize when retrieved evidence is genuinely insufficient, and (2) the filtering effect of confidence-based thresholding that prevents overconfident misclassifications.
+
+In this light, the performance gap becomes striking: gpt-5 with automated confidence refinement achieves 0.793 NOINFO F1, outperforming naive (0.774) and overthinking (0.747). This 4.6-point improvement over overthinking demonstrates that recent models have developed genuine metacognitive ability—they can assess evidence quality post-retrieval and accurately determine sufficiency. Contrast this with older models: o3's naive approach dominates NOINFO (0.786), while automated refinement underperforms (0.733), suggesting earlier architectures lacked reliable confidence calibration. The trend is clear: **as models advance, their NOINFO performance under automated confidence refinement or OVERTHINKING improves relative to baseline strategies**, validating that self-awareness in thought processes is not just emerging—it's becoming measurable, tunable, and deployable for real-world applications where admitting uncertainty is as valuable as providing answers.
+
+For now, ~5% is a low lift. As time progresses, we *should* expect to see this increase. If anything, I hope that a lot of these research oriented labs such as OpenAI, Deepmind, Anthropic etc. begin to focus on what we're calling self-awareness.
 
 # References
 
@@ -319,6 +331,3 @@ This stability advantage is critical for production systems where predictable be
 [4] - Tool Use; Weng Lilian, (https://lilianweng.github.io/posts/2023-06-23-agent/#component-three-tool-use)
 
 [5] Grid Search, Random Search, Genetic Algorithm: A Big Comparison for NAS; Department of Computer Engineering Ternopil National Economic University, (https://arxiv.org/pdf/1912.06059)
-
-
-
