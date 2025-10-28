@@ -9,6 +9,8 @@ math = true
 
 "To say you know when you know, and to say you do not when you do not — that is knowledge." - Confucius
 
+**Special thanks to [Yash Sharma](https://www.yash-sharma.com/) for a lot of valuable feedback on my idea and evaluation methodology**
+
 Research code: https://github.com/pranavc28/thought-engineering-and-self-awareness
 
 # Claim
