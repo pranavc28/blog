@@ -3,7 +3,11 @@ languageCode = 'en-us'
 title = 'Pranav on a Tangent'
 theme = 'PaperMod'
 
+[markup.goldmark.renderer]
+    unsafe = true
+
 [params]
+    math = true
     [params.assets]
         favicon = "/favicon.svg"
     

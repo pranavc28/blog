@@ -2,20 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:52314/blog/posts/thought-engineering-self-awareness/</loc>
+    <loc>https://pranavc28.github.io/blog/posts/thought-engineering-self-awareness/</loc>
     <lastmod>2025-10-19T07:07:07+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:52314/blog/posts/</loc>
+    <loc>https://pranavc28.github.io/blog/posts/</loc>
     <lastmod>2025-10-19T07:07:07+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:52314/blog/</loc>
+    <loc>https://pranavc28.github.io/blog/</loc>
     <lastmod>2025-10-19T07:07:07+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:52314/blog/posts/temperature-ocr-vqa/</loc>
+    <loc>https://pranavc28.github.io/blog/posts/temperature-ocr-vqa/</loc>
     <lastmod>2025-09-27T07:07:07+01:00</lastmod>
   </url><url>
-    <loc>http://localhost:52314/blog/categories/</loc>
+    <loc>https://pranavc28.github.io/blog/categories/</loc>
   </url><url>
-    <loc>http://localhost:52314/blog/tags/</loc>
+    <loc>https://pranavc28.github.io/blog/tags/</loc>
   </url>
 </urlset>

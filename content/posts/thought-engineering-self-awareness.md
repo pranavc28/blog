@@ -2,6 +2,7 @@
 title = 'From Thinking to Knowing: Using Natural Language Confidence From LLM Thought Processes'
 date = 2025-10-19T07:07:07+01:00
 draft = false
+math = true
 +++
 
 "And this is wisdom and temperance and self-knowledge — for a man to know what he knows, and what he does not know." - Plato, Charmides
@@ -10,11 +11,15 @@ draft = false
 
 Research code: https://github.com/pranavc28/thought-engineering-and-self-awareness
 
+# Claim
+
+Thought engineering techniques (overthinking and automated confidence refinement) improve multi-classification performance across all model architectures. The purpose of this blog is to explain these terms, and prove why this is true.
+
 # Motivation
 
-Despite the rise of reasoning models, limited research exists on how confident LLMs are in their reasoning processes and whether this confidence can be systematically evaluated through natural language—similar to humans. We term this capability **self-awareness**. This blog proposes a method for evaluating model self-awareness using natural language confidence scores and introduces **automated confidence refinement**, a novel framework to improve LLM accuracy in multi-classification problems. This represents the first exploration under the broader umbrella of **thought engineering** as the industry releases more powerful thinking models.
+Despite the rise of reasoning models, limited research exists on how confident LLMs are in their reasoning processes and whether this confidence can be systematically evaluated through natural language—similar to humans. We term this capability **self-awareness**. This blog proposes a method for evaluating model self-awareness using natural language confidence scores within responses from LLMs and introduces **automated confidence refinement**, a novel framework to improve LLM accuracy in multi-classification problems. This represents the first exploration under the broader umbrella that I have termed **thought engineering**, as the industry releases more powerful thinking models.
 
-We discuss what constitutes self-awareness in LLMs, demonstrate why this capability is critical for providing context based on an LLM's reasoning, and validate this method's accuracy.
+We discuss what constitutes self-awareness in LLMs, demonstrate why this capability is critical for providing context based on an LLM's reasoning, and validate this method's accuracy using confidence scores for statistical significance.
 
 # Definition of Automated Confidence Refinement
 
@@ -26,7 +31,7 @@ For steps with low confidence (e.g., <0.5), we can either hardcode an outcome or
 
 Current LLM reasoning relies on prompting strategies like Chain of Thought (CoT) and ensemble methods that aggregate predictions to determine consensus in classification tasks.
 
-However, human cognition extends beyond sequential reasoning—it includes metacognitive processes that evaluate confidence. A junior employee demonstrates maturity by recognizing knowledge gaps and seeking help when uncertain. As humans acquire context through research or consultation, their reasoning refines and confidence increases. The capacity to accurately articulate confidence levels is a key indicator of competence and trustworthiness—a capability largely unexplored in LLMs.
+However, human cognition extends beyond sequential reasoning—it includes metacognitive processes that evaluate confidence. A junior employee demonstrates maturity by recognizing knowledge gaps and seeking help when uncertain. As humans acquire context through research or consultation, their reasoning refines and confidence in providing solutions increases. The capacity to accurately articulate confidence levels is a key indicator of competence and trustworthiness — a capability largely unexplored in LLMs.
 
 # Related Work
 
@@ -36,7 +41,7 @@ Recent work from Anthropic, IBM Research AI, and Meta FAIR has explored LLM self
 
 **SELF-RAG** [2] trains models to monitor their reasoning via special "reflection tokens" (retrieve/no-retrieve, relevance, support), making retrieval on-demand and behavior controllable at inference. The model selectively allocates effort and checks claim support before proceeding, tying thinking to metacognition. We apply this concept by monitoring LLM reasoning through natural language confidence scores and providing additional context when confidence is low.
 
-While ample research exists on thinking in LLMs, natural language confidence scores remain underexplored. As conversational interfaces and agent-to-agent communication grow, this information becomes crucial for building trust and enabling agents to exchange context like humans do.
+As conversational interfaces and agent-to-agent communication grow, knowing when to add additional  information becomes crucial for building trust and enabling agents to exchange context like humans do.
 
 # Problem Formulation
 
@@ -48,9 +53,9 @@ Reasoning-capable models (GPT-4o, GPT-5, o3, Gemini 2.5, Claude) provide visibil
 
 This produces an incorrect conclusion. Without confidence scores, diagnosing where reasoning failed is difficult. However, if the model recognized its knowledge gap at Thought 2 (40% confidence), a system could automatically provide context via tool calls—such as querying a geographical database—before proceeding [3].
 
-Accurate confidence calibration directly impacts trust. Just as senior employees trust junior colleagues who articulate knowledge boundaries, users trust LLMs that signal uncertainty reliably. **Hypothesis: Organizations developing LLMs with accurate confidence assessment will establish trust faster**.
+Accurate confidence calibration directly impacts trust. Just as senior employees trust junior colleagues who articulate knowledge boundaries, users trust LLMs that signal uncertainty reliably. **This yields an interesting idea, organizations developing LLMs, to augment simple white-collar jobs, with accurate confidence assessment will establish trust faster**.
 
-This study evaluates how confidence self-awareness has evolved across OpenAI model generations. We introduce **thought engineering**—the systematic approach to managing and measuring confidence self-awareness in LLMs—and present **automated confidence refinement**, determining optimal confidence thresholds for triggering additional context retrieval, or resorting to a default classification outcome when the natural language confidence score is too low.
+This study evaluates how confidence self-awareness has evolved across 2 OpenAI model generations. We introduce **thought engineering**—the systematic approach to managing and measuring confidence self-awareness in LLMs—and present **automated confidence refinement**, determining optimal confidence thresholds for triggering additional context retrieval, or resorting to a default classification outcome when the natural language confidence score is too low.
 
 # Experiment
 
@@ -64,6 +69,12 @@ We evaluate our framework on SciFact, a scientific claim verification benchmark.
 - **NOINFO**: No relevant information found
 
 We sampled 200 claims to test across multiple models. Each requires retrieving relevant papers from 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must identify relevant context before reasoning.
+
+For our use case, our **golden examples only contained of claims that are NOINFO**. This is because we want to evaluate if the LLM can be confident in situations that it does not have enough context, or could not find enough relevant information to increase it's confidence from it's pre-trained dataset to create a conclusion.
+
+## **The Critical Importance of NOINFO Classification**
+
+**NOINFO F1 score emerges as the most critical metric for evaluating confidence-aware reasoning**. It directly measures whether models **can recognize insufficient context and are aware of the situation**. Our threshold optimization framework converts low-confidence SUPPORT/CONTRADICT predictions to NOINFO, meaning NOINFO F1 captures both: (1) the model's ability to recognize genuinely insufficient evidence, and (2) confidence-based filtering preventing overconfident misclassifications.
 
 ## Evaluation Methodology
 
@@ -179,127 +190,153 @@ Return JSON: \{"refined_queries": ["query1", "query2"]\}
 
 **Key insight**: This framework tests whether LLMs can accurately self-assess confidence and know when to seek additional context—analogous to knowing when to ask for help.
 
+### Evaluation Metrics
+
+We use **F1 score** as the primary metric because of precision-recall balance**: F1 rewards balancing precision (avoiding false positives) and recall (catching true positives). A model predicting only NOINFO might have high accuracy but terrible F1.
+
+The experiment uses 200 parallel workers for efficient processing across 1,000 total predictions (200 claims × 5 models).
+
 ### Automated Confidence Refinement
 
-We test five models: **o3**, **o4-mini**, **gpt-4o**, **gpt-5-mini**, and **gpt-5**. Initially, 50 claims determined ideal confidence thresholds per model. We then scaled to 200 claims for final testing.
+We test 2 models: **o3**, and **gpt-5**. Initially, 50 claims determined ideal confidence thresholds per model. We then scaled to 200 claims for final testing.
 
 Each prediction includes a confidence score, enabling two threshold-based optimizations:
 
-1. **Classification Threshold**: Converts low-confidence SUPPORT/CONTRADICT predictions to NOINFO (range: 0.50-0.75)
-2. **Iterative Refinement Threshold**: Triggers additional retrieval when confidence is insufficient (range: 0.70-0.95)
+1. **Classification Threshold**: Converts low-confidence NOINFO predictions to NOINFO.
+2. **Iterative Refinement Threshold**: Triggers additional retrieval when confidence is insufficient.
 
-**Grid Search Optimization**: We perform exhaustive grid search over threshold combinations to find optimal values per model. For each combination, we apply thresholds to raw outputs, compute macro F1 score, and select the configuration maximizing F1.
+To calculate these confidence thresholds, we used the grid search algorithm [5].
+
+**Grid Search Optimization**: We perform exhaustive grid search over threshold combinations to find optimal values per model. For each combination, we apply thresholds to raw outputs, compute noinfo F1 score, and select the configuration maximizing F1.
 
 This is impactful because it:
 - **Removes manual tuning**: Automatically discovers optimal operating points per model
 - **Accounts for model differences**: Models have different confidence calibration (o3 may be overconfident, gpt-5 well-calibrated)
 - **Maximizes real-world utility**: Finds the balance between conservative (excessive NOINFO) and aggressive (wrong classifications)
 
-Grid search tests 6 classification × 6 iterative refinement thresholds = 36 configurations per model per strategy (540 total evaluations).
+**Mathematical Formulation:**
 
+$$T_\tau(\hat{y}_i, c_i) = \begin{cases} \text{NOINFO} & \text{if } c_i < \tau \land \hat{y}_i \neq \text{NOINFO} \\ \hat{y}_i & \text{otherwise} \end{cases}$$
 
-#### **Automated Threshold Optimization via Grid Search**
+$$\tau^* = \arg\max_{\tau \in \Theta} F1_{\text{NOINFO}}(\tau)$$
 
-We developed `optimize_thresholds.py` to discover optimal confidence thresholds per model via **exhaustive grid search** across classification thresholds (0.50, 0.55, 0.60, 0.65, 0.70, 0.75) and refinement thresholds (0.70, 0.75, 0.80, 0.85, 0.90, 0.95). For each of the 36 combinations, the algorithm:
+**Where:**
+- \\(T_\tau(\hat{y}_i, c_i)\\) - transformation function with threshold \\(\tau\\)
+- \\(c_i\\) - confidence score for instance \\(i\\)
+- \\(\tau\\) - threshold parameter
+- \\(\hat{y}_i\\) - predicted label for instance \\(i\\)
+- \\(\tau^*\\) - optimal threshold
+- \\(\land\\) - logical AND operator
+- \\(F1_{\text{NOINFO}}(\tau)\\) - F1 score as a function of threshold
 
-1. **Applies classification threshold**: Converts predictions where `confidence < threshold` and `label ≠ NOINFO` to NOINFO
-2. **Simulates iterative refinement**: Uses refined result if `initial_confidence < refinement_threshold`, otherwise falls back to naive
-3. **Computes macro F1**: Calculates F1 per class (SUPPORT, CONTRADICT, NOINFO) and averages them
-4. **Selects best configuration**: Identifies the threshold pair maximizing macro F1
-
-![Grid Search Visualization](/blog/images/grid_search_diagram.png)
-*Figure: Grid search for gpt-5 model exploring all threshold combinations. Each cell represents one configuration with its F1 score. The red star marks the optimal threshold pair. Darker green indicates better performance.*
-
-This automated approach is critical because **models have fundamentally different confidence calibration**. Our optimizer discovered o3 performs best with a classification threshold of 0.60, while gpt-4o requires 0.50—suggesting o3 is overconfident while gpt-4o is better calibrated. Iterative refinement thresholds vary from 0.70 (o4-mini, o3) to 0.95 (gpt-4o), revealing some models need aggressive refinement triggers while others benefit from conservative ones. **Without optimization, manually tuning 5 models × 3 strategies × 2 thresholds = 30 configurations would be impractical** [5]. Grid search identifies each model's "sweet spot" between conservative (excessive NOINFO) and aggressive (incorrect SUPPORT/CONTRADICT), improving F1 scores by 0.01-0.03 points.
-
-Notably, GPT-5's flatness indicates a mature, well-calibrated model requiring minimal tuning—perhaps OpenAI implements similar evaluations internally.
-
-### Evaluation Metrics
-
-We use **macro F1 score** as the primary metric because:
-
-1. **Class imbalance handling**: The dataset has unequal class distribution. Accuracy biases toward the majority class, while macro F1 treats all classes equally.
-
-2. **Precision-recall balance**: F1 rewards balancing precision (avoiding false positives) and recall (catching true positives). A model predicting only NOINFO might have high accuracy but terrible F1.
-
-3. **Clinical relevance**: In scientific claim verification, false positives (claiming evidence when none exists) are as harmful as false negatives (missing valid evidence). F1 captures both through its harmonic mean.
-
-4. **Per-class interpretability**: Macro F1 reveals which classes struggle, essential for diagnosing confidence calibration issues.
-
-The experiment uses 200 parallel workers for efficient processing across 1,000 total predictions (200 claims × 5 models).
+This automated approach is critical because **models have fundamentally different confidence calibration**. Grid search identifies each model's "sweet spot" between conservative (excessive NOINFO) and aggressive (incorrect SUPPORT/CONTRADICT).
 
 # Results
 
-## Overall Performance (Macro F1)
+## Performance (NOINFO F1 scores) for the o3 model
 
-![Retrieval Strategy Comparison - Bar Chart](/blog/images/thought_vs_naive_line.png)
+![Retrieval Strategy Comparison o3 - Bar Chart](/blog/images/noinfo_f1_o3.png)
+{{< center >}}Fig 1 - Comparison of thought engineering strategies for OpenAI o3 model{{< /center >}}
 
-Macro F1 trends reveal distinct patterns across model generations:
+## Performance (NOINFO F1 scores) for the gpt-5 model
 
-- **Older models (o3, o4-mini)**: Naive performs best (o3: 0.801, o4-mini: 0.758). Overthinking shows comparable performance (o3: 0.767, o4-mini: 0.786), while iterative refinement lags (o3: 0.736, o4-mini: 0.783).
+![Retrieval Strategy Comparison gpt-5 - Bar Chart](/blog/images/noinfo_f1_gpt-5.png)
+{{< center >}}Fig 2 - Comparison of thought engineering strategies for OpenAI gpt-5 model{{< /center >}}
 
-- **Mid-tier models (gpt-4o, gpt-5-mini)**: All strategies converge (~0.73-0.75), suggesting these models struggle with confidence calibration regardless of strategy.
+F1 score trends reveal **similar patterns** across model generations:
 
-- **Advanced model (gpt-5)**: Iterative refinement dramatically outperforms (0.799 F1) vs. naive (0.779) and overthinking (0.752). This **2.1 point improvement** demonstrates effective self-awareness in confidence assessment.
+- **Older model (o3)**: We can see that thought engineering thinking techniques outperform naive techniques
 
-## Per-Class Analysis
+0.883 (Naive) < 0.910 (Iterative Refinement - *almost* statistically significant) < 0.922 (Overthinking - statistically significant)
 
-**NOINFO Classification:**
-![NOINFO F1 Comparison](/blog/images/noinfo_f1_comparison.png)
+- **Newer model (gpt-5)**: We can see that thought engineering thinking techniques outperform naive techniques.
 
-NOINFO is the most challenging class, requiring models to recognize insufficient evidence:
+0.837 (Naive) < 0.857 (Overthinking) < 0.867 (Iterative Refinement - statistically significant)
 
-- **o3**: Naive excels (0.786 F1), while overthinking (0.763) and iterative refinement (0.733) degrade
-- **gpt-4o & gpt-5-mini**: All strategies struggle (0.68-0.75 F1) with minimal differentiation
-- **gpt-5**: Iterative refinement achieves highest F1 (0.793), outperforming naive (0.774) and overthinking (0.747)
+We also perfomed permutation statistical significance tests on the 200 samples above. Below describes how we calculated this, and the results.
 
-**SUPPORT Classification:**
-![SUPPORT F1 Comparison](/blog/images/support_f1_comparison.png)
+## Understanding Permutation Significance Tests
 
-Support classification shows clearest evidence of improved confidence awareness:
+### What Are Permutation Tests?
 
-- **o3 & o4-mini**: Naive performs well, overthinking peaks early (o4-mini: 0.800 F1)
-- **gpt-4o & gpt-5-mini**: Performance plateaus around 0.75-0.78 F1 across all strategies
-- **gpt-5**: Iterative refinement achieves exceptional performance (0.817 F1) vs. naive (0.797) and overthinking (0.745)
+Permutation tests are non-parametric statistical methods that assess whether observed differences between two classifiers are statistically significant without making distributional assumptions. They work by repeatedly shuffling predictions between the two classifiers to generate a null distribution of differences that would occur purely by chance. This makes them particularly valuable for small sample sizes (like our n=200) where parametric test assumptions may not hold, and allows us to test the null hypothesis that two classifiers are equivalent in performance.
 
-**CONTRADICT Classification:**
-![CONTRADICT F1 Comparison](/blog/images/contradict_f1_comparison.png)
+The p-value represents the probability of observing a difference as extreme as the actual difference if the classifiers were truly equivalent, computed by comparing the observed accuracy difference against 10,000 random permutations. A p-value less than 0.05 indicates statistical significance, meaning the observed difference would occur by chance less than 5% of the time. We report confidence as 1 - p-value, where higher values indicate stronger evidence of a real performance difference between classifiers.
 
-Contradict shows the most volatile patterns:
+### Mathematical Formulation
 
-- **o3**: Naive dominates (0.841 F1), with overthinking (0.782) and iterative refinement (0.706) underperforming
-- **o4-mini**: All strategies converge (~0.79 F1)
-- **gpt-4o**: Significant drop for all approaches (0.68-0.73 F1)
-- **gpt-5**: Iterative refinement rebounds strongly (0.787 F1), matching naive (0.766) and overthinking (0.764)
+Given two classifiers \\(C_1\\) and \\(C_2\\) evaluated on \\(n\\) test instances:
 
-Per-class analysis reveals **gpt-5 with iterative refinement** achieves the most balanced performance across all classes, suggesting better confidence calibration enables knowing when additional context is needed.
+**1. Observed difference:**
+
+\\[
+\\delta_{obs} = \\text{acc}(C_1) - \\text{acc}(C_2)
+\\]
+
+where 
+
+\\[
+\\text{acc}(C) = \\frac{1}{n} \\sum_{i=1}^{n} \\mathbb{I}(\\text{pred}_i = \\text{gold}_i)
+\\]
+
+**2. Null hypothesis:** \\(H_0: \\delta = 0\\) (classifiers are equivalent)
+
+**3. Permutation procedure:**
+
+For each permutation \\(k = 1, \\ldots, K\\) (where \\(K = 10{,}000\\)):
+- For each instance \\(i\\): With probability 0.5, swap \\((\\text{pred}\_{1,i}, \\text{pred}\_{2,i})\\)
+- Compute permuted difference: \\(\\delta_k = \\text{acc}_k(C_1) - \\text{acc}_k(C_2)\\)
+
+**4. P-value computation:**
+
+\\[
+p = \\frac{1}{K} \\sum_{k=1}^{K} \\mathbb{I}(|\\delta_k| \\geq |\\delta_{obs}|)
+\\]
+
+where \\(\\mathbb{I}(\\cdot)\\) is the indicator function that equals 1 when the condition is true and 0 otherwise.
+
+**5. Decision rule:** Reject \\(H_0\\) if \\(p < \\alpha\\) (typically \\(\\alpha = 0.05\\))
+
+### Statistical Significance Results Summary
+
+| Model | Comparison | Sample Size | Confidence | p-value | Significant? |
+|-------|-----------|-------------|------------|---------|--------------|
+| o3 | Overthinking vs Automated Refinement | 200 | 81.8% | 0.1824 | No |
+| o3 | Automated Refinement vs Naive | 200 | *93.4%* | 0.0659 | No |
+| o3 | Overthinking vs Naive | 200 | **99.0%** | **0.0101** | ✓ **Yes** |
+| gpt-5 | Overthinking vs Automated Refinement | 200 | 61.9% | 0.3815 | No |
+| gpt-5 | Automated Refinement vs Naive | 200 | **95.2%** | **0.0480** | ✓ **Yes** |
+| gpt-5 | Overthinking vs Naive | 200 | 86.1% | 0.1385 | No |
+
+**Key Findings:**
+- For **o3**: Overthinking shows a statistically significant improvement over Naive (p = 0.0101)
+- For **o3**: Almost achieved statistical significance that iterative refinement performs better than naive methods (p = 0.0659)
+- For **gpt-5**: Automated Refinement shows a statistically significant improvement over Naive (p = 0.0480)
+- Most other comparisons do not reach statistical significance at the α = 0.05 threshold
+
+*Note: Confidence = 1 - p-value. Bold entries indicate statistically significant results (p < 0.05).*
+
+# Conclusion
+
+Our results demonstrate a clear trend: **pure thinking models (o3) and mixed routers LLMs (gpt-5), tperform better in self-awareness evaluation confidence assessments**. Mixed router models (gpt-5) seem to benefit more with iterative refinement (3.6% and statistically significant), than pure thinking models (o3) where overthinking has a stronger effect (4.4% and statistically significant).
+
+This validates our hypothesis: **modern thinking LLMs can be engineered to recognize insufficient reasoning and proactively seek additional context**. The automated confidence refinement framework provides a systematic mechanism for thought engineering, enabling models to operate like professionals who know when to request more information. As models improve, this metacognitive ability should become more reliable, transforming confidence scores from noisy estimates into actionable signals for optimizing multi-classification through threshold tuning and conditional retrieval.
+
+This confidence iterative refinement framework offers a principled alternative: let models reason naturally, then assess confidence post-prediction to determine if additional context is needed. As LLMs advance, this pattern should strengthen — future models should exhibit better confidence calibration, making automated refinement a reliable strategy for high-stakes reasoning tasks requiring accuracy and self-awareness.
 
 # Assumptions and Caveats
 
 This framework assumes developers have access to additional APIs/tools for adding context when the LLM has low confidence.
 
-We used a sample size of 200 claims. Running 1,000 total requests (5 models × 200 claims) plus grid search optimization is costly—hundreds of dollars. While 1,000+ claims would be ideal, 200 provides meaningful insights. 
+We used a sample size of 200 claims. Running 1,000 total requests (2 models × 1000 claims) plus grid search optimization is costly—hundreds of dollars. While 1,000+ claims would be ideal, 200 provides meaningful insights. 
 
-The key finding is not absolute performance differences between models (e.g., o3 vs. gpt-5 on naive), but rather **within-model trends**: older models (o3) perform poorly on thought engineering methods (overthinking, confidence-based refinement), while newer models (gpt-5) excel at them. This pattern strengthens with model advancement.
+The key finding is not absolute performance differences between models (e.g., o3 vs. gpt-5), but rather **within-model trends for thought-engineering**: older models (o3) and newer models (gpt-5) perform better with thought engineering methods (overthinking, confidence-based refinement) regardless of their architecture type.
 
+# Future application
 
-# **Conclusion**
+~3%-5% boosts in f1 scores, though statistically significant, may not have a massive impact on users trusting LLMs more.
 
-Our results demonstrate a clear evolutionary trend: **as models advance, they develop more accurate self-awareness in confidence assessments**. We should not compare how each model performs against each other given that the data set size is not 1,000+ claims, instead look at the trends of naive vs overthinking vs automated confidence refinement. While older models (o3, o4-mini) performed best with naive retrieval (F1: 0.801, 0.758), gpt-5 performed best with automated confidence refinement achieved best results(F1: 0.799), outperforming naive (0.779) and overthinking (0.752).
-
-This validates our hypothesis: **modern LLMs can be engineered to recognize insufficient reasoning and proactively seek additional context**. The automated confidence refinement framework provides a systematic mechanism for thought engineering, enabling models to operate like professionals who know when to request more information. As models improve, this metacognitive ability becomes more reliable, transforming confidence scores from noisy estimates into actionable signals for optimizing multi-classification through threshold tuning and conditional retrieval.
-
-Notably, **overthinking exhibited high variability across models**, mirroring human cognitive bias. While overthinking improved o4-mini (+0.028 F1), it degraded o3 (-0.034 F1) and gpt-5 (-0.027 F1). This reflects how pre-reasoning introduces noise—models may overanalyze simple claims or generate overly complex search strategies missing relevant evidence [1]. Automated confidence refinement showed more stable behavior: it either matched baseline or, for gpt-5, significantly exceeded it.
-
-This stability advantage is critical for production systems where predictable behavior matters more than occasional high performance. Effective thought engineering must account for overthinking's variability. Our framework offers a principled alternative: let models reason naturally, then assess confidence post-prediction to determine if additional context is needed. As LLMs advance, this pattern should strengthen—future models will exhibit better confidence calibration, making automated refinement a reliable strategy for high-stakes reasoning tasks requiring accuracy and self-awareness.
-
-## **The Critical Importance of NOINFO Classification**
-
-**NOINFO F1 score emerges as the most critical metric for evaluating confidence-aware reasoning**. It directly measures whether models **can recognize insufficient context and are aware of the situation**. Our threshold optimization framework converts low-confidence SUPPORT/CONTRADICT predictions to NOINFO, meaning NOINFO F1 captures both: (1) the model's ability to recognize genuinely insufficient evidence, and (2) confidence-based filtering preventing overconfident misclassifications.
-
-The performance gap is striking: gpt-5 with automated confidence refinement achieves 0.793 NOINFO F1, outperforming naive (0.774) and overthinking (0.747). This 4.6-point improvement demonstrates genuine metacognitive ability—assessing evidence quality post-retrieval and determining sufficiency. In contrast, o3's naive approach dominates NOINFO (0.786), while automated refinement underperforms (0.733), suggesting earlier architectures lack reliable confidence calibration. The trend is clear: **as models advance, their NOINFO performance under automated confidence refinement improves relative to baseline strategies**, validating that self-awareness is becoming measurable, tunable, and deployable for real-world applications where admitting uncertainty is as valuable as providing answers.
-
-Currently, ~5% improvement is modest. As time progresses, we expect this to increase. Research labs like OpenAI, DeepMind, and Anthropic should focus on what we term self-awareness.
+This research does not propose that thought engineering can be the solution to gain "trust" with LLMs. Instead, it claims and proves that thinking models are indeed "aware," and that research labs could build future LLMs to produce more accurate confidence scores in their responses to help developers/users know when to add more context.
 
 # References
 
