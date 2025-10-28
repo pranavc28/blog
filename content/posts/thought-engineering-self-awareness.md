@@ -194,7 +194,7 @@ Return JSON: \{"refined_queries": ["query1", "query2"]\}
 
 ### Evaluation Metrics
 
-We use **F1 score** as the primary metric because of precision-recall balance**: F1 rewards balancing precision (avoiding false positives) and recall (catching true positives). A model predicting only NOINFO might have high accuracy but terrible F1.
+We use **NOINFO F1 score** as the primary metric because it measures the model's ability to recognize insufficient evidence. Since our golden dataset contains only NOINFO examples, NOINFO F1 captures both precision (correctly identifying lack of information) and recall (not overconfidently misclassifying as SUPPORT/CONTRADICT). This directly evaluates self-awareness: can the model recognize when it doesn't know?
 
 The experiment uses 200 parallel workers for efficient processing across 1,000 total predictions (200 claims × 5 models).
 
@@ -336,9 +336,11 @@ The key finding is not absolute performance differences between models (e.g., o3
 
 # Future application
 
-~3%-5% boosts in f1 scores, though statistically significant, may not have a massive impact on users trusting LLMs more.
+~3%-5% boosts in F1 scores, though statistically significant, may not have a massive impact on users trusting LLMs more.
 
-This research does not propose that thought engineering can be the solution to gain "trust" with LLMs. Instead, it claims and proves that thinking models are indeed "aware," and that research labs could build future LLMs to produce more accurate confidence scores in their responses to help developers/users know when to add more context.
+This research does not propose that thought engineering can be the solution to gain "trust" with LLMs. Instead, it claims and proves that thinking models are indeed "aware," and that we can use thought engineering to add more context and improve accuracy scores for multiclassification problems. 
+
+Research labs could build future LLMs to produce more accurate confidence scores in their responses to help developers/users know when to add more context, given that these LLMs are already inherently "aware".
 
 # References
 
