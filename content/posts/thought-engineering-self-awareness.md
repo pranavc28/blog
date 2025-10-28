@@ -340,7 +340,7 @@ The key finding is not absolute performance differences between models (e.g., o3
 
 This research does not propose that thought engineering can be the solution to gain "trust" with LLMs. Instead, it claims and proves that thinking models are indeed "aware," and that we can use thought engineering to add more context and improve accuracy scores for multiclassification problems. 
 
-Research labs could build future LLMs to produce more accurate confidence scores in their responses to help developers/users know when to add more context, given that these LLMs are already inherently "aware".
+Research labs could build future LLMs to produce more accurate confidence scores in their responses to help developers/users know when to add more context, given that these LLMs are inherently "aware".
 
 # References
 
