@@ -170,7 +170,7 @@ Thought engineering techniques (overthinking and automated confidence refinement
 <p>This study evaluates how confidence self-awareness has evolved across 2 OpenAI model generations. We introduce <strong>thought engineering</strong>—the systematic approach to managing and measuring confidence self-awareness in LLMs—and present <strong>automated confidence refinement</strong>, determining optimal confidence thresholds for triggering additional context retrieval, or resorting to a default classification outcome when the natural language confidence score is too low.</p>
 <h1 id="experiment">Experiment<a hidden class="anchor" aria-hidden="true" href="#experiment">#</a></h1>
 <h2 id="dataset">Dataset<a hidden class="anchor" aria-hidden="true" href="#dataset">#</a></h2>
-<p>Hugging face link: <a href="https://huggingface.co/datasets/allenai/scifact">https://huggingface.co/datasets/allenai/scifact</a></p>
+<p>Hugging Face link: <a href="https://huggingface.co/datasets/allenai/scifact">https://huggingface.co/datasets/allenai/scifact</a></p>
 <p>We evaluate our framework on SciFact, a scientific claim verification benchmark. The dataset pairs scientific claims with research paper abstracts, requiring classification as:</p>
 <ul>
 <li><strong>SUPPORT</strong>: Evidence confirms the claim</li>
@@ -178,7 +178,7 @@ Thought engineering techniques (overthinking and automated confidence refinement
 <li><strong>NOINFO</strong>: No relevant information found</li>
 </ul>
 <p>We sampled 200 claims to test across multiple models. Each requires retrieving relevant papers from 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must identify relevant context before reasoning.</p>
-<p>For our use case, our <strong>golden examples only contained of claims that are NOINFO</strong>. This is because we want to evaluate if the LLM can be confident in situations that it does not have enough context, or could not find enough relevant information to increase it&rsquo;s confidence from it&rsquo;s pre-trained dataset to create a conclusion.</p>
+<p>For our use case, our <strong>golden examples only contained of claims that are NOINFO</strong>. This is because we want to evaluate if the LLM can be confident in situations that it does not have enough context, or could not find enough relevant information to increase its confidence from its pre-trained dataset to create a conclusion.</p>
 <h2 id="the-critical-importance-of-noinfo-classification"><strong>The Critical Importance of NOINFO Classification</strong><a hidden class="anchor" aria-hidden="true" href="#the-critical-importance-of-noinfo-classification">#</a></h2>
 <p><strong>NOINFO F1 score emerges as the most critical metric for evaluating confidence-aware reasoning</strong>. It directly measures whether models <strong>can recognize insufficient context and are aware of the situation</strong>. Our threshold optimization framework converts low-confidence SUPPORT/CONTRADICT predictions to NOINFO, meaning NOINFO F1 captures both: (1) the model&rsquo;s ability to recognize genuinely insufficient evidence, and (2) confidence-based filtering preventing overconfident misclassifications.</p>
 <h2 id="evaluation-methodology">Evaluation Methodology<a hidden class="anchor" aria-hidden="true" href="#evaluation-methodology">#</a></h2>
@@ -274,7 +274,7 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 <li><strong>Iterative Refinement Threshold</strong>: Triggers additional retrieval when confidence is insufficient.</li>
 </ol>
 <p>To calculate these confidence thresholds, we used the grid search algorithm [5].</p>
-<p><strong>Grid Search Optimization</strong>: We perform exhaustive grid search over threshold combinations to find optimal values per model. For each combination, we apply thresholds to raw outputs, compute noinfo F1 score, and select the configuration maximizing F1.</p>
+<p><strong>Grid Search Optimization</strong>: We perform exhaustive grid search over threshold combinations to find optimal values per model. For each combination, we apply thresholds to raw outputs, compute NOINFO F1 score, and select the configuration maximizing F1.</p>
 <p>This is impactful because it:</p>
 <ul>
 <li><strong>Removes manual tuning</strong>: Automatically discovers optimal operating points per model</li>
@@ -315,7 +315,7 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 <li><strong>Newer model (gpt-5)</strong>: We can see that thought engineering thinking techniques outperform naive techniques.</li>
 </ul>
 <p>0.837 (Naive) &lt; 0.857 (Overthinking) &lt; 0.867 (Iterative Refinement - statistically significant)</p>
-<p>We also perfomed permutation statistical significance tests on the 200 samples above. Below describes how we calculated this, and the results.</p>
+<p>We also performed permutation statistical significance tests on the 200 samples above. Below describes how we calculated this, and the results.</p>
 <h2 id="understanding-permutation-significance-tests">Understanding Permutation Significance Tests<a hidden class="anchor" aria-hidden="true" href="#understanding-permutation-significance-tests">#</a></h2>
 <h3 id="what-are-permutation-tests">What Are Permutation Tests?<a hidden class="anchor" aria-hidden="true" href="#what-are-permutation-tests">#</a></h3>
 <p>Permutation tests are non-parametric statistical methods that assess whether observed differences between two classifiers are statistically significant without making distributional assumptions. They work by repeatedly shuffling predictions between the two classifiers to generate a null distribution of differences that would occur purely by chance. This makes them particularly valuable for small sample sizes (like our n=200) where parametric test assumptions may not hold, and allows us to test the null hypothesis that two classifiers are equivalent in performance.</p>

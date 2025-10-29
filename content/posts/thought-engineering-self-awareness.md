@@ -63,7 +63,7 @@ This study evaluates how confidence self-awareness has evolved across 2 OpenAI m
 
 ## Dataset
 
-Hugging face link: https://huggingface.co/datasets/allenai/scifact
+Hugging Face link: https://huggingface.co/datasets/allenai/scifact
 
 We evaluate our framework on SciFact, a scientific claim verification benchmark. The dataset pairs scientific claims with research paper abstracts, requiring classification as:
 - **SUPPORT**: Evidence confirms the claim
@@ -72,7 +72,7 @@ We evaluate our framework on SciFact, a scientific claim verification benchmark.
 
 We sampled 200 claims to test across multiple models. Each requires retrieving relevant papers from 5,000+ scientific abstracts and classifying the claim-evidence relationship. This two-stage task (retrieval + classification) mirrors real-world scenarios where LLMs must identify relevant context before reasoning.
 
-For our use case, our **golden examples only contained of claims that are NOINFO**. This is because we want to evaluate if the LLM can be confident in situations that it does not have enough context, or could not find enough relevant information to increase it's confidence from it's pre-trained dataset to create a conclusion.
+For our use case, our **golden examples only contained of claims that are NOINFO**. This is because we want to evaluate if the LLM can be confident in situations that it does not have enough context, or could not find enough relevant information to increase its confidence from its pre-trained dataset to create a conclusion.
 
 ## **The Critical Importance of NOINFO Classification**
 
@@ -209,7 +209,7 @@ Each prediction includes a confidence score, enabling two threshold-based optimi
 
 To calculate these confidence thresholds, we used the grid search algorithm [5].
 
-**Grid Search Optimization**: We perform exhaustive grid search over threshold combinations to find optimal values per model. For each combination, we apply thresholds to raw outputs, compute noinfo F1 score, and select the configuration maximizing F1.
+**Grid Search Optimization**: We perform exhaustive grid search over threshold combinations to find optimal values per model. For each combination, we apply thresholds to raw outputs, compute NOINFO F1 score, and select the configuration maximizing F1.
 
 This is impactful because it:
 - **Removes manual tuning**: Automatically discovers optimal operating points per model
@@ -255,7 +255,7 @@ F1 score trends reveal **similar patterns** across model generations:
 
 0.837 (Naive) < 0.857 (Overthinking) < 0.867 (Iterative Refinement - statistically significant)
 
-We also perfomed permutation statistical significance tests on the 200 samples above. Below describes how we calculated this, and the results.
+We also performed permutation statistical significance tests on the 200 samples above. Below describes how we calculated this, and the results.
 
 ## Understanding Permutation Significance Tests
 
