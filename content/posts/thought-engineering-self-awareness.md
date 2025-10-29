@@ -320,7 +320,7 @@ where \\(\\mathbb{I}(\\cdot)\\) is the indicator function that equals 1 when the
 
 # Conclusion
 
-Our results demonstrate a clear trend: **pure thinking models (o3) and mixed routers LLMs (gpt-5), tperform better in self-awareness evaluation confidence assessments**. Mixed router models (gpt-5) seem to benefit more with iterative refinement (3.6% and statistically significant), than pure thinking models (o3) where overthinking has a stronger effect (4.4% and statistically significant).
+Our results demonstrate a clear trend: **pure thinking models (o3) and mixed routers LLMs (gpt-5), perform better in self-awareness evaluation confidence assessments**. Mixed router models (gpt-5) seem to benefit more with iterative refinement (3.6% and statistically significant), than pure thinking models (o3) where overthinking has a stronger effect (4.4% and statistically significant).
 
 This validates our hypothesis: **modern thinking LLMs can be engineered to recognize insufficient reasoning and proactively seek additional context**. The automated confidence refinement framework provides a systematic mechanism for thought engineering, enabling models to operate like professionals who know when to request more information. As models improve, this metacognitive ability should become more reliable, transforming confidence scores from noisy estimates into actionable signals for optimizing multi-classification through threshold tuning and conditional retrieval.
 
