@@ -33,7 +33,7 @@ For steps with low confidence (e.g., <0.5), we can either hardcode an outcome or
 
 Current LLM reasoning relies on prompting strategies like Chain of Thought (CoT) and ensemble methods that aggregate predictions to determine consensus in classification tasks.
 
-However, human cognition extends beyond sequential reasoning—it includes metacognitive processes that evaluate confidence. A junior employee demonstrates maturity by recognizing knowledge gaps and seeking help when uncertain. As humans acquire context through research or consultation, their reasoning refines and confidence in providing solutions increases. The capacity to accurately articulate confidence levels is a key indicator of competence and trustworthiness — a capability largely unexplored in LLMs.
+However, human cognition extends beyond sequential reasoning—it includes metacognitive processes that evaluate confidence. A junior employee demonstrates maturity by recognizing knowledge gaps and seeking help when uncertain. As humans acquire context through research or consultation, their reasoning refines and confidence in providing solutions increases. The capacity to accurately articulate confidence levels in natural language is a key indicator of competence and trustworthiness — a capability largely unexplored in LLMs.
 
 # Related Work
 
