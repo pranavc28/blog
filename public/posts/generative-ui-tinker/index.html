@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=58988&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
@@ -11,19 +11,19 @@
 Research code: https://github.com/pranavc28/generative-ui
 Dataset: https://huggingface.co/datasets/cfahlgren1/react-code-instructions/
 Purpose
-This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used Tinker to fine tune my own LLM, a product released by the team at Thinking Machines Lab.
+This blog explores how I fine-tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research labs. I used Tinker to fine-tune my own LLM, a product released by the team at Thinking Machines Lab.
 It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/blog/posts/generative-ui-tinker/">
+<link rel="canonical" href="http://localhost:58988/blog/posts/generative-ui-tinker/">
 <link crossorigin="anonymous" href="/blog/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css" integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn&#43;yY=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.svg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:58988/favicon.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:58988/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:58988/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:58988/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:58988/blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/generative-ui-tinker/">
+<link rel="alternate" hreflang="en" href="http://localhost:58988/blog/posts/generative-ui-tinker/">
 <noscript>
     <style>
         #theme-toggle,
@@ -101,7 +101,7 @@ It did a great job, and produced generally usable React code to the level that I
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/blog/" accesskey="h" title="Pranav on a Tangent (Alt + H)">Pranav on a Tangent</a>
+            <a href="http://localhost:58988/blog/" accesskey="h" title="Pranav on a Tangent (Alt + H)">Pranav on a Tangent</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -145,9 +145,9 @@ It did a great job, and produced generally usable React code to the level that I
 <p>Research code: <a href="https://github.com/pranavc28/generative-ui">https://github.com/pranavc28/generative-ui</a>
 Dataset: <a href="https://huggingface.co/datasets/cfahlgren1/react-code-instructions/">https://huggingface.co/datasets/cfahlgren1/react-code-instructions/</a></p>
 <h2 id="purpose">Purpose<a hidden class="anchor" aria-hidden="true" href="#purpose">#</a></h2>
-<p>This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used <a href="http://tinker-docs.thinkingmachines.ai/">Tinker</a> to fine tune my own LLM, a product released by the team at <a href="https://thinkingmachines.ai/">Thinking Machines Lab</a>.</p>
+<p>This blog explores how I fine-tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research labs. I used <a href="http://tinker-docs.thinkingmachines.ai/">Tinker</a> to fine-tune my own LLM, a product released by the team at <a href="https://thinkingmachines.ai/">Thinking Machines Lab</a>.</p>
 <p>It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.</p>
-<p>In this blog, I explain what fine tuning means, why Generative UI can/should be fine tuned, and left some of my thoughts on tinker.</p>
+<p>In this blog, I explain what fine-tuning means, why Generative UI can/should be fine-tuned, and share some of my thoughts on Tinker.</p>
 <h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
 <p>The intersection of artificial intelligence and user interface development has reached a fascinating inflection point. For decades, building user interfaces required manual coding—developers translating design specifications into HTML, CSS, and JavaScript line by line. More recently, component libraries and frameworks like React have standardized this process, but the fundamental paradigm remained unchanged: humans write code, computers execute it.</p>
 <p>Large Language Models (LLMs) have demonstrated remarkable capabilities in code generation, but their application to UI development faces unique challenges. Unlike backend logic or algorithmic problems where correctness is binary, UI code must balance multiple competing objectives: syntactic correctness, visual appeal, interactivity, accessibility, and alignment with user intent.</p>
@@ -298,7 +298,7 @@ Our configuration:</p>
 <p><strong>Data Filtering</strong><br>
 We filter prompts exceeding 16k tokens during initialization to leave room for generation within the 32k context window. This prevents out-of-memory errors and truncated generations.</p>
 <h2 id="results-when-comparing-the-fine-tuned-model-to-raw-qwen-model-samples">Results when comparing the fine-tuned model to raw Qwen model samples<a hidden class="anchor" aria-hidden="true" href="#results-when-comparing-the-fine-tuned-model-to-raw-qwen-model-samples">#</a></h2>
-<p>To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The differences are striking and directly reflect the reward signals defined in our training objective.</p>
+<p>To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The following analysis is <strong>qualitative</strong>, focusing on observable improvements in code structure, completeness, and interactivity rather than quantitative metrics. The differences directly reflect the reward signals defined in our training objective.</p>
 <h3 id="use-case-1-ride-booking-interface">Use Case 1: Ride Booking Interface<a hidden class="anchor" aria-hidden="true" href="#use-case-1-ride-booking-interface">#</a></h3>
 <p><strong>Raw Model Performance</strong></p>
 <p><img alt="Raw Qwen Transport Interface Failure" loading="lazy" src="/blog/images/sample_qwen_transport_fail.png"></p>
@@ -355,9 +355,9 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <li><strong>Proper data mapping</strong>: <code>.map()</code> with keys, proper TypeScript typing for player objects</li>
 </ul>
 <p>In this case, I was super interested with the model picking up real time updates using time. This was not something that I explicitly prompted the LLM. Yet, it reasoned from previous examples that real time updates could be valuable.</p>
-<h2 id="thoughts-on-tinker">Thoughts on Tinker<a hidden class="anchor" aria-hidden="true" href="#thoughts-on-tinker">#</a></h2>
-<p>My experience using Tinker for this generative UI fine-tuning project revealed several strengths and limitations worth discussing.</p>
-<p><strong>Pros:</strong></p>
+<h2 id="technical-considerations-and-lessons-learned-with-tinker">Technical Considerations and Lessons Learned with Tinker<a hidden class="anchor" aria-hidden="true" href="#technical-considerations-and-lessons-learned-with-tinker">#</a></h2>
+<p>My experience using Tinker for this generative UI fine-tuning project provided valuable insights into distributed reinforcement learning infrastructure and practical considerations for implementing custom training loops at scale.</p>
+<p><strong>Key Strengths:</strong></p>
 <ol>
 <li>
 <p><strong>Flexible API for Custom Training Loops</strong>: Tinker&rsquo;s Python-based API allowed me to implement asynchronous PPO with full control over the training loop. I could define custom reward functions, manage sampling strategies, and orchestrate advantage computations without being constrained by a rigid framework. This flexibility was essential for implementing the multi-objective reward function targeting UI-specific qualities like completeness, interactivity, and structural validity. The ability to write arbitrary Python code while Tinker handled the distributed execution was the key differentiator.</p>
@@ -369,26 +369,24 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <p><strong>Efficient LoRA Support for Large Model Fine-Tuning</strong>: Training a 30B parameter model like Qwen3-30B-A3B would typically require prohibitive computational resources. Tinker&rsquo;s native support for Low-Rank Adaptation (LoRA) reduced the trainable parameters by several orders of magnitude, making the fine-tuning feasible on available GPU resources. The training converged in 5 epochs across 600 examples, completing in a reasonable timeframe. Without LoRA support integrated into the platform, this project would have been impractical for individual researchers or small teams.</p>
 </li>
 </ol>
-<p><strong>Cons:</strong></p>
+<p><strong>Technical Challenges and Solutions:</strong></p>
 <ol>
 <li>
-<p><strong>Limited Access and Onboarding Friction</strong>: Tinker is currently in private beta with waitlist-controlled access. While I was fortunate to gain access, along with other major reserach labs such as Ramp, Meta, etc.. the restricted availability could be a significant barrier for teams needing immediate deployment or researchers wanting to replicate my results. The onboarding process required coordination with the Thinking Machines team on Slack, which added lead time before I could begin experimentation. For production use cases with tight timelines, this gating mechanism could be time consuming.</p>
+<p><strong>Asynchronous Workflow Optimization</strong>: I initially implemented a synchronous pipeline, processing one prompt at a time. This approach became a significant bottleneck, with idle GPU time during sequential operations. After discovering Tinker&rsquo;s native asynchronous support, I refactored the entire training loop to launch concurrent sampling requests. This architectural change transformed the training efficiency—instead of waiting for each sample to complete before starting the next, I could maintain high GPU utilization by overlapping computation phases. The lesson here is that understanding the platform&rsquo;s async capabilities upfront is crucial for performance optimization.</p>
 </li>
 <li>
-<p><strong>Learning Curve for API-Driven Workflows</strong>: I intially built out a synchronous pipeline. It took me a week to figure out that Tinker also natively supports asynchrnous sampling and workflows. The real question that I had was why use synchronous workflows from PPO and LoRa fine tuning? Almost everyone cares about speed - so why not just default all of our workflows to asynchronous.</p>
+<p><strong>Custom Monitoring Infrastructure</strong>: To track training convergence and debug reward function behavior, I needed detailed logging of epoch runs, reward distributions, and sampling efficiency. Tinker&rsquo;s API didn&rsquo;t provide built-in monitoring dashboards, so I implemented a custom logging framework that captured per-epoch metrics, advantage distributions, and policy divergence measures. This experience highlighted the importance of observability in RL training—without detailed metrics, diagnosing reward function issues or training instabilities would have been nearly impossible. For production deployments, integrating monitoring tools like Weights &amp; Biases or custom Prometheus exporters would be essential.</p>
 </li>
 <li>
-<p><strong>Debugging</strong>: I did not see any support for monitoring or reliability. I wanted to log my epoch runs, samples, and overall fune tuning times. This was not natively supported, and required custom code. I assume that most startups/customers would need better logging or reliability which could be built inherently.</p>
-</li>
-<li>
-<p><strong>Moat</strong>: Oother startups like Modal can also fine tune LLMs efficiently: <a href="https://modal.com/blog/llm-fine-tuning-overview#where-to-fine-tune-llms-in-2025">https://modal.com/blog/llm-fine-tuning-overview#where-to-fine-tune-llms-in-2025</a>. I think what would have been even more impactful is setting up a reward function for me, given a text prompt. Turning the knobs for each particular reward is the real hard part. If a startup did that for me, and did it well with experimentation, they could find a niche in the market that no one has solved yet.</p>
+<p><strong>Access Model and Collaboration</strong>: Tinker operates in private beta, which required coordination with the Thinking Machines team for access and onboarding. While this provided an opportunity for direct technical support, it also meant that reproducing these results requires similar access arrangements. For teams evaluating fine-tuning platforms, understanding the access model and support structure is important for project planning and timeline estimation.</p>
 </li>
 </ol>
+<p><strong>Future Directions for Reward Function Engineering</strong>: One area where additional tooling could provide significant value is automated reward function tuning. In this project, I manually specified weights for completeness, interactivity, and validity rewards (\( w_1 = 7.5 \), \( w_2 = 1.8 \), etc.). These values were determined through iterative experimentation—adjusting weights, observing generated samples, and refining the balance. A platform that could automate this hyperparameter search using techniques like Bayesian optimization or learned reward functions would substantially reduce the engineering burden and enable faster convergence to optimal reward specifications.</p>
 <h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
 <p>Generative UI represents a paradigm shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with Proximal Policy Optimization, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces.</p>
-<p>I have focused more on the length of the React code output, and how dynamic it is. Users can target other features such as tailwind/design parity, or code structure.</p>
+<p>This implementation focused on code completeness and dynamic interactivity as primary reward signals. The same framework can be extended to target other UI qualities: design system compliance (Tailwind utility usage patterns), accessibility standards (ARIA attributes, semantic HTML), or architectural patterns (component composition, separation of concerns). The reward function serves as a flexible specification language for encoding domain-specific quality criteria.</p>
 <p>The combination of PPO&rsquo;s reward-driven learning and Tinker&rsquo;s abstraction of distributed training infrastructure makes this approach practical for researchers and developers. We define our reward function (what makes good UI code), specify our training loop (how to explore and update), and Tinker handles the complexity of distributed execution across GPUs effectively.</p>
-<p>I appreciated testing out open source chinese models, like Qwen. Honestly, <strong>I&rsquo;m in shock</strong>. They&rsquo;re worth a fraction of the cost of models like GPT-5 and Gemini-3. In addition, after being fine tuned, my custom checkpoint did an absolutely amazing job. If anything, this blog post got me even more excited about the possibilities and future of AI. If I can fine tune LLMs in my free time so easily, with free credits, imagine what a startup with 100s of millions of dollars in funding must be doing :)</p>
+<p>The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the computational cost and inference latency of frontier models like GPT-4 or Claude 3.5. After fine-tuning on a domain-specific dataset with custom reward signals, the model generates functional, interactive React components that meet the quality standards defined in the training objective. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks. For production applications with specific requirements, investing in custom fine-tuning can yield superior results compared to relying solely on off-the-shelf frontier models.</p>
 
 
   </div>
@@ -401,7 +399,7 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/blog/">Pranav on a Tangent</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:58988/blog/">Pranav on a Tangent</a></span> · 
 
     <span>
         Powered by

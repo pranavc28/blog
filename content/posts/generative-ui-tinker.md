@@ -12,11 +12,11 @@ Dataset: https://huggingface.co/datasets/cfahlgren1/react-code-instructions/
 
 ## Purpose
 
-This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used [Tinker](http://tinker-docs.thinkingmachines.ai/) to fine tune my own LLM, a product released by the team at [Thinking Machines Lab](https://thinkingmachines.ai/).
+This blog explores how I fine-tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research labs. I used [Tinker](http://tinker-docs.thinkingmachines.ai/) to fine-tune my own LLM, a product released by the team at [Thinking Machines Lab](https://thinkingmachines.ai/).
 
 It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.
 
-In this blog, I explain what fine tuning means, why Generative UI can/should be fine tuned, and left some of my thoughts on tinker.
+In this blog, I explain what fine-tuning means, why Generative UI can/should be fine-tuned, and share some of my thoughts on Tinker.
 
 ## Background
 
@@ -217,7 +217,7 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 
 ## Results when comparing the fine-tuned model to raw Qwen model samples
 
-To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The differences are striking and directly reflect the reward signals defined in our training objective.
+To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The following analysis is **qualitative**, focusing on observable improvements in code structure, completeness, and interactivity rather than quantitative metrics. The differences directly reflect the reward signals defined in our training objective.
 
 ### Use Case 1: Ride Booking Interface
 
@@ -291,11 +291,11 @@ The fine-tuned model generates improved leaderboards with:
 
 In this case, I was super interested with the model picking up real time updates using time. This was not something that I explicitly prompted the LLM. Yet, it reasoned from previous examples that real time updates could be valuable.
 
-## Thoughts on Tinker
+## Technical Considerations and Lessons Learned with Tinker
 
-My experience using Tinker for this generative UI fine-tuning project revealed several strengths and limitations worth discussing.
+My experience using Tinker for this generative UI fine-tuning project provided valuable insights into distributed reinforcement learning infrastructure and practical considerations for implementing custom training loops at scale.
 
-**Pros:**
+**Key Strengths:**
 
 1. **Flexible API for Custom Training Loops**: Tinker's Python-based API allowed me to implement asynchronous PPO with full control over the training loop. I could define custom reward functions, manage sampling strategies, and orchestrate advantage computations without being constrained by a rigid framework. This flexibility was essential for implementing the multi-objective reward function targeting UI-specific qualities like completeness, interactivity, and structural validity. The ability to write arbitrary Python code while Tinker handled the distributed execution was the key differentiator.
 
@@ -303,22 +303,22 @@ My experience using Tinker for this generative UI fine-tuning project revealed s
 
 3. **Efficient LoRA Support for Large Model Fine-Tuning**: Training a 30B parameter model like Qwen3-30B-A3B would typically require prohibitive computational resources. Tinker's native support for Low-Rank Adaptation (LoRA) reduced the trainable parameters by several orders of magnitude, making the fine-tuning feasible on available GPU resources. The training converged in 5 epochs across 600 examples, completing in a reasonable timeframe. Without LoRA support integrated into the platform, this project would have been impractical for individual researchers or small teams.
 
-**Cons:**
+**Technical Challenges and Solutions:**
 
-1. **Limited Access and Onboarding Friction**: Tinker is currently in private beta with waitlist-controlled access. While I was fortunate to gain access, along with other major reserach labs such as Ramp, Meta, etc.. the restricted availability could be a significant barrier for teams needing immediate deployment or researchers wanting to replicate my results. The onboarding process required coordination with the Thinking Machines team on Slack, which added lead time before I could begin experimentation. For production use cases with tight timelines, this gating mechanism could be time consuming.
+1. **Asynchronous Workflow Optimization**: I initially implemented a synchronous pipeline, processing one prompt at a time. This approach became a significant bottleneck, with idle GPU time during sequential operations. After discovering Tinker's native asynchronous support, I refactored the entire training loop to launch concurrent sampling requests. This architectural change transformed the training efficiency—instead of waiting for each sample to complete before starting the next, I could maintain high GPU utilization by overlapping computation phases. The lesson here is that understanding the platform's async capabilities upfront is crucial for performance optimization.
 
-2. **Learning Curve for API-Driven Workflows**: I intially built out a synchronous pipeline. It took me a week to figure out that Tinker also natively supports asynchrnous sampling and workflows. The real question that I had was why use synchronous workflows from PPO and LoRa fine tuning? Almost everyone cares about speed - so why not just default all of our workflows to asynchronous.
+2. **Custom Monitoring Infrastructure**: To track training convergence and debug reward function behavior, I needed detailed logging of epoch runs, reward distributions, and sampling efficiency. Tinker's API didn't provide built-in monitoring dashboards, so I implemented a custom logging framework that captured per-epoch metrics, advantage distributions, and policy divergence measures. This experience highlighted the importance of observability in RL training—without detailed metrics, diagnosing reward function issues or training instabilities would have been nearly impossible. For production deployments, integrating monitoring tools like Weights & Biases or custom Prometheus exporters would be essential.
 
-3. **Debugging**: I did not see any support for monitoring or reliability. I wanted to log my epoch runs, samples, and overall fune tuning times. This was not natively supported, and required custom code. I assume that most startups/customers would need better logging or reliability which could be built inherently.
+3. **Access Model and Collaboration**: Tinker operates in private beta, which required coordination with the Thinking Machines team for access and onboarding. While this provided an opportunity for direct technical support, it also meant that reproducing these results requires similar access arrangements. For teams evaluating fine-tuning platforms, understanding the access model and support structure is important for project planning and timeline estimation.
 
-4. **Moat**: Oother startups like Modal can also fine tune LLMs efficiently: https://modal.com/blog/llm-fine-tuning-overview#where-to-fine-tune-llms-in-2025. I think what would have been even more impactful is setting up a reward function for me, given a text prompt. Turning the knobs for each particular reward is the real hard part. If a startup did that for me, and did it well with experimentation, they could find a niche in the market that no one has solved yet.
+**Future Directions for Reward Function Engineering**: One area where additional tooling could provide significant value is automated reward function tuning. In this project, I manually specified weights for completeness, interactivity, and validity rewards (\\( w_1 = 7.5 \\), \\( w_2 = 1.8 \\), etc.). These values were determined through iterative experimentation—adjusting weights, observing generated samples, and refining the balance. A platform that could automate this hyperparameter search using techniques like Bayesian optimization or learned reward functions would substantially reduce the engineering burden and enable faster convergence to optimal reward specifications.
 
 ## Conclusion
 
 Generative UI represents a paradigm shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with Proximal Policy Optimization, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces.
 
-I have focused more on the length of the React code output, and how dynamic it is. Users can target other features such as tailwind/design parity, or code structure.
+This implementation focused on code completeness and dynamic interactivity as primary reward signals. The same framework can be extended to target other UI qualities: design system compliance (Tailwind utility usage patterns), accessibility standards (ARIA attributes, semantic HTML), or architectural patterns (component composition, separation of concerns). The reward function serves as a flexible specification language for encoding domain-specific quality criteria.
 
 The combination of PPO's reward-driven learning and Tinker's abstraction of distributed training infrastructure makes this approach practical for researchers and developers. We define our reward function (what makes good UI code), specify our training loop (how to explore and update), and Tinker handles the complexity of distributed execution across GPUs effectively.
 
-I appreciated testing out open source chinese models, like Qwen. Honestly, **I'm in shock**. They're worth a fraction of the cost of models like GPT-5 and Gemini-3. In addition, after being fine tuned, my custom checkpoint did an absolutely amazing job. If anything, this blog post got me even more excited about the possibilities and future of AI. If I can fine tune LLMs in my free time so easily, with free credits, imagine what a startup with 100s of millions of dollars in funding must be doing :)
+The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the computational cost and inference latency of frontier models like GPT-4 or Claude 3.5. After fine-tuning on a domain-specific dataset with custom reward signals, the model generates functional, interactive React components that meet the quality standards defined in the training objective. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks. For production applications with specific requirements, investing in custom fine-tuning can yield superior results compared to relying solely on off-the-shelf frontier models.
