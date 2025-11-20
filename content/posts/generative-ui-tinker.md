@@ -328,6 +328,8 @@ The raw model's leaderboard suffers from:
 
 **Fine-Tuned Model Performance** *(inferred from training patterns)*
 
+![Fine tuned Qwen Leaderboard](/blog//images/realtime_leaderboard_live_fine_tune.png)
+
 The fine-tuned model generates improved leaderboards with:
 - **Complete table structure**: All rows and columns properly closed, balanced JSX elements
 - **State-driven rendering**: Uses `useState` to manage leaderboard data, enabling dynamic updates. Also updates leaderboards in realtime as a demo as time progresses.
