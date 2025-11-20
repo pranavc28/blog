@@ -20,7 +20,7 @@ In this blog, I explain what fine-tuning means, why Generative UI can/should be 
 
 ## Background
 
-The intersection of artificial intelligence and user interface development has reached a fascinating inflection point. For decades, building user interfaces required manual coding—developers translating design specifications into HTML, CSS, and JavaScript line by line. More recently, component libraries and frameworks like React have standardized this process, but the fundamental paradigm remained unchanged: humans write code, computers execute it.
+As LLMs progressively become better, it is clear that entire backends, such as search or shopping, can be replaced. What about front ends, or user interfaces?
 
 Large Language Models (LLMs) have demonstrated remarkable capabilities in code generation, but their application to UI development faces unique challenges. Unlike backend logic or algorithmic problems where correctness is binary, UI code must balance multiple competing objectives: syntactic correctness, visual appeal, interactivity, accessibility, and alignment with user intent.
 
@@ -28,50 +28,35 @@ This brings us to a critical question: what exactly do we mean by "Generative UI
 
 ## Definition of Generative UI
 
-**Generative UI** refers to the automated creation of user interface code through machine learning models, where the system generates complete, functional interface implementations from natural language descriptions or specifications.
-
-More formally, generative UI can be defined as a conditional generation task:
+Generative UI can be defined as a conditional generation task:
 
 Given:
-- A specification \\( S \\) (user intent, design requirements, functional specifications)
-- A domain \\( D \\) (React, Vue, HTML/CSS, etc.)
-- A set of constraints \\( C \\) (style guidelines, accessibility requirements, component libraries)
+1. A specification \\( S \\) (user intent, design requirements, functional specifications)
+2. A domain \\( D \\) (React, Vue, HTML/CSS, etc.)
+3. A set of constraints \\( C \\) (style guidelines, accessibility requirements, component libraries)
 
 Generate:
-- A complete code artifact \\( U \\) that:
-  - Compiles/parses without errors
-  - Renders a visual interface matching \\( S \\)
-  - Includes appropriate interactivity and state management
-  - Follows idiomatic patterns for domain \\( D \\)
-  - Satisfies constraints \\( C \\)
 
-This differs from code completion or snippet generation in crucial ways:
+A complete code artifact \\( A \\) that compiles/parses without errors, renders a visual interface matching \\( S \\), includes appropriate interactivity and state management, follows idiomatic patterns for domain \\( D \\), and satisfies constraints \\( C \\).
 
-**Completeness**: Generative UI produces entire, self-contained components or applications, not fragments requiring human integration.
-
-**Functional Correctness**: The generated code must actually work when executed, not just look plausible to static analysis.
+This differs from algorithmic code completion in crucial ways:
 
 **Visual Grounding**: The code's visual output matters as much as its textual content—an interface that compiles but looks broken has failed its purpose.
 
 **Context Awareness**: Generative UI systems must understand the broader context of UI development: component composition, state flow, event handling, styling approaches, and accessibility considerations.
 
+**Dynamic vs static code**: Generative UI systems must be more dynamic in nature, given that each user has different intent and purposes thus may prefer their own version of interacting with an app.
+
 In our implementation, we focus on React/TypeScript generation, treating each generation as a mapping from `(system_prompt, user_message) → React component code`. The model must learn the implicit constraints of React development: proper JSX syntax, hook usage rules, event handler patterns, and TypeScript type annotations.
 
 ## Why Fine-Tuning for Generative UI?
 
-Having defined what generative UI entails, the natural question becomes: why can't off-the-shelf large language models handle this task effectively? Why invest effort in fine-tuning models specifically for UI generation?
+Having defined what generative UI is, the natural question becomes: why can't off-the-shelf large language models handle this task effectively? Why invest effort in fine-tuning models specifically for UI generation?
 
-The answer lies in understanding the unique requirements of UI code generation versus general-purpose coding:
+1. **Interactivity and Dynamics**: Modern UIs aren't static displays; they respond to user actions through state management and event handlers. A beautiful-looking component that doesn't actually *do* anything fails its fundamental purpose.
+2. **Visual and Semantic Coherence**: The generated code must not only compile but also render appropriately. Styling, layout, and visual hierarchy matter as much as logical correctness. I trained it on an online dataset. Companies/startups have their own codebases and styles - they should use those.
 
-**Structural Completeness**: UI components must be complete, self-contained units. A truncated component with missing closing braces or incomplete return statements is completely unusable—unlike a general code snippet that might still provide partial value.
-
-**Interactivity and Dynamics**: Modern UIs aren't static displays; they respond to user actions through state management and event handlers. A beautiful-looking component that doesn't actually *do* anything fails its fundamental purpose.
-
-**Visual and Semantic Coherence**: The generated code must not only compile but also render appropriately. Styling, layout, and visual hierarchy matter as much as logical correctness.
-
-**Domain-Specific Patterns**: React development has established idioms—controlled components, proper hook usage, JSX conventions—that general-purpose models may not consistently follow without targeted training.
-
-These requirements suggest that fine-tuning is necessary. But what *kind* of fine-tuning? Traditional supervised learning or reinforcement learning?
+These requirements suggest that fine-tuning is *helpful*. But what *kind* of fine-tuning? Traditional supervised learning or reinforcement learning?
 
 ### The Supervised Learning Limitation
 
@@ -81,13 +66,13 @@ For generative UI, this is problematic. A dataset might contain components with 
 
 ### The Reinforcement Learning Solution
 
-Reinforcement learning, specifically Proximal Policy Optimization (PPO), addresses these limitations by defining explicit reward functions that encode our preferences. We can reward complete code more than truncated outputs, interactive components more than static ones, and idiomatic patterns more than unusual but technically correct alternatives. The model learns through exploration and feedback, discovering better solutions than those in the training data.
+Reinforcement learning, specifically Group Relative Policy Optimization (GRPO), addresses these limitations by defining explicit reward functions that encode preferences. We reward complete code more than truncated outputs, interactive components more than static ones, and idiomatic patterns more than unusual but technically correct alternatives. The model learns through exploration and feedback, discovering better solutions than those in the training data.
 
-This motivates our technical approach: PPO-based fine-tuning with carefully designed reward functions. Let's examine how this works in detail.
+This motivates a technical approach: GRPO-based fine-tuning with carefully designed reward functions. 
 
-## Fine-Tuning with PPO: Technical Deep Dive
+## Fine-Tuning with GRPO: Technical Deep Dive
 
-Now that we've established *why* reinforcement learning is necessary for generative UI, let's examine *how* it works. This section provides a technical deep dive into Proximal Policy Optimization and its application to UI code generation.
+Now that we've established *why* reinforcement learning is necessary for generative UI, let's examine *how* it works. This section provides a technical deep dive into Group Relative Policy Optimization and its application to UI code generation.
 
 ### The Supervised Learning Baseline: A Mathematical Perspective
 
@@ -103,9 +88,9 @@ This approach teaches the model to maximize the likelihood of the exact training
 2. **Loss-Evaluation Mismatch**: Cross-entropy loss treats all token prediction errors equally, but in UI code, a mismatched brace is far worse than suboptimal variable naming.
 3. **No Exploration**: The model can only learn from provided examples, never discovering alternative (potentially better) solutions.
 
-### Proximal Policy Optimization (PPO)
+### Group Relative Policy Optimization (GRPO)
 
-PPO is a policy gradient reinforcement learning algorithm designed for stable, efficient policy optimization. Instead of maximizing likelihood of specific sequences, PPO maximizes expected reward:
+GRPO is a policy gradient reinforcement learning algorithm specifically designed for LLM fine-tuning. Unlike PPO, which requires a separate value network to estimate advantages, GRPO computes advantages directly from a group of sampled trajectories. Instead of maximizing likelihood of specific sequences, GRPO maximizes expected reward:
 
 $$\mathcal{J}(\theta) = \mathbb{E}\_{\tau \sim \pi\_\theta}\left[R(\tau)\right]$$
 
@@ -114,27 +99,37 @@ Where:
 - \\( \tau \\) is a trajectory (generated token sequence)
 - \\( R(\tau) \\) is the total reward
 
-The core innovation of PPO is the **clipped surrogate objective**, which ensures stable policy updates:
+The key innovation of GRPO is **group-relative advantage estimation**. For each prompt, we sample \\( k \\) completions and compute advantages relative to the group mean:
 
-$$\mathcal{L}^{\text{CLIP}}(\theta) = \mathbb{E}_t\left[\min\left(r_t(\theta)\hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t\right)\right]$$
+$$\hat{A}\_i = R(\tau\_i) - \frac{1}{k}\sum\_{j=1}^{k} R(\tau\_j)$$
 
 Where:
-- \\( r_t(\theta) = \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)} \\) is the importance sampling ratio
-- \\( \hat{A}_t \\) is the advantage estimate (how much better this action is than average)
-- \\( \epsilon \\) is the clipping parameter (typically 0.2)
-- \\( a_t \\) and \\( s_t \\) are the action (token) and state (context) at time \\( t \\)
+- \\( \tau_i \\) is the \\( i \\)-th sampled trajectory in the group
+- \\( R(\tau_i) \\) is the reward for trajectory \\( i \\)
+- The group mean \\( \frac{1}{k}\sum_{j=1}^{k} R(\tau_j) \\) serves as a baseline
 
-**Why does clipping matter?** Without clipping, the ratio \\( r_t(\theta) \\) could become arbitrarily large, causing unstable policy updates. If the new policy makes an action much more likely than the old policy (\\( r_t \gg 1 \\)), we could overshoot the optimal policy. Clipping bounds this ratio to \\( [1-\epsilon, 1+\epsilon] \\), ensuring conservative updates.
+The GRPO objective function is:
+
+$$\mathcal{L}^{\text{GRPO}}(\theta) = \mathbb{E}\_{x \sim \mathcal{D}} \left[\frac{1}{k}\sum\_{i=1}^{k} \hat{A}\_i \sum\_{t} \log \pi\_\theta(y\_t^{(i)} \mid x, y\_{<t}^{(i)})\right]$$
+
+Where:
+- \\( x \\) is the prompt (user request)
+- \\( y^{(i)} \\) is the \\( i \\)-th generated completion
+- \\( \hat{A}_i \\) is the advantage for the \\( i \\)-th sample
+
+**Why group-relative advantages?** By using the group mean as a baseline, we normalize rewards within each prompt's context. A reward of +5 might be good for a simple component but poor for a complex one. Group-relative advantages automatically adapt to task difficulty—only completions better than the group average receive positive advantages.
 
 The gradient of this objective is:
 
-$$\nabla\_\theta \mathcal{L}^{\text{CLIP}}(\theta) = \mathbb{E}\_t\left[\nabla\_\theta \log \pi\_\theta(a\_t \mid s\_t) \cdot \min\left(\hat{A}\_t, \text{clip}(\hat{A}\_t, -\epsilon\hat{A}\_t^+, \epsilon\hat{A}\_t^-)\right)\right]$$
+$$\nabla\_\theta \mathcal{L}^{\text{GRPO}}(\theta) = \mathbb{E}\_{x \sim \mathcal{D}} \left[\frac{1}{k}\sum\_{i=1}^{k} \hat{A}\_i \nabla\_\theta \sum\_{t} \log \pi\_\theta(y\_t^{(i)} \mid x, y\_{<t}^{(i)})\right]$$
 
-This gradient increases the probability of actions with positive advantages (good outcomes) and decreases probability of actions with negative advantages (bad outcomes), but only to a limited extent determined by the clipping.
+This gradient increases the probability of completions with positive advantages (above group mean) and decreases probability of completions with negative advantages (below group mean). The magnitude of the update is proportional to how much better or worse each completion is relative to its peers.
 
-### Why PPO for Generative UI?
+Note, **DeepSeek was trained using GRPO.**
 
-PPO addresses the limitations of supervised learning in three critical ways:
+### Why GRPO for Generative UI?
+
+GRPO addresses the limitations of supervised learning in three critical ways:
 
 **1. Reward-Based Optimization**  
 We define a reward function that explicitly encodes UI quality:
@@ -148,32 +143,31 @@ Where:
 - \\( R_{\text{quotes}} \\): Reward for balanced quotes and strings
 - \\( \text{penalty}_{\text{length}} \\): Penalty for excessive length deviation from reference
 
-This **multi-objective reward function captures the nuanced requirements of UI code** that cross-entropy loss cannot express.
+This **multi-objective reward function captures the nuanced requirements of UI code** that cross-entropy loss cannot express. In general, it also assumes that the model can produce compilable code but is not nuanced to produce output in the formats that we want.
 
 **2. Exploration and Discovery**  
-By sampling multiple completions per prompt (\\( k \\) samples), the model explores the solution space. Good solutions receive positive advantages, bad solutions receive negative advantages. Over time, the policy shifts toward generating better code:
+By sampling multiple completions per prompt (\\( k \\) samples), the model explores the solution space. Good solutions (above the K samples group mean) receive positive advantages, poor solutions (below the K samples group mean) receive negative advantages. Over time, the policy shifts toward generating better code.
 
+The model compares different approaches to the same problem within each batch, learning relative quality rather than absolute scores.
 
-**3. Stability Through Clipping**  
-The clipping mechanism prevents catastrophic policy updates. Even if we sample an unusually good or bad trajectory, the policy update is bounded. This is crucial for fine-tuning pre-trained models where we want to adapt behavior, not destroy existing knowledge.
+**3. Stability Through Group Normalization**  
+The group-relative baseline provides automatic reward normalization. Even if we design reward functions with different scales, the advantages are normalized within each group. This prevents catastrophic policy updates—no single exceptionally high or low reward can dominate training. This is crucial for fine-tuning pre-trained models where we want to adapt behavior, not destroy existing knowledge. Unlike PPO's clipping mechanism, GRPO achieves stability through statistical normalization rather than hard constraints.
 
 With the theoretical foundation established, we can now turn to the practical implementation details.
 
-## Implementation: Asynchronous PPO Training with Tinker
+## Implementation: Asynchronous GRPO Training with Tinker
 
-Implementing PPO for large language models traditionally requires extensive infrastructure: distributed training systems, GPU orchestration, gradient accumulation strategies, and sophisticated async coordination. **Tinker** abstracts this complexity, letting us focus on the algorithm while it handles distributed execution.
 
-### Algorithm: Asynchronous PPO Training with Tinker
+### Algorithm: Asynchronous GRPO Training with Tinker
 
-My implementation follows the standard PPO training loop with asynchronous sampling and gradient computation:
+My implementation follows the standard GRPO training loop with asynchronous sampling and gradient computation:
 
 The key innovation is asynchronous execution. Instead of synchronously sampling one prompt at a time, we launch all sampling requests concurrently, process results as they complete, and overlap computation phases.
 
-Below is an image of the general asynchronous calls that were computed to allow tinker to work efficiently.
+Below is an image of the general asynchronous calls that were computed to allow Tinker to work efficiently.
 
-![Asynchronous PPO Algorithm](/blog/images/ppo_tinker.png)
+![Asynchronous GRPO Algorithm](/blog/images/ppo_tinker.png)
 
-{{< center >}}Algorithm 1: Asynchronous PPO for Generative UI using Tinker API{{< /center >}}
 
 ### Reward function design
 
@@ -214,25 +208,51 @@ def compute_reward(generated_code, reference_code):
     return R_base + R_complete + R_valid + R_interactive + R_quotes - penalty_length
 ```
 
-**Advantage Construction**  
-The advantage array is crucial. We assign zero advantage to prompt tokens (we don't train on them) and distribute the trajectory reward across generated tokens:
+**Group-Relative Advantage Construction**  
+The advantage computation is the heart of GRPO. For each prompt, we sample \\( k \\) completions, compute their rewards, and calculate group-relative advantages:
 
 ```python
-def create_advantage_array(prompt_length, gen_length, reward):
+def compute_group_advantages(rewards):
+    """
+    Compute group-relative advantages from a list of rewards.
+    
+    Args:
+        rewards: List of k rewards for k sampled completions
+    
+    Returns:
+        advantages: List of k advantages normalized by group mean
+    """
+    baseline = sum(rewards) / len(rewards)  # Group mean as baseline
+    advantages = [r - baseline for r in rewards]
+    return advantages
+
+def create_advantage_array(prompt_length, gen_length, advantage):
+    """
+    Create per-token advantage array for a single trajectory.
+    
+    Args:
+        prompt_length: Number of tokens in the prompt
+        gen_length: Number of generated tokens
+        advantage: Scalar advantage for this trajectory (from group)
+    
+    Returns:
+        advantage_array: Per-token advantages (0 for prompt, advantage for generation)
+    """
     prompt_advantages = [0.0] * (prompt_length - 1)
-    gen_advantages = [reward] * gen_length
+    gen_advantages = [advantage] * gen_length
     return prompt_advantages + gen_advantages
 ```
 
-This ensures gradients only flow through generated portions from the LLM, not the fixed prompt context.
+This two-stage process first normalizes advantages within each group (comparing the \\( k \\) samples for a prompt), then assigns the normalized advantage uniformly across all generated tokens. This ensures gradients only flow through generated portions from the LLM, not the fixed prompt context.
 
 **Hyperparameter Tuning**  
 Our configuration:
 - Learning rate: \\( 10^{-5} \\) (small to prevent catastrophic forgetting)
-- Samples per prompt: 4 (exploration-exploitation balance)
-- Clip epsilon: 0.2 (standard PPO value)
+- Samples per prompt (\\( k \\)): 4 (group size for advantage computation)
 - Epochs: 5 (sufficient for convergence on 600 examples)
 - Max generation tokens: 16,000 (React components can be long)
+
+The choice of \\( k = 4 \\) samples per prompt balances exploration (diversity in the group) with computational efficiency. Larger \\( k \\) provides more robust baselines but increases sampling cost linearly.
 
 **Data Filtering**  
 We filter prompts exceeding 16k tokens during initialization to leave room for generation within the 32k context window. This prevents out-of-memory errors and truncated generations.
@@ -241,7 +261,7 @@ Having detailed the implementation, the critical question remains: does it actua
 
 ## Results: Comparing Fine-Tuned vs. Raw Qwen Model
 
-To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The following analysis is **qualitative**, focusing on observable improvements in code structure, completeness, and interactivity rather than quantitative metrics. The differences directly reflect the reward signals defined in our training objective.
+To evaluate the effectiveness of GRPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The following analysis is **qualitative**, focusing on observable improvements in code structure, completeness, and interactivity rather than quantitative metrics. The differences directly reflect the reward signals defined in our training objective.
 
 Each test case highlights a different aspect of the reward function's impact on generation quality.
 
@@ -317,7 +337,7 @@ The fine-tuned model generates improved leaderboards with:
 
 In this case, I was particularly interested in observing the model generate real-time updates using time-based state changes. This was not something explicitly encoded in the prompt, yet the model inferred from training patterns that dynamic updates would enhance the user experience—demonstrating genuine learned understanding rather than mere template replication.
 
-These qualitative results validate the PPO approach, but implementing this system revealed important practical considerations about infrastructure and tooling.
+These qualitative results validate the GRPO approach, but implementing this system revealed important practical considerations about infrastructure and tooling.
 
 ## Technical Considerations and Lessons Learned with Tinker
 
@@ -325,7 +345,7 @@ My experience using Tinker for this generative UI fine-tuning project provided v
 
 **Key Strengths:**
 
-1. **Flexible API for Custom Training Loops**: Tinker's Python-based API allowed me to implement asynchronous PPO with full control over the training loop. I could define custom reward functions, manage sampling strategies, and orchestrate advantage computations without being constrained by a rigid framework. This flexibility was essential for implementing the multi-objective reward function targeting UI-specific qualities like completeness, interactivity, and structural validity. The ability to write arbitrary Python code while Tinker handled the distributed execution was the key differentiator.
+1. **Flexible API for Custom Training Loops**: Tinker's Python-based API allowed me to implement asynchronous GRPO with full control over the training loop. I could define custom reward functions, manage sampling strategies, and orchestrate group-relative advantage computations without being constrained by a rigid framework. This flexibility was essential for implementing the multi-objective reward function targeting UI-specific qualities like completeness, interactivity, and structural validity. The ability to write arbitrary Python code while Tinker handled the distributed execution was the key differentiator.
 
 2. **Managed Infrastructure with Distributed GPU Orchestration**: The platform abstracted away the complexity of distributed training across multiple GPUs. I didn't need to manage NCCL configurations, handle gradient synchronization, or debug multi-node communication failures. Tinker's infrastructure automatically distributed my sampling requests across available GPUs, collected results asynchronously, and executed gradient updates efficiently. For a researcher focused on algorithm development rather than DevOps, this was invaluable—I could iterate on reward functions and training hyperparameters without worrying about infrastructure scalability.
 
@@ -345,10 +365,10 @@ Having explored the theory, implementation, results, and practical infrastructur
 
 ## Conclusion
 
-Generative UI represents a paradigm shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with Proximal Policy Optimization, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces.
+Generative UI represents a shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with Group Relative Policy Optimization, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces based on exisiting code bases built at a company.
 
-This implementation focused on code completeness and dynamic interactivity as primary reward signals. The same framework can be extended to target other UI qualities: design system compliance (Tailwind utility usage patterns), accessibility standards (ARIA attributes, semantic HTML), or architectural patterns (component composition, separation of concerns). The reward function serves as a flexible specification language for encoding domain-specific quality criteria.
+Companies no longer have to mentor their front end engineers to build aesthetic front end applications. Simply fine tune an LLM on your exisitng codebase's reward signals, and ask the model to output code relative to your style.
 
-The combination of PPO's reward-driven learning and Tinker's abstraction of distributed training infrastructure makes this approach practical for researchers and developers. We define our reward function (what makes good UI code), specify our training loop (how to explore and update), and Tinker handles the complexity of distributed execution across GPUs effectively.
 
-The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the computational cost and inference latency of frontier models like GPT-4 or Claude 3.5. After fine-tuning on a domain-specific dataset with custom reward signals, the model generates functional, interactive React components that meet the quality standards defined in the training objective. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks. For production applications with specific requirements, investing in custom fine-tuning can yield superior results compared to relying solely on off-the-shelf frontier models.
+
+The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the cost of frontier models like GPT-4 or Claude 3.5. After fine-tuning on a domain-specific dataset with custom reward signals, the model generates functional, interactive React components. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks.
