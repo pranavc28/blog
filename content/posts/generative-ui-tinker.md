@@ -326,7 +326,7 @@ The raw model's leaderboard suffers from:
 - **Poor data structure**: Inconsistent formatting or missing key player attributes
 - **No interactivity**: Unable to filter, sort, or update leaderboard dynamically
 
-**Fine-Tuned Model Performance** *(inferred from training patterns)*
+**Fine-Tuned Model Performance**
 
 ![Fine tuned Qwen Leaderboard](/blog//images/realtime_leaderboard_live_fine_tune.png)
 
@@ -370,7 +370,5 @@ Having explored the theory, implementation, results, and practical infrastructur
 Generative UI represents a shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with Group Relative Policy Optimization, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces based on exisiting code bases built at a company.
 
 Companies no longer have to mentor their front end engineers to build aesthetic front end applications. Simply fine tune an LLM on your exisitng codebase's reward signals, and ask the model to output code relative to your style.
-
-
 
 The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the cost of frontier models like GPT-4 or Claude 3.5. After fine-tuning on a domain-specific dataset with custom reward signals, the model generates functional, interactive React components. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks.
