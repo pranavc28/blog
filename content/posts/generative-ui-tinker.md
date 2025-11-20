@@ -246,7 +246,7 @@ def create_advantage_array(prompt_length, gen_length, advantage):
 This two-stage process first normalizes advantages within each group (comparing the \\( k \\) samples for a prompt), then assigns the normalized advantage uniformly across all generated tokens. This ensures gradients only flow through generated portions from the LLM, not the fixed prompt context.
 
 **Hyperparameter Tuning**  
-Our configuration:
+
 - Learning rate: \\( 10^{-5} \\) (small to prevent catastrophic forgetting)
 - Samples per prompt (\\( k \\)): 4 (group size for advantage computation)
 - Epochs: 5 (sufficient for convergence on 600 examples)
