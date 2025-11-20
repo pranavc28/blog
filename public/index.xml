@@ -14,7 +14,8 @@
       <pubDate>Fri, 14 Nov 2025 07:07:07 +0100</pubDate>
       <guid>http://localhost:1313/blog/posts/generative-ui-tinker/</guid>
       <description>&lt;p&gt;&lt;em&gt;&amp;ldquo;Form and function should be one, joined in a spiritual union&amp;rdquo; - Frank Lloyd Wright&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;Research code: &lt;a href=&#34;https://github.com/pranavc28/generative-ui&#34;&gt;https://github.com/pranavc28/generative-ui&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Research code: &lt;a href=&#34;https://github.com/pranavc28/generative-ui&#34;&gt;https://github.com/pranavc28/generative-ui&lt;/a&gt;
+Dataset: &lt;a href=&#34;https://huggingface.co/datasets/cfahlgren1/react-code-instructions/&#34;&gt;https://huggingface.co/datasets/cfahlgren1/react-code-instructions/&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;purpose&#34;&gt;Purpose&lt;/h2&gt;
 &lt;p&gt;This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used &lt;a href=&#34;http://tinker-docs.thinkingmachines.ai/&#34;&gt;Tinker&lt;/a&gt; to fine tune my own LLM, a product released by the team at &lt;a href=&#34;https://thinkingmachines.ai/&#34;&gt;Thinking Machines Lab&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.&lt;/p&gt;</description>

@@ -8,6 +8,7 @@ math = true
 *"Form and function should be one, joined in a spiritual union" - Frank Lloyd Wright*
 
 Research code: https://github.com/pranavc28/generative-ui
+Dataset: https://huggingface.co/datasets/cfahlgren1/react-code-instructions/
 
 ## Purpose
 
