@@ -292,6 +292,25 @@ In this case, I was super interested with the model picking up real time updates
 
 ## Thoughts on Tinker
 
+My experience using Tinker for this generative UI fine-tuning project revealed several strengths and limitations worth discussing.
+
+**Pros:**
+
+1. **Flexible API for Custom Training Loops**: Tinker's Python-based API allowed me to implement asynchronous PPO with full control over the training loop. I could define custom reward functions, manage sampling strategies, and orchestrate advantage computations without being constrained by a rigid framework. This flexibility was essential for implementing the multi-objective reward function targeting UI-specific qualities like completeness, interactivity, and structural validity. The ability to write arbitrary Python code while Tinker handled the distributed execution was the key differentiator.
+
+2. **Managed Infrastructure with Distributed GPU Orchestration**: The platform abstracted away the complexity of distributed training across multiple GPUs. I didn't need to manage NCCL configurations, handle gradient synchronization, or debug multi-node communication failures. Tinker's infrastructure automatically distributed my sampling requests across available GPUs, collected results asynchronously, and executed gradient updates efficiently. For a researcher focused on algorithm development rather than DevOps, this was invaluable—I could iterate on reward functions and training hyperparameters without worrying about infrastructure scalability.
+
+3. **Efficient LoRA Support for Large Model Fine-Tuning**: Training a 30B parameter model like Qwen3-30B-A3B would typically require prohibitive computational resources. Tinker's native support for Low-Rank Adaptation (LoRA) reduced the trainable parameters by several orders of magnitude, making the fine-tuning feasible on available GPU resources. The training converged in 5 epochs across 600 examples, completing in a reasonable timeframe. Without LoRA support integrated into the platform, this project would have been impractical for individual researchers or small teams.
+
+**Cons:**
+
+1. **Limited Access and Onboarding Friction**: Tinker is currently in private beta with waitlist-controlled access. While I was fortunate to gain access, along with other major reserach labs such as Ramp, Meta, etc.. the restricted availability could be a significant barrier for teams needing immediate deployment or researchers wanting to replicate my results. The onboarding process required coordination with the Thinking Machines team on Slack, which added lead time before I could begin experimentation. For production use cases with tight timelines, this gating mechanism could be time consuming.
+
+2. **Learning Curve for API-Driven Workflows**: I intially built out a synchronous pipeline. It took me a week to figure out that Tinker also natively supports asynchrnous sampling and workflows. The real question that I had was why use synchronous workflows from PPO and LoRa fine tuning? Almost everyone cares about speed - so why not just default all of our workflows to asynchronous.
+
+3. **Debugging**: I did not see any support for monitoring or reliability. I wanted to log my epoch runs, samples, and overall fune tuning times. This was not natively supported, and required custom code. I assume that most startups/customers would need better logging or reliability which could be built inherently.
+
+4. **Moat**: Oother startups like Modal can also fine tune LLMs efficiently: https://modal.com/blog/llm-fine-tuning-overview#where-to-fine-tune-llms-in-2025. I think what would have been even more impactful is setting up a reward function for me, given a text prompt. Turning the knobs for each particular reward is the real hard part. If a startup did that for me, and did it well with experimentation, they could find a niche in the market that no one has solved yet.
 
 ## Conclusion
 
@@ -300,3 +319,5 @@ Generative UI represents a paradigm shift in interface development—from manual
 I have focused more on the length of the React code output, and how dynamic it is. Users can target other features such as tailwind/design parity, or code structure.
 
 The combination of PPO's reward-driven learning and Tinker's abstraction of distributed training infrastructure makes this approach practical for researchers and developers. We define our reward function (what makes good UI code), specify our training loop (how to explore and update), and Tinker handles the complexity of distributed execution across GPUs effectively.
+
+I appreciated testing out open source chinese models, like Qwen. Honestly, **I'm in shock**. They're worth a fraction of the cost of models like GPT-5 and Gemini-3. In addition, after being fine tuned, my custom checkpoint did an absolutely amazing job. If anything, this blog post got me even more excited about the possibilities and future of AI. If I can fine tune LLMs in my free time so easily, with free credits, imagine what a startup with 100s of millions of dollars must be doing :)
