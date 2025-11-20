@@ -14,7 +14,7 @@ math = true
 
 This blog explores how I fine-tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research labs. I used [Tinker](http://tinker-docs.thinkingmachines.ai/) to fine-tune my own LLM, a product released by the team at [Thinking Machines Lab](https://thinkingmachines.ai/).
 
-It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.
+It did a great job, and produced generally usable React code at a better level that I expected it to from an online dataset.
 
 In this blog, I explain what fine-tuning means, why Generative UI can/should be fine-tuned, and share some of my thoughts on Tinker.
 
@@ -24,15 +24,7 @@ The intersection of artificial intelligence and user interface development has r
 
 Large Language Models (LLMs) have demonstrated remarkable capabilities in code generation, but their application to UI development faces unique challenges. Unlike backend logic or algorithmic problems where correctness is binary, UI code must balance multiple competing objectives: syntactic correctness, visual appeal, interactivity, accessibility, and alignment with user intent.
 
-Enter reinforcement learning. By treating UI generation as a sequential decision-making problem where the model receives rewards for producing high-quality interfaces, we can guide LLMs toward generating not just syntactically correct code, but truly functional, interactive, and well-structured user interfaces. This represents a fundamental shift from imitation learning to reward-driven optimization.
-
-## Why Generative UI and fine tuning?
-
-Why invest effort in fine-tuning models specifically for generative UI? The answer lies in understanding the unique requirements of UI code generation versus general-purpose coding: Structural Completeness, Interactivity and Dynamics, Visual and Semantic Coherence, and Domain-Specific Patterns.
-
-Traditional supervised fine-tuning trains models on input-output pairs, essentially teaching imitation. But what if the training data contains suboptimal examples? What if there are multiple valid solutions with different quality levels? Supervised learning can't distinguish between them—it treats all training examples as equally correct.
-
-Reinforcement learning, specifically Proximal Policy Optimization (PPO), addresses these limitations by defining explicit reward functions that encode our preferences. We can reward complete code more than truncated outputs, interactive components more than static ones, and idiomatic patterns more than unusual but technically correct alternatives. The model learns through exploration and feedback, discovering better solutions than those in the training data.
+This brings us to a critical question: what exactly do we mean by "Generative UI," and why does it require specialized approaches?
 
 ## Definition of Generative UI
 
@@ -65,11 +57,39 @@ This differs from code completion or snippet generation in crucial ways:
 
 In our implementation, we focus on React/TypeScript generation, treating each generation as a mapping from `(system_prompt, user_message) → React component code`. The model must learn the implicit constraints of React development: proper JSX syntax, hook usage rules, event handler patterns, and TypeScript type annotations.
 
-## Fine-Tuning and PPO: Why Reinforcement Learning for Generative UI
+## Why Fine-Tuning for Generative UI?
 
-Fine-tuning adapts a pre-trained language model to a specific domain or task by continuing training on targeted data. For generative UI, we face a critical question: *should we use supervised learning or reinforcement learning?*
+Having defined what generative UI entails, the natural question becomes: why can't off-the-shelf large language models handle this task effectively? Why invest effort in fine-tuning models specifically for UI generation?
 
-### The Supervised Learning Baseline
+The answer lies in understanding the unique requirements of UI code generation versus general-purpose coding:
+
+**Structural Completeness**: UI components must be complete, self-contained units. A truncated component with missing closing braces or incomplete return statements is completely unusable—unlike a general code snippet that might still provide partial value.
+
+**Interactivity and Dynamics**: Modern UIs aren't static displays; they respond to user actions through state management and event handlers. A beautiful-looking component that doesn't actually *do* anything fails its fundamental purpose.
+
+**Visual and Semantic Coherence**: The generated code must not only compile but also render appropriately. Styling, layout, and visual hierarchy matter as much as logical correctness.
+
+**Domain-Specific Patterns**: React development has established idioms—controlled components, proper hook usage, JSX conventions—that general-purpose models may not consistently follow without targeted training.
+
+These requirements suggest that fine-tuning is necessary. But what *kind* of fine-tuning? Traditional supervised learning or reinforcement learning?
+
+### The Supervised Learning Limitation
+
+Traditional supervised fine-tuning trains models on input-output pairs, essentially teaching imitation. But what if the training data contains suboptimal examples? What if there are multiple valid solutions with different quality levels? Supervised learning can't distinguish between them—it treats all training examples as equally correct.
+
+For generative UI, this is problematic. A dataset might contain components with varying levels of completeness, interactivity, and code quality. Supervised learning would learn to imitate both the good and the bad examples indiscriminately.
+
+### The Reinforcement Learning Solution
+
+Reinforcement learning, specifically Proximal Policy Optimization (PPO), addresses these limitations by defining explicit reward functions that encode our preferences. We can reward complete code more than truncated outputs, interactive components more than static ones, and idiomatic patterns more than unusual but technically correct alternatives. The model learns through exploration and feedback, discovering better solutions than those in the training data.
+
+This motivates our technical approach: PPO-based fine-tuning with carefully designed reward functions. Let's examine how this works in detail.
+
+## Fine-Tuning with PPO: Technical Deep Dive
+
+Now that we've established *why* reinforcement learning is necessary for generative UI, let's examine *how* it works. This section provides a technical deep dive into Proximal Policy Optimization and its application to UI code generation.
+
+### The Supervised Learning Baseline: A Mathematical Perspective
 
 Supervised learning optimizes a straightforward objective—minimize the cross-entropy loss between predicted and target tokens:
 
@@ -136,6 +156,8 @@ By sampling multiple completions per prompt (\\( k \\) samples), the model explo
 
 **3. Stability Through Clipping**  
 The clipping mechanism prevents catastrophic policy updates. Even if we sample an unusually good or bad trajectory, the policy update is bounded. This is crucial for fine-tuning pre-trained models where we want to adapt behavior, not destroy existing knowledge.
+
+With the theoretical foundation established, we can now turn to the practical implementation details.
 
 ## Implementation: Asynchronous PPO Training with Tinker
 
@@ -215,9 +237,13 @@ Our configuration:
 **Data Filtering**  
 We filter prompts exceeding 16k tokens during initialization to leave room for generation within the 32k context window. This prevents out-of-memory errors and truncated generations.
 
-## Results when comparing the fine-tuned model to raw Qwen model samples
+Having detailed the implementation, the critical question remains: does it actually work? Let's examine the empirical results.
+
+## Results: Comparing Fine-Tuned vs. Raw Qwen Model
 
 To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The following analysis is **qualitative**, focusing on observable improvements in code structure, completeness, and interactivity rather than quantitative metrics. The differences directly reflect the reward signals defined in our training objective.
+
+Each test case highlights a different aspect of the reward function's impact on generation quality.
 
 ### Use Case 1: Ride Booking Interface
 
@@ -289,7 +315,9 @@ The fine-tuned model generates improved leaderboards with:
 - **Conditional rendering**: Highlights for top players, empty state handling when no data exists
 - **Proper data mapping**: `.map()` with keys, proper TypeScript typing for player objects
 
-In this case, I was super interested with the model picking up real time updates using time. This was not something that I explicitly prompted the LLM. Yet, it reasoned from previous examples that real time updates could be valuable.
+In this case, I was particularly interested in observing the model generate real-time updates using time-based state changes. This was not something explicitly encoded in the prompt, yet the model inferred from training patterns that dynamic updates would enhance the user experience—demonstrating genuine learned understanding rather than mere template replication.
+
+These qualitative results validate the PPO approach, but implementing this system revealed important practical considerations about infrastructure and tooling.
 
 ## Technical Considerations and Lessons Learned with Tinker
 
@@ -312,6 +340,8 @@ My experience using Tinker for this generative UI fine-tuning project provided v
 3. **Access Model and Collaboration**: Tinker operates in private beta, which required coordination with the Thinking Machines team for access and onboarding. While this provided an opportunity for direct technical support, it also meant that reproducing these results requires similar access arrangements. For teams evaluating fine-tuning platforms, understanding the access model and support structure is important for project planning and timeline estimation.
 
 **Future Directions for Reward Function Engineering**: One area where additional tooling could provide significant value is automated reward function tuning. In this project, I manually specified weights for completeness, interactivity, and validity rewards (\\( w_1 = 7.5 \\), \\( w_2 = 1.8 \\), etc.). These values were determined through iterative experimentation—adjusting weights, observing generated samples, and refining the balance. A platform that could automate this hyperparameter search using techniques like Bayesian optimization or learned reward functions would substantially reduce the engineering burden and enable faster convergence to optimal reward specifications.
+
+Having explored the theory, implementation, results, and practical infrastructure considerations, we can now synthesize the key insights from this project.
 
 ## Conclusion
 
