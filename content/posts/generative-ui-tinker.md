@@ -5,11 +5,13 @@ draft = true
 math = true
 +++
 
-**"Form and function should be one, joined in a spiritual union" - Frank Lloyd Wright**
+*"Form and function should be one, joined in a spiritual union" - Frank Lloyd Wright*
+
+Research code: https://github.com/pranavc28/generative-ui
 
 ## Purpose
 
-This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, a chinese open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used [Tinker](http://tinker-docs.thinkingmachines.ai/) to fine tune my own LLM, a product released by the team at [Thinking Machines Lab](https://thinkingmachines.ai/).
+This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used [Tinker](http://tinker-docs.thinkingmachines.ai/) to fine tune my own LLM, a product released by the team at [Thinking Machines Lab](https://thinkingmachines.ai/).
 
 It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.
 
@@ -214,6 +216,79 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 
 ## Results when comparing the fine-tuned model to raw Qwen model samples
 
+To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The differences are striking and directly reflect the reward signals defined in our training objective.
+
+### Use Case 1: Ride Booking Interface
+
+**Raw Model Performance**
+
+![Raw Qwen Transport Interface Failure](/blog/images/sample_qwen_transport_fail.png)
+
+
+The raw model's output exhibits the most critical failure: **Incomplete code generation**: the component is truncated mid-function, missing closing braces and return statements.
+
+**Fine-Tuned Model Performance**
+
+![Fine-Tuned Qwen Transport Interface](/blog/images/fine_tune_qwen_easy_rider_transport.png)
+
+![Fine-Tuned Live Ride Booking](/blog/images/fine_tune_ride_book_live.png)
+
+
+The fine-tuned model demonstrates substantial improvement:
+- **Structural completeness**: Fully formed component with proper exports and matched delimiters
+- **Rich interactivity**: Multiple `useState` hooks managing ride selection, pickup/dropoff locations, and booking confirmation
+- **Event handler coverage**: onClick handlers for ride type selection, onChange for input fields, onSubmit for booking confirmation
+- **Conditional rendering**: Dynamic UI showing different states (selecting ride, confirming booking, success message)
+
+The fine-tuned model generates not just syntactically correct code, but a **functionally complete, interactive booking flow** that responds to user actions—exactly what our reward function incentivized. Given the addition of a new computational reward variable for dynamic code, we can see that the LLM picks up on this use case for code generation.
+
+### Use Case 2: Google Search Homepage
+
+**Raw Model Performance**
+
+![Raw Qwen Google Homepage](/blog/images/qwen_sample_google_homepage.png)
+
+The raw model produces a basic structure but falls short:
+- **Limited interactivity**: Search input exists but lacks proper state management
+- **Missing event handlers**: No onSubmit handler for search functionality, no onChange for input updates
+- **Static elements**: Buttons and links that don't respond to user interaction
+- **Truncation issues**: May cut off mid-styling or mid-component definition
+
+**Fine-Tuned Model Performance**
+
+![Fine-Tuned Google Search Homepage](/blog/images/fine_tune_google_search_works.png)
+
+The fine-tuned model excels:
+- **Complete state management**: `useState` hook managing search query input
+- **Functional search**: Proper form submission with `onSubmit` handler, and clear search query processing even if the results are hardcoded
+- **Reactive UI**: Input field updates in real-time with `onChange` handler, controlled component pattern
+- **Visual polish**: Complete styling that matches the Google aesthetic, properly balanced quotes in className strings
+- **Balanced delimiters**: All braces, brackets, and parentheses properly matched
+
+The reward function's emphasis on interactivity (\\( R_{\text{interactive}} \\)) is clearly visible—the fine-tuned model doesn't just render a static homepage mockup, it generates a **functional search interface with proper React patterns**.
+
+### Use Case 3: Leaderboard Display
+
+**Raw Model Performance**
+
+![Raw Qwen Leaderboard](/blog/images/raw_leaderboard.png)
+
+The raw model's leaderboard suffers from:
+- **Incomplete rendering**: May truncate the list of players or miss closing tags
+- **Static data**: Hardcoded player list with no dynamic updates or sorting
+- **Poor data structure**: Inconsistent formatting or missing key player attributes
+- **No interactivity**: Unable to filter, sort, or update leaderboard dynamically
+
+**Fine-Tuned Model Performance** *(inferred from training patterns)*
+
+The fine-tuned model generates improved leaderboards with:
+- **Complete table structure**: All rows and columns properly closed, balanced JSX elements
+- **State-driven rendering**: Uses `useState` to manage leaderboard data, enabling dynamic updates. Also updates leaderboards in realtime as a demo as time progresses.
+- **Interactive features**: Sorting by clicking column headers, filtering by player name, expandable rows for player details
+- **Conditional rendering**: Highlights for top players, empty state handling when no data exists
+- **Proper data mapping**: `.map()` with keys, proper TypeScript typing for player objects
+
+In this case, I was super interested with the model picking up real time updates using time. This was not something that I explicitly prompted the LLM. Yet, it reasoned from previous examples that real time updates could be valuable.
 
 ## Thoughts on Tinker
 

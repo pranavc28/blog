@@ -8,8 +8,9 @@
 <title>Tinkering with Generative UI | Pranav on a Tangent</title>
 <meta name="keywords" content="">
 <meta name="description" content="&ldquo;Form and function should be one, joined in a spiritual union&rdquo; - Frank Lloyd Wright
+Research code: https://github.com/pranavc28/generative-ui
 Purpose
-This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, a chinese open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used Tinker to fine tune my own LLM, a product released by the team at Thinking Machines Lab.
+This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used Tinker to fine tune my own LLM, a product released by the team at Thinking Machines Lab.
 It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/blog/posts/generative-ui-tinker/">
@@ -145,9 +146,10 @@ It did a great job, and produced generally usable React code to the level that I
 
 </div>
   </header> 
-  <div class="post-content"><p><strong>&ldquo;Form and function should be one, joined in a spiritual union&rdquo; - Frank Lloyd Wright</strong></p>
+  <div class="post-content"><p><em>&ldquo;Form and function should be one, joined in a spiritual union&rdquo; - Frank Lloyd Wright</em></p>
+<p>Research code: <a href="https://github.com/pranavc28/generative-ui">https://github.com/pranavc28/generative-ui</a></p>
 <h2 id="purpose">Purpose<a hidden class="anchor" aria-hidden="true" href="#purpose">#</a></h2>
-<p>This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, a chinese open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used <a href="http://tinker-docs.thinkingmachines.ai/">Tinker</a> to fine tune my own LLM, a product released by the team at <a href="https://thinkingmachines.ai/">Thinking Machines Lab</a>.</p>
+<p>This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used <a href="http://tinker-docs.thinkingmachines.ai/">Tinker</a> to fine tune my own LLM, a product released by the team at <a href="https://thinkingmachines.ai/">Thinking Machines Lab</a>.</p>
 <p>It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.</p>
 <p>In this blog, I explain what fine tuning means, why Generative UI can/should be fine tuned, and left some of my thoughts on tinker.</p>
 <h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
@@ -300,6 +302,63 @@ Our configuration:</p>
 <p><strong>Data Filtering</strong><br>
 We filter prompts exceeding 16k tokens during initialization to leave room for generation within the 32k context window. This prevents out-of-memory errors and truncated generations.</p>
 <h2 id="results-when-comparing-the-fine-tuned-model-to-raw-qwen-model-samples">Results when comparing the fine-tuned model to raw Qwen model samples<a hidden class="anchor" aria-hidden="true" href="#results-when-comparing-the-fine-tuned-model-to-raw-qwen-model-samples">#</a></h2>
+<p>To evaluate the effectiveness of PPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The differences are striking and directly reflect the reward signals defined in our training objective.</p>
+<h3 id="use-case-1-ride-booking-interface">Use Case 1: Ride Booking Interface<a hidden class="anchor" aria-hidden="true" href="#use-case-1-ride-booking-interface">#</a></h3>
+<p><strong>Raw Model Performance</strong></p>
+<p><img alt="Raw Qwen Transport Interface Failure" loading="lazy" src="/blog/images/sample_qwen_transport_fail.png"></p>
+<p>The raw model&rsquo;s output exhibits the most critical failure: <strong>Incomplete code generation</strong>: the component is truncated mid-function, missing closing braces and return statements.</p>
+<p><strong>Fine-Tuned Model Performance</strong></p>
+<p><img alt="Fine-Tuned Qwen Transport Interface" loading="lazy" src="/blog/images/fine_tune_qwen_easy_rider_transport.png"></p>
+<p><img alt="Fine-Tuned Live Ride Booking" loading="lazy" src="/blog/images/fine_tune_ride_book_live.png"></p>
+<p>The fine-tuned model demonstrates substantial improvement:</p>
+<ul>
+<li><strong>Structural completeness</strong>: Fully formed component with proper exports and matched delimiters</li>
+<li><strong>Rich interactivity</strong>: Multiple <code>useState</code> hooks managing ride selection, pickup/dropoff locations, and booking confirmation</li>
+<li><strong>Event handler coverage</strong>: onClick handlers for ride type selection, onChange for input fields, onSubmit for booking confirmation</li>
+<li><strong>Conditional rendering</strong>: Dynamic UI showing different states (selecting ride, confirming booking, success message)</li>
+</ul>
+<p>The fine-tuned model generates not just syntactically correct code, but a <strong>functionally complete, interactive booking flow</strong> that responds to user actions—exactly what our reward function incentivized. Given the addition of a new computational reward variable for dynamic code, we can see that the LLM picks up on this use case for code generation.</p>
+<h3 id="use-case-2-google-search-homepage">Use Case 2: Google Search Homepage<a hidden class="anchor" aria-hidden="true" href="#use-case-2-google-search-homepage">#</a></h3>
+<p><strong>Raw Model Performance</strong></p>
+<p><img alt="Raw Qwen Google Homepage" loading="lazy" src="/blog/images/qwen_sample_google_homepage.png"></p>
+<p>The raw model produces a basic structure but falls short:</p>
+<ul>
+<li><strong>Limited interactivity</strong>: Search input exists but lacks proper state management</li>
+<li><strong>Missing event handlers</strong>: No onSubmit handler for search functionality, no onChange for input updates</li>
+<li><strong>Static elements</strong>: Buttons and links that don&rsquo;t respond to user interaction</li>
+<li><strong>Truncation issues</strong>: May cut off mid-styling or mid-component definition</li>
+</ul>
+<p><strong>Fine-Tuned Model Performance</strong></p>
+<p><img alt="Fine-Tuned Google Search Homepage" loading="lazy" src="/blog/images/fine_tune_google_search_works.png"></p>
+<p>The fine-tuned model excels:</p>
+<ul>
+<li><strong>Complete state management</strong>: <code>useState</code> hook managing search query input</li>
+<li><strong>Functional search</strong>: Proper form submission with <code>onSubmit</code> handler, and clear search query processing even if the results are hardcoded</li>
+<li><strong>Reactive UI</strong>: Input field updates in real-time with <code>onChange</code> handler, controlled component pattern</li>
+<li><strong>Visual polish</strong>: Complete styling that matches the Google aesthetic, properly balanced quotes in className strings</li>
+<li><strong>Balanced delimiters</strong>: All braces, brackets, and parentheses properly matched</li>
+</ul>
+<p>The reward function&rsquo;s emphasis on interactivity (\( R_{\text{interactive}} \)) is clearly visible—the fine-tuned model doesn&rsquo;t just render a static homepage mockup, it generates a <strong>functional search interface with proper React patterns</strong>.</p>
+<h3 id="use-case-3-leaderboard-display">Use Case 3: Leaderboard Display<a hidden class="anchor" aria-hidden="true" href="#use-case-3-leaderboard-display">#</a></h3>
+<p><strong>Raw Model Performance</strong></p>
+<p><img alt="Raw Qwen Leaderboard" loading="lazy" src="/blog/images/raw_leaderboard.png"></p>
+<p>The raw model&rsquo;s leaderboard suffers from:</p>
+<ul>
+<li><strong>Incomplete rendering</strong>: May truncate the list of players or miss closing tags</li>
+<li><strong>Static data</strong>: Hardcoded player list with no dynamic updates or sorting</li>
+<li><strong>Poor data structure</strong>: Inconsistent formatting or missing key player attributes</li>
+<li><strong>No interactivity</strong>: Unable to filter, sort, or update leaderboard dynamically</li>
+</ul>
+<p><strong>Fine-Tuned Model Performance</strong> <em>(inferred from training patterns)</em></p>
+<p>The fine-tuned model generates improved leaderboards with:</p>
+<ul>
+<li><strong>Complete table structure</strong>: All rows and columns properly closed, balanced JSX elements</li>
+<li><strong>State-driven rendering</strong>: Uses <code>useState</code> to manage leaderboard data, enabling dynamic updates. Also updates leaderboards in realtime as a demo as time progresses.</li>
+<li><strong>Interactive features</strong>: Sorting by clicking column headers, filtering by player name, expandable rows for player details</li>
+<li><strong>Conditional rendering</strong>: Highlights for top players, empty state handling when no data exists</li>
+<li><strong>Proper data mapping</strong>: <code>.map()</code> with keys, proper TypeScript typing for player objects</li>
+</ul>
+<p>In this case, I was super interested with the model picking up real time updates using time. This was not something that I explicitly prompted the LLM. Yet, it reasoned from previous examples that real time updates could be valuable.</p>
 <h2 id="thoughts-on-tinker">Thoughts on Tinker<a hidden class="anchor" aria-hidden="true" href="#thoughts-on-tinker">#</a></h2>
 <h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
 <p>Generative UI represents a paradigm shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with Proximal Policy Optimization, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces.</p>
