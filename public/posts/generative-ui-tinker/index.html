@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=58988&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/blog/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog/livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
@@ -16,16 +16,16 @@ Purpose
 This blog explores how I fine-tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research labs. I used Tinker to fine-tune my own LLM, a product released by the team at Thinking Machines Lab.
 It did a great job, and produced generally usable React code at a better level that I expected it to from an online dataset.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:58988/blog/posts/generative-ui-tinker/">
+<link rel="canonical" href="http://localhost:1313/blog/posts/generative-ui-tinker/">
 <link crossorigin="anonymous" href="/blog/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css" integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn&#43;yY=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:58988/favicon.svg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:58988/blog/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:58988/blog/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:58988/blog/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:58988/blog/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicon.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/blog/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/blog/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/blog/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/blog/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:58988/blog/posts/generative-ui-tinker/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/blog/posts/generative-ui-tinker/">
 <noscript>
     <style>
         #theme-toggle,
@@ -103,7 +103,7 @@ It did a great job, and produced generally usable React code at a better level t
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:58988/blog/" accesskey="h" title="Pranav on a Tangent (Alt + H)">Pranav on a Tangent</a>
+            <a href="http://localhost:1313/blog/" accesskey="h" title="Pranav on a Tangent (Alt + H)">Pranav on a Tangent</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -154,8 +154,8 @@ It did a great job, and produced generally usable React code at a better level t
 <p>In this blog, I explain what fine-tuning means, why Generative UI can/should be fine-tuned, and share some of my thoughts on Tinker.</p>
 <h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
 <p>As LLMs progressively become better, it is clear that entire backends, such as search or shopping, can be replaced. What about front ends, or user interfaces?</p>
-<p>Large Language Models (LLMs) have demonstrated remarkable capabilities in code generation, but their application to UI development faces unique challenges. Unlike backend logic or algorithmic problems where correctness is binary, UI code must balance multiple competing objectives: syntactic correctness, visual appeal, interactivity, accessibility, and alignment with user intent.</p>
-<p>This brings us to a critical question: what exactly do we mean by &ldquo;Generative UI,&rdquo; and why does it require specialized approaches?</p>
+<p>Large Language Models (LLMs) have demonstrated remarkable capabilities in code generation, but their application to UI development faces unique challenges. Unlike backend logic or algorithmic problems where correctness is clear, front end code must have multiple objectives: syntactic correctness, visual appeal, dynamism, and alignment with user intent.</p>
+<p>This brings a critical question: what is &ldquo;Generative UI,&rdquo; and why does it require specialized approaches?</p>
 <h2 id="definition-of-generative-ui">Definition of Generative UI<a hidden class="anchor" aria-hidden="true" href="#definition-of-generative-ui">#</a></h2>
 <p>Generative UI can be defined as a conditional generation task:</p>
 <p>Given:</p>
@@ -170,17 +170,17 @@ It did a great job, and produced generally usable React code at a better level t
 <p><strong>Visual Grounding</strong>: The code&rsquo;s visual output matters as much as its textual content—an interface that compiles but looks broken has failed its purpose.</p>
 <p><strong>Context Awareness</strong>: Generative UI systems must understand the broader context of UI development: component composition, state flow, event handling, styling approaches, and accessibility considerations.</p>
 <p><strong>Dynamic vs static code</strong>: Generative UI systems must be more dynamic in nature, given that each user has different intent and purposes thus may prefer their own version of interacting with an app.</p>
-<p>In our implementation, we focus on React/TypeScript generation, treating each generation as a mapping from <code>(system_prompt, user_message) → React component code</code>. The model must learn the implicit constraints of React development: proper JSX syntax, hook usage rules, event handler patterns, and TypeScript type annotations.</p>
+<p>In our implementation, we focus on React/TypeScript generation, treating each generation as a mapping from <code>(system_prompt, user_message) → React component code</code>.</p>
 <h2 id="why-fine-tuning-for-generative-ui">Why Fine-Tuning for Generative UI?<a hidden class="anchor" aria-hidden="true" href="#why-fine-tuning-for-generative-ui">#</a></h2>
-<p>Having defined what generative UI is, the natural question becomes: why can&rsquo;t off-the-shelf large language models handle this task effectively? Why invest effort in fine-tuning models specifically for UI generation?</p>
+<p>Having defined what generative UI is, why can&rsquo;t off-the-shelf large language models handle this task effectively? Why invest effort in fine-tuning models specifically for UI generation?</p>
 <ol>
-<li><strong>Interactivity and Dynamics</strong>: Modern UIs aren&rsquo;t static displays; they respond to user actions through state management and event handlers. A beautiful-looking component that doesn&rsquo;t actually <em>do</em> anything fails its fundamental purpose.</li>
-<li><strong>Visual and Semantic Coherence</strong>: The generated code must not only compile but also render appropriately. Styling, layout, and visual hierarchy matter as much as logical correctness. I trained it on an online dataset. Companies/startups have their own codebases and styles - they should use those.</li>
+<li><strong>Interactivity and Dynamics</strong>: Modern UIs aren&rsquo;t static displays; they respond to user actions through state management and event handlers. A beautiful-looking component that is not dynamic fails its fundamental purpose in today&rsquo;s world.</li>
+<li><strong>Visual Appeal</strong>: The generated code be visually appealing. Styling, layout, and visual hierarchy matter as much as logical correctness. I trained it on an online dataset. Companies/startups have their own codebases and styles - they should use those.</li>
 </ol>
 <p>These requirements suggest that fine-tuning is <em>helpful</em>. But what <em>kind</em> of fine-tuning? Traditional supervised learning or reinforcement learning?</p>
 <h3 id="the-supervised-learning-limitation">The Supervised Learning Limitation<a hidden class="anchor" aria-hidden="true" href="#the-supervised-learning-limitation">#</a></h3>
-<p>Traditional supervised fine-tuning trains models on input-output pairs, essentially teaching imitation. But what if the training data contains suboptimal examples? What if there are multiple valid solutions with different quality levels? Supervised learning can&rsquo;t distinguish between them—it treats all training examples as equally correct.</p>
-<p>For generative UI, this is problematic. A dataset might contain components with varying levels of completeness, interactivity, and code quality. Supervised learning would learn to imitate both the good and the bad examples indiscriminately.</p>
+<p>Traditional supervised fine-tuning trains models on input-output pairs, labeled as positive and negative example. But what if the training data contains suboptimal examples? What if there are multiple valid solutions with different quality levels?</p>
+<p>For generative UI, this is problematic. A dataset might contain components with varying levels of completeness, dynamism, and code quality. Supervised learning would learn to imitate both the good and the bad examples similarly.</p>
 <h3 id="the-reinforcement-learning-solution">The Reinforcement Learning Solution<a hidden class="anchor" aria-hidden="true" href="#the-reinforcement-learning-solution">#</a></h3>
 <p>Reinforcement learning, specifically Group Relative Policy Optimization (GRPO), addresses these limitations by defining explicit reward functions that encode preferences. We reward complete code more than truncated outputs, interactive components more than static ones, and idiomatic patterns more than unusual but technically correct alternatives. The model learns through exploration and feedback, discovering better solutions than those in the training data.</p>
 <p>This motivates a technical approach: GRPO-based fine-tuning with carefully designed reward functions.</p>
@@ -224,7 +224,7 @@ It did a great job, and produced generally usable React code at a better level t
 <p><strong>Why group-relative advantages?</strong> By using the group mean as a baseline, we normalize rewards within each prompt&rsquo;s context. A reward of +5 might be good for a simple component but poor for a complex one. Group-relative advantages automatically adapt to task difficulty—only completions better than the group average receive positive advantages.</p>
 <p>The gradient of this objective is:</p>
 <p>$$\nabla_\theta \mathcal{L}^{\text{GRPO}}(\theta) = \mathbb{E}_{x \sim \mathcal{D}} \left[\frac{1}{k}\sum_{i=1}^{k} \hat{A}_i \nabla_\theta \sum_{t} \log \pi_\theta(y_t^{(i)} \mid x, y_{&lt;t}^{(i)})\right]$$</p>
-<p>This gradient increases the probability of completions with positive advantages (above group mean) and decreases probability of completions with negative advantages (below group mean). The magnitude of the update is proportional to how much better or worse each completion is relative to its peers.</p>
+<p>This gradient increases the probability of completions with positive advantages (above group mean) and decreases probability of completions with negative advantages (below group mean). The magnitude of the update is proportional to how much better or worse each completion is relative to the other samples for the same example.</p>
 <p>Note, <strong>DeepSeek was trained using GRPO.</strong></p>
 <h3 id="why-grpo-for-generative-ui">Why GRPO for Generative UI?<a hidden class="anchor" aria-hidden="true" href="#why-grpo-for-generative-ui">#</a></h3>
 <p>GRPO addresses the limitations of supervised learning in three critical ways:</p>
@@ -241,7 +241,7 @@ We define a reward function that explicitly encodes UI quality:</p>
 </ul>
 <p>This <strong>multi-objective reward function captures the nuanced requirements of UI code</strong> that cross-entropy loss cannot express. In general, it also assumes that the model can produce compilable code but is not nuanced to produce output in the formats that we want.</p>
 <p><strong>2. Exploration and Discovery</strong><br>
-By sampling multiple completions per prompt (\( k \) samples), the model explores the solution space. Good solutions (above the K samples group mean) receive positive advantages, poor solutions (below the K samples group mean) receive negative advantages. Over time, the policy shifts toward generating better code.</p>
+By sampling multiple completions per prompt (\( k \) samples), the model explores the solution space. Good solutions (above the K samples group mean) receive positive advantages, whilst poor solutions (below the K samples group mean) receive negative advantages. Over time, the policy shifts toward generating better code.</p>
 <p>The model compares different approaches to the same problem within each batch, learning relative quality rather than absolute scores.</p>
 <p><strong>3. Stability Through Group Normalization</strong><br>
 The group-relative baseline provides automatic reward normalization. Even if we design reward functions with different scales, the advantages are normalized within each group. This prevents catastrophic policy updates—no single exceptionally high or low reward can dominate training. This is crucial for fine-tuning pre-trained models where we want to adapt behavior, not destroy existing knowledge. Unlike PPO&rsquo;s clipping mechanism, GRPO achieves stability through statistical normalization rather than hard constraints.</p>
@@ -249,7 +249,7 @@ The group-relative baseline provides automatic reward normalization. Even if we 
 <h2 id="implementation-asynchronous-grpo-training-with-tinker">Implementation: Asynchronous GRPO Training with Tinker<a hidden class="anchor" aria-hidden="true" href="#implementation-asynchronous-grpo-training-with-tinker">#</a></h2>
 <h3 id="algorithm-asynchronous-grpo-training-with-tinker">Algorithm: Asynchronous GRPO Training with Tinker<a hidden class="anchor" aria-hidden="true" href="#algorithm-asynchronous-grpo-training-with-tinker">#</a></h3>
 <p>My implementation follows the standard GRPO training loop with asynchronous sampling and gradient computation:</p>
-<p>The key innovation is asynchronous execution. Instead of synchronously sampling one prompt at a time, we launch all sampling requests concurrently, process results as they complete, and overlap computation phases.</p>
+<p>The key infrastructure challenge was figuring out asynchronous execution. Instead of synchronously sampling one prompt at a time, we launch all sampling requests concurrently, process results as they complete, and overlap computation phases.</p>
 <p>Below is an image of the general asynchronous calls that were computed to allow Tinker to work efficiently.</p>
 <p><img alt="Asynchronous GRPO Algorithm" loading="lazy" src="/blog/images/ppo_tinker.png"></p>
 <h3 id="reward-function-design">Reward function design<a hidden class="anchor" aria-hidden="true" href="#reward-function-design">#</a></h3>
@@ -328,7 +328,6 @@ The advantage computation is the heart of GRPO. For each prompt, we sample \( k 
 <p>The choice of \( k = 4 \) samples per prompt balances exploration (diversity in the group) with computational efficiency. Larger \( k \) provides more robust baselines but increases sampling cost linearly.</p>
 <p><strong>Data Filtering</strong><br>
 We filter prompts exceeding 16k tokens during initialization to leave room for generation within the 32k context window. This prevents out-of-memory errors and truncated generations.</p>
-<p>Having detailed the implementation, the critical question remains: does it actually work? Let&rsquo;s examine the empirical results.</p>
 <h2 id="results-comparing-fine-tuned-vs-raw-qwen-model">Results: Comparing Fine-Tuned vs. Raw Qwen Model<a hidden class="anchor" aria-hidden="true" href="#results-comparing-fine-tuned-vs-raw-qwen-model">#</a></h2>
 <p>To evaluate the effectiveness of GRPO fine-tuning, I tested both the raw Qwen model and the fine-tuned version on three distinct UI generation tasks: booking a ride interface, a Google search homepage, and a leaderboard display. The following analysis is <strong>qualitative</strong>, focusing on observable improvements in code structure, completeness, and interactivity rather than quantitative metrics. The differences directly reflect the reward signals defined in our training objective.</p>
 <p>Each test case highlights a different aspect of the reward function&rsquo;s impact on generation quality.</p>
@@ -346,7 +345,7 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <li><strong>Event handler coverage</strong>: onClick handlers for ride type selection, onChange for input fields, onSubmit for booking confirmation</li>
 <li><strong>Conditional rendering</strong>: Dynamic UI showing different states (selecting ride, confirming booking, success message)</li>
 </ul>
-<p>The fine-tuned model generates not just syntactically correct code, but a <strong>functionally complete, interactive booking flow</strong> that responds to user actions—exactly what our reward function incentivized. Given the addition of a new computational reward variable for dynamic code, we can see that the LLM picks up on this use case for code generation.</p>
+<p>The fine-tuned model generates not just syntactically correct code, but a <strong>functionally complete, interactive booking flow</strong> that responds to user actions—exactly what our reward function incentivized. Given the addition of a new computational reward variable for dynamic code, we can see that the LLM picks up on this use case effectively for code generation.</p>
 <h3 id="use-case-2-google-search-homepage">Use Case 2: Google Search Homepage<a hidden class="anchor" aria-hidden="true" href="#use-case-2-google-search-homepage">#</a></h3>
 <p><strong>Raw Model Performance</strong></p>
 <p><img alt="Raw Qwen Google Homepage" loading="lazy" src="/blog/images/qwen_sample_google_homepage.png"></p>
@@ -355,7 +354,6 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <li><strong>Limited interactivity</strong>: Search input exists but lacks proper state management</li>
 <li><strong>Missing event handlers</strong>: No onSubmit handler for search functionality, no onChange for input updates</li>
 <li><strong>Static elements</strong>: Buttons and links that don&rsquo;t respond to user interaction</li>
-<li><strong>Truncation issues</strong>: May cut off mid-styling or mid-component definition</li>
 </ul>
 <p><strong>Fine-Tuned Model Performance</strong></p>
 <p><img alt="Fine-Tuned Google Search Homepage" loading="lazy" src="/blog/images/fine_tune_google_search_works.png"></p>
@@ -364,8 +362,6 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <li><strong>Complete state management</strong>: <code>useState</code> hook managing search query input</li>
 <li><strong>Functional search</strong>: Proper form submission with <code>onSubmit</code> handler, and clear search query processing even if the results are hardcoded</li>
 <li><strong>Reactive UI</strong>: Input field updates in real-time with <code>onChange</code> handler, controlled component pattern</li>
-<li><strong>Visual polish</strong>: Complete styling that matches the Google aesthetic, properly balanced quotes in className strings</li>
-<li><strong>Balanced delimiters</strong>: All braces, brackets, and parentheses properly matched</li>
 </ul>
 <p>The reward function&rsquo;s emphasis on interactivity (\( R_{\text{interactive}} \)) is clearly visible—the fine-tuned model doesn&rsquo;t just render a static homepage mockup, it generates a <strong>functional search interface with proper React patterns</strong>.</p>
 <h3 id="use-case-3-leaderboard-display">Use Case 3: Leaderboard Display<a hidden class="anchor" aria-hidden="true" href="#use-case-3-leaderboard-display">#</a></h3>
@@ -373,7 +369,6 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <p><img alt="Raw Qwen Leaderboard" loading="lazy" src="/blog/images/raw_leaderboard.png"></p>
 <p>The raw model&rsquo;s leaderboard suffers from:</p>
 <ul>
-<li><strong>Incomplete rendering</strong>: May truncate the list of players or miss closing tags</li>
 <li><strong>Static data</strong>: Hardcoded player list with no dynamic updates or sorting</li>
 <li><strong>Poor data structure</strong>: Inconsistent formatting or missing key player attributes</li>
 <li><strong>No interactivity</strong>: Unable to filter, sort, or update leaderboard dynamically</li>
@@ -385,11 +380,10 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <li><strong>Complete table structure</strong>: All rows and columns properly closed, balanced JSX elements</li>
 <li><strong>State-driven rendering</strong>: Uses <code>useState</code> to manage leaderboard data, enabling dynamic updates. Also updates leaderboards in realtime as a demo as time progresses.</li>
 <li><strong>Interactive features</strong>: Sorting by clicking column headers, filtering by player name, expandable rows for player details</li>
-<li><strong>Conditional rendering</strong>: Highlights for top players, empty state handling when no data exists</li>
 <li><strong>Proper data mapping</strong>: <code>.map()</code> with keys, proper TypeScript typing for player objects</li>
 </ul>
-<p>In this case, I was particularly interested in observing the model generate real-time updates using time-based state changes. This was not something explicitly encoded in the prompt, yet the model inferred from training patterns that dynamic updates would enhance the user experience—demonstrating genuine learned understanding rather than mere template replication.</p>
-<p>These qualitative results validate the GRPO approach, but implementing this system revealed important practical considerations about infrastructure and tooling.</p>
+<p>In this case, I was particularly interested in observing how the model generate real-time updates using time-based state changes. This was not something explicitly encoded in the prompt, yet the model inferred from training patterns that dynamic updates would enhance the user experience—demonstrating genuine learned understanding rather than mere template replication.</p>
+<p>These qualitative results validate the GRPO approach, but implementing this system revealed important practical considerations about infrastructure and tooling around tinker.</p>
 <h2 id="technical-considerations-and-lessons-learned-with-tinker">Technical Considerations and Lessons Learned with Tinker<a hidden class="anchor" aria-hidden="true" href="#technical-considerations-and-lessons-learned-with-tinker">#</a></h2>
 <p>My experience using Tinker for this generative UI fine-tuning project provided valuable insights into distributed reinforcement learning infrastructure and practical considerations for implementing custom training loops at scale.</p>
 <p><strong>Key Strengths:</strong></p>
@@ -407,21 +401,20 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
 <p><strong>Technical Challenges and Solutions:</strong></p>
 <ol>
 <li>
-<p><strong>Asynchronous Workflow Optimization</strong>: I initially implemented a synchronous pipeline, processing one prompt at a time. This approach became a significant bottleneck, with idle GPU time during sequential operations. After discovering Tinker&rsquo;s native asynchronous support, I refactored the entire training loop to launch concurrent sampling requests. This architectural change transformed the training efficiency—instead of waiting for each sample to complete before starting the next, I could maintain high GPU utilization by overlapping computation phases. The lesson here is that understanding the platform&rsquo;s async capabilities upfront is crucial for performance optimization.</p>
+<p><strong>Asynchronous Workflow Optimization</strong>: I initially implemented a synchronous pipeline, processing one prompt at a time. This approach became a significant bottleneck, with idle GPU time during sequential operations. After discovering Tinker&rsquo;s native asynchronous support, I refactored the entire training loop to launch concurrent sampling requests. The lesson here is that understanding the platform&rsquo;s async capabilities upfront is crucial for performance optimization. It also raised another question, when should one use synchronous sampling? Perhaps Thinking Machine Labs could make that clearer in their guide.</p>
 </li>
 <li>
-<p><strong>Custom Monitoring Infrastructure</strong>: To track training convergence and debug reward function behavior, I needed detailed logging of epoch runs, reward distributions, and sampling efficiency. Tinker&rsquo;s API didn&rsquo;t provide built-in monitoring dashboards, so I implemented a custom logging framework that captured per-epoch metrics, advantage distributions, and policy divergence measures. This experience highlighted the importance of observability in RL training—without detailed metrics, diagnosing reward function issues or training instabilities would have been nearly impossible. For production deployments, integrating monitoring tools like Weights &amp; Biases or custom Prometheus exporters would be essential.</p>
+<p><strong>Custom Monitoring Infrastructure</strong>: To track training convergence and debug reward function behavior, I needed detailed logging of epoch runs, reward distributions, and sampling efficiency. Tinker&rsquo;s API didn&rsquo;t provide built-in monitoring dashboards, so I implemented custom logging that captured per-epoch metrics, advantage distributions, and policy divergence measures. This experience highlighted the importance of observability in RL training—without detailed metrics, diagnosing reward function issues or training instabilities would have been nearly impossible. For production deployments, integrating monitoring tools like Weights &amp; Biases would be essential.</p>
 </li>
 <li>
 <p><strong>Access Model and Collaboration</strong>: Tinker operates in private beta, which required coordination with the Thinking Machines team for access and onboarding. While this provided an opportunity for direct technical support, it also meant that reproducing these results requires similar access arrangements. For teams evaluating fine-tuning platforms, understanding the access model and support structure is important for project planning and timeline estimation.</p>
 </li>
 </ol>
-<p><strong>Future Directions for Reward Function Engineering</strong>: One area where additional tooling could provide significant value is automated reward function tuning. In this project, I manually specified weights for completeness, interactivity, and validity rewards (\( w_1 = 7.5 \), \( w_2 = 1.8 \), etc.). These values were determined through iterative experimentation—adjusting weights, observing generated samples, and refining the balance. A platform that could automate this hyperparameter search using techniques like Bayesian optimization or learned reward functions would substantially reduce the engineering burden and enable faster convergence to optimal reward specifications.</p>
-<p>Having explored the theory, implementation, results, and practical infrastructure considerations, we can now synthesize the key insights from this project.</p>
+<p><strong>Future Directions for Reward Function Engineering</strong>: One area where additional tooling could provide significant value is automated reward function tuning. In this project, I manually specified weights for completeness, interactivity, and validity rewards (\( w_1 = 7.5 \), \( w_2 = 1.8 \), etc.). These values were determined through iterative experimentation—adjusting weights, observing generated samples, and refining the balance. A platform that could automate this hyperparameter search using techniques like Bayesian optimization or &ldquo;learned reward functions&rdquo; would substantially reduce the engineering burden and enable faster convergence to optimal reward specifications.</p>
 <h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
-<p>Generative UI represents a shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with Group Relative Policy Optimization, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces based on exisiting code bases built at a company.</p>
-<p>Companies no longer have to mentor their front end engineers to build aesthetic front end applications. Simply fine tune an LLM on your exisitng codebase&rsquo;s reward signals, and ask the model to output code relative to your style.</p>
-<p>The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the cost of frontier models like GPT-4 or Claude 3.5. After fine-tuning on a domain-specific dataset with custom reward signals, the model generates functional, interactive React components. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks.</p>
+<p>The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the cost of frontier models like GPT-4 or Claude 3.5. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks.</p>
+<p>Generative UI represents a generational shift in interface development—from manual coding to specification-to-implementation via machine learning. By fine-tuning large language models with GRPO, we can teach models not just to imitate existing code, but to discover and generate high-quality, interactive, complete user interfaces based on exisiting code bases.</p>
+<p>Companies no longer have to mentor their front end engineers to build aesthetic front end applications. Simply fine tune an LLM similar to what I did on your exisiting codebase&rsquo;s reward signals, and ask the model to output code relative to your requirements and styles.</p>
 
 
   </div>
@@ -434,7 +427,7 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:58988/blog/">Pranav on a Tangent</a></span> · 
+        <span>&copy; 2025 <a href="http://localhost:1313/blog/">Pranav on a Tangent</a></span> · 
 
     <span>
         Powered by
