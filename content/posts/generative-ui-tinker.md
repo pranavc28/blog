@@ -355,6 +355,8 @@ My experience using Tinker for this generative UI fine-tuning project provided v
 
 **Future Directions for Reward Function Engineering**: One area where additional tooling could provide significant value is automated reward function tuning. In this project, I manually specified weights for completeness, interactivity, and validity rewards (\\( w_1 = 7.5 \\), \\( w_2 = 1.8 \\), etc.). These values were determined through iterative experimentation—adjusting weights, observing generated samples, and refining the balance. A platform that could automate this hyperparameter search using techniques like Bayesian optimization or "learned reward functions" would substantially reduce the engineering burden and enable faster convergence to optimal reward specifications.
 
+Until they have something truly native to their platform as a feature, such a reward function optimization, I don't why I'd use them again compared to competitors like Modal or Unsloth. I got a lot of free credits, which made me excited to give them a try!
+
 ## Conclusion
 
 The results from fine-tuning Qwen3-30B-A3B demonstrate the potential of open-source models for specialized tasks. These models deliver strong performance at a fraction of the cost of frontier models like GPT-4 or Claude 3.5. This reinforces a broader trend in the AI landscape: specialized, fine-tuned smaller models often outperform general-purpose larger models for well-defined tasks.
