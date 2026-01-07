@@ -136,7 +136,7 @@ With effective Reinforcement Learning techniques, it is possible to make Large L
     <h1 class="post-title entry-hint-parent">
       Self-Awareness Generalization in Large Language Models
     </h1>
-    <div class="post-meta"><span title='2025-01-20 07:07:07 +0100 +0100'>January 20, 2025</span>
+    <div class="post-meta"><span title='2026-01-05 07:07:07 +0100 +0100'>January 5, 2026</span>
 
 </div>
   </header> 
@@ -400,7 +400,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 <p>Our results provide <strong>partial support</strong> for the original claims.</p>
 <p><strong>Claim 1: RL can improve LLM self-awareness.</strong> ✅ <strong>Supported.</strong> GRPO training with calibration-aware rewards produces statistically significant improvements in NA recall within the training domain. FEVER-only training achieved +14.9% NA recall (p &lt; 0.0001), while mixed training achieved +29.3% NA recall on FEVER. The model learned to express uncertainty more appropriately when evidence was insufficient, validating that cheap RL on smaller models can meaningfully improve self-awareness without waiting for frontier lab solutions.</p>
 <p><strong>Claim 2: Self-awareness generalizes across domains.</strong> ❌ <strong>Not supported.</strong> Despite our hypothesis that diverse training would promote regularization and transfer, neither training regime produced statistically significant improvements on out-of-domain datasets (VitaminC, ClimateFEVER). The p-values ranged from 0.40–0.53, indicating no detectable transfer. Mixed training did show improved confidence differentiation (Conf Std) on out-of-domain data, but this did not translate to accuracy or F1 gains.</p>
-<p><strong>Implications.</strong> For practitioners deploying LLMs in high-stakes workflows, these results suggest that self-awareness calibration must be performed on in-domain data. A model trained to say &ldquo;I don&rsquo;t know&rdquo; on marketing claims will not reliably do so on medical claims. The good news: even with ~1,000 domain-specific examples and lightweight LoRA training, significant self-awareness gains are achievable. The path forward may require either (1) much larger and more diverse training mixtures, (2) explicit meta-learning objectives for uncertainty transfer, or (3) acceptance that calibration is inherently domain-specific.</p>
+<p><strong>Implications.</strong> For researchers deploying LLMs, these results suggest that self-awareness calibration must be performed on in-domain data. A model trained to say &ldquo;I don&rsquo;t know&rdquo; on marketing claims will not reliably do so on medical claims. The good news: even with ~1,000 domain-specific examples and lightweight LoRA training, significant self-awareness gains are achievable. The path forward may require either (1) much larger and more diverse training mixtures, (2) explicit meta-learning objectives for uncertainty transfer, or (3) acceptance that calibration is inherently domain-specific. The specific, is unknown with this research and a possible path of exploration.</p>
 
 
   </div>
