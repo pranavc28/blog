@@ -188,8 +188,7 @@ It did a great job, and produced generally usable React code at a better level t
 <p>Now that we&rsquo;ve established <em>why</em> reinforcement learning is necessary for generative UI, let&rsquo;s examine <em>how</em> it works. This section provides a technical deep dive into Group Relative Policy Optimization and its application to UI code generation.</p>
 <h3 id="the-supervised-learning-baseline-a-mathematical-perspective">The Supervised Learning Baseline: A Mathematical Perspective<a hidden class="anchor" aria-hidden="true" href="#the-supervised-learning-baseline-a-mathematical-perspective">#</a></h3>
 <p>Supervised learning optimizes a straightforward objective—minimize the cross-entropy loss between predicted and target tokens:</p>
-<p>$$\mathcal{L}_{\text{SL}}(\theta) = -\mathbb{E}_{x \sim \mathcal{D}}\left[\sum_{t} \log p_\theta(x_t \mid x_{&lt;t})\right]$$</p>
-<p>Where \( \theta \) are model parameters, \( \mathcal{D} \) is the training dataset, \( x_t \) is the token at position \( t \), and \( x_{&lt;t} \) is the context (all previous tokens).</p>
+$$\mathcal{L}\_{\text{SL}}(\theta) = -\mathbb{E}\_{x \sim \mathcal{D}}\left[\sum\_{t} \log p\_\theta(x\_t \mid x\_{<t})\right]$$<p>Where \( \theta \) are model parameters, \( \mathcal{D} \) is the training dataset, \( x_t \) is the token at position \( t \), and \( x_{&lt;t} \) is the context (all previous tokens).</p>
 <p>This approach teaches the model to maximize the likelihood of the exact training sequences. It&rsquo;s simple, stable, and works well when training data represents optimal behavior. However, it has fundamental limitations for UI generation:</p>
 <ol>
 <li><strong>Exposure Bias</strong>: During training, the model always sees correct previous tokens; at inference, its own potentially incorrect predictions compound.</li>
@@ -198,24 +197,21 @@ It did a great job, and produced generally usable React code at a better level t
 </ol>
 <h3 id="group-relative-policy-optimization-grpo">Group Relative Policy Optimization (GRPO)<a hidden class="anchor" aria-hidden="true" href="#group-relative-policy-optimization-grpo">#</a></h3>
 <p>GRPO is a policy gradient reinforcement learning algorithm specifically designed for LLM fine-tuning. Unlike PPO, which requires a separate value network to estimate advantages, GRPO computes advantages directly from a group of sampled trajectories. Instead of maximizing likelihood of specific sequences, GRPO maximizes expected reward:</p>
-<p>$$\mathcal{J}(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[R(\tau)\right]$$</p>
-<p>Where:</p>
+$$\mathcal{J}(\theta) = \mathbb{E}\_{\tau \sim \pi\_\theta}\left[R(\tau)\right]$$<p>Where:</p>
 <ul>
 <li>\( \pi_\theta \) is the policy (our language model)</li>
 <li>\( \tau \) is a trajectory (generated token sequence)</li>
 <li>\( R(\tau) \) is the total reward</li>
 </ul>
 <p>The key innovation of GRPO is <strong>group-relative advantage estimation</strong>. For each prompt, we sample \( k \) completions and compute advantages relative to the group mean:</p>
-<p>$$\hat{A}_i = R(\tau_i) - \frac{1}{k}\sum_{j=1}^{k} R(\tau_j)$$</p>
-<p>Where:</p>
+$$\hat{A}\_i = R(\tau\_i) - \frac{1}{k}\sum\_{j=1}^{k} R(\tau\_j)$$<p>Where:</p>
 <ul>
 <li>\( \tau_i \) is the \( i \)-th sampled trajectory in the group</li>
 <li>\( R(\tau_i) \) is the reward for trajectory \( i \)</li>
 <li>The group mean \( \frac{1}{k}\sum_{j=1}^{k} R(\tau_j) \) serves as a baseline</li>
 </ul>
 <p>The GRPO objective function is:</p>
-<p>$$\mathcal{L}^{\text{GRPO}}(\theta) = \mathbb{E}_{x \sim \mathcal{D}} \left[\frac{1}{k}\sum_{i=1}^{k} \hat{A}_i \sum_{t} \log \pi_\theta(y_t^{(i)} \mid x, y_{&lt;t}^{(i)})\right]$$</p>
-<p>Where:</p>
+$$\mathcal{L}^{\text{GRPO}}(\theta) = \mathbb{E}\_{x \sim \mathcal{D}} \left[\frac{1}{k}\sum\_{i=1}^{k} \hat{A}\_i \sum\_{t} \log \pi\_\theta(y\_t^{(i)} \mid x, y\_{<t}^{(i)})\right]$$<p>Where:</p>
 <ul>
 <li>\( x \) is the prompt (user request)</li>
 <li>\( y^{(i)} \) is the \( i \)-th generated completion</li>
@@ -223,15 +219,13 @@ It did a great job, and produced generally usable React code at a better level t
 </ul>
 <p><strong>Why group-relative advantages?</strong> By using the group mean as a baseline, we normalize rewards within each prompt&rsquo;s context. A reward of +5 might be good for a simple component but poor for a complex one. Group-relative advantages automatically adapt to task difficulty—only completions better than the group average receive positive advantages.</p>
 <p>The gradient of this objective is:</p>
-<p>$$\nabla_\theta \mathcal{L}^{\text{GRPO}}(\theta) = \mathbb{E}_{x \sim \mathcal{D}} \left[\frac{1}{k}\sum_{i=1}^{k} \hat{A}_i \nabla_\theta \sum_{t} \log \pi_\theta(y_t^{(i)} \mid x, y_{&lt;t}^{(i)})\right]$$</p>
-<p>This gradient increases the probability of completions with positive advantages (above group mean) and decreases probability of completions with negative advantages (below group mean). The magnitude of the update is proportional to how much better or worse each completion is relative to the other samples for the same example.</p>
+$$\nabla\_\theta \mathcal{L}^{\text{GRPO}}(\theta) = \mathbb{E}\_{x \sim \mathcal{D}} \left[\frac{1}{k}\sum\_{i=1}^{k} \hat{A}\_i \nabla\_\theta \sum\_{t} \log \pi\_\theta(y\_t^{(i)} \mid x, y\_{<t}^{(i)})\right]$$<p>This gradient increases the probability of completions with positive advantages (above group mean) and decreases probability of completions with negative advantages (below group mean). The magnitude of the update is proportional to how much better or worse each completion is relative to the other samples for the same example.</p>
 <p>Note, <strong>DeepSeek was trained using GRPO.</strong></p>
 <h3 id="why-grpo-for-generative-ui">Why GRPO for Generative UI?<a hidden class="anchor" aria-hidden="true" href="#why-grpo-for-generative-ui">#</a></h3>
 <p>GRPO addresses the limitations of supervised learning in three critical ways:</p>
 <p><strong>1. Reward-Based Optimization</strong><br>
 We define a reward function that explicitly encodes UI quality:</p>
-<p>$$R(\text{code}) = R_{\text{base}} + w_1 R_{\text{complete}} + w_2 R_{\text{valid}} + w_3 R_{\text{interactive}} + w_4 R_{\text{quotes}} - w_5 \text{penalty}_{\text{length}}$$</p>
-<p>Where:</p>
+$$R(\text{code}) = R_{\text{base}} + w_1 R_{\text{complete}} + w_2 R_{\text{valid}} + w_3 R_{\text{interactive}} + w_4 R_{\text{quotes}} - w_5 \text{penalty}_{\text{length}}$$<p>Where:</p>
 <ul>
 <li>\( R_{\text{complete}} \): Reward for structural completeness (matched braces, proper endings)</li>
 <li>\( R_{\text{valid}} \): Reward for syntactic validity (balanced delimiters, proper exports)</li>
@@ -428,7 +422,7 @@ We filter prompts exceeding 16k tokens during initialization to leave room for g
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/blog/">Pranav on a Tangent</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/blog/">Pranav on a Tangent</a></span> · 
 
     <span>
         Powered by

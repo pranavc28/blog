@@ -285,9 +285,7 @@ Return JSON: \{&#34;refined_queries&#34;: [&#34;query1&#34;, &#34;query2&#34;]\}
 <li><strong>Maximizes real-world utility</strong>: Finds the balance between conservative (excessive NOINFO) and aggressive (wrong classifications)</li>
 </ul>
 <p><strong>Mathematical Formulation:</strong></p>
-<p>$$T_\tau(\hat{y}_i, c_i) = \begin{cases} \text{NOINFO} &amp; \text{if } c_i &lt; \tau \land \hat{y}_i \neq \text{NOINFO} \ \hat{y}_i &amp; \text{otherwise} \end{cases}$$</p>
-<p>$$\tau^* = \arg\max_{\tau \in \Theta} F1_{\text{NOINFO}}(\tau)$$</p>
-<p><strong>Where:</strong></p>
+$$T_\tau(\hat{y}_i, c_i) = \begin{cases} \text{NOINFO} & \text{if } c_i < \tau \land \hat{y}_i \neq \text{NOINFO} \\ \hat{y}_i & \text{otherwise} \end{cases}$$$$\tau^* = \arg\max_{\tau \in \Theta} F1_{\text{NOINFO}}(\tau)$$<p><strong>Where:</strong></p>
 <ul>
 <li>\(T_\tau(\hat{y}_i, c_i)\) - transformation function with threshold \(\tau\)</li>
 <li>\(c_i\) - confidence score for instance \(i\)</li>
@@ -447,7 +445,7 @@ p = \frac{1}{K} \sum_{k=1}^{K} \mathbb{I}(|\delta_k| \geq |\delta_{obs}|)
     </main>
     
 <footer class="footer">
-        <span>&copy; 2025 <a href="http://localhost:1313/blog/">Pranav on a Tangent</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/blog/">Pranav on a Tangent</a></span> · 
 
     <span>
         Powered by

@@ -6,18 +6,32 @@
     <description>Recent content in Posts on Pranav on a Tangent</description>
     <generator>Hugo -- 0.150.1</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 14 Nov 2025 07:07:07 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 20 Dec 2025 07:07:07 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Self-Awareness Generalization in Large Language Models</title>
+      <link>http://localhost:1313/blog/posts/self-awareness-generalization/</link>
+      <pubDate>Sat, 20 Dec 2025 07:07:07 +0100</pubDate>
+      <guid>http://localhost:1313/blog/posts/self-awareness-generalization/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;Research code:&lt;/strong&gt; &lt;a href=&#34;https://github.com/pranavc28/self-awareness-grpo&#34;&gt;https://github.com/pranavc28/self-awareness-grpo&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;LLM:&lt;/strong&gt; openai/gpt-oss-20b&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Datasets:&lt;/strong&gt; &lt;a href=&#34;https://github.com/tdiggelm/climate-fever-dataset&#34;&gt;https://github.com/tdiggelm/climate-fever-dataset&lt;/a&gt;, &lt;a href=&#34;https://fever.ai/download/fever/train.jsonl&#34;&gt;https://fever.ai/download/fever/train.jsonl&lt;/a&gt;, &lt;a href=&#34;https://github.com/TalSchuster/VitaminC&#34;&gt;https://github.com/TalSchuster/VitaminC&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;claim&#34;&gt;Claim&lt;/h2&gt;
+&lt;p&gt;With effective Reinforcement Learning techniques, it is possible to make Large Language Models (LLMs) more self-aware, and better at letting users know when they cannot provide a high confidence response to a request. We will call such an outcome &amp;ldquo;not enough information/not applicable&amp;rdquo;. Such an outcome will be crucial, as AI embeds itself in more workflows, to gain more trust in situations where an incorrect outcome such as PASS/FAIL will worsen the user experience.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Tinkering with Generative UI</title>
       <link>http://localhost:1313/blog/posts/generative-ui-tinker/</link>
       <pubDate>Fri, 14 Nov 2025 07:07:07 +0100</pubDate>
       <guid>http://localhost:1313/blog/posts/generative-ui-tinker/</guid>
       <description>&lt;p&gt;&lt;em&gt;&amp;ldquo;Form and function should be one, joined in a spiritual union&amp;rdquo; - Frank Lloyd Wright&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;Research code: &lt;a href=&#34;https://github.com/pranavc28/generative-ui&#34;&gt;https://github.com/pranavc28/generative-ui&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Research code: &lt;a href=&#34;https://github.com/pranavc28/generative-ui&#34;&gt;https://github.com/pranavc28/generative-ui&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Dataset: &lt;a href=&#34;https://huggingface.co/datasets/cfahlgren1/react-code-instructions/&#34;&gt;https://huggingface.co/datasets/cfahlgren1/react-code-instructions/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2 id=&#34;purpose&#34;&gt;Purpose&lt;/h2&gt;
-&lt;p&gt;This blog explores how I fine tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research lab. I used &lt;a href=&#34;http://tinker-docs.thinkingmachines.ai/&#34;&gt;Tinker&lt;/a&gt; to fine tune my own LLM, a product released by the team at &lt;a href=&#34;https://thinkingmachines.ai/&#34;&gt;Thinking Machines Lab&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;It did a great job, and produced generally usable React code to the level that I expected it to from an online dataset.&lt;/p&gt;</description>
+&lt;p&gt;This blog explores how I fine-tuned Qwen, Qwen/Qwen3-30B-A3B, an open source model producing React code for a fraction of the cost of any of the top-tier AI research labs. I used &lt;a href=&#34;http://tinker-docs.thinkingmachines.ai/&#34;&gt;Tinker&lt;/a&gt; to fine-tune my own LLM, a product released by the team at &lt;a href=&#34;https://thinkingmachines.ai/&#34;&gt;Thinking Machines Lab&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It did a great job, and produced generally usable React code at a better level that I expected it to from an online dataset.&lt;/p&gt;</description>
     </item>
     <item>
       <title>From Thinking to Knowing: Using Natural Language Confidence From LLM Thought Processes</title>
