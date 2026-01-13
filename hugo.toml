@@ -22,7 +22,7 @@ theme = 'PaperMod'
         Content = """
 
 Hey! Thanks for visiting :) This is Pranav. I work at Google Labs, building Enterprise AI agents to power Google's workforce for the future.
-All research that I post about is stuff that I can't find online, and wanted to explore for fun.
+Gaining interest in RL, self-awareness, and evals. Feel free to DM me, chat, or share feedback!
 """
 
     [[params.socialIcons]]
