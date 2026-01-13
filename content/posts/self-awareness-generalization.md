@@ -125,11 +125,11 @@ Fig 2. Rewards cumulative curve over training for FEVER-only training dataset
 
 ![Accuracy](/blog/images/mixed/accuracy.png)
 
-Fig 3. Accuracy curve over training for FEVER-only training dataset
+Fig 3. Accuracy curve over training for mixed training dataset
 
 ![Rewards Cumulative](/blog/images/mixed/rewards_cumulative.png)
 
-Fig 4. Rewards cumulative curve over training for FEVER-only training dataset
+Fig 4. Rewards cumulative curve over training for mixed training dataset
 
 ### Discussion
 
