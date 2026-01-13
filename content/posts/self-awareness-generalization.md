@@ -11,11 +11,11 @@ math = true
 
 **Datasets:** https://github.com/tdiggelm/climate-fever-dataset, https://fever.ai/download/fever/train.jsonl, https://github.com/TalSchuster/VitaminC
 
-## Claim
+## Claims
 
-With effective Reinforcement Learning techniques, it is possible to make Large Language Models (LLMs) more self-aware, and better at letting users know when they cannot provide a high confidence response to a request. We will call such an outcome "not enough information/not applicable". Such an outcome will be crucial, as AI embeds itself in more workflows, to gain more trust in situations where an incorrect outcome such as PASS/FAIL will worsen the user experience.
+1. **GRPO with calibration-aware rewards can improve NA recall by >10% on in-domain fact verification tasks.** With effective Reinforcement Learning techniques, it is possible to make Large Language Models (LLMs) more self-aware, and better at letting users know when they cannot provide a high confidence response to a request. We will call such an outcome "not enough information/not applicable" (NA). Such an outcome will be crucial, as AI embeds itself in more workflows, to gain more trust in situations where an incorrect outcome such as PASS/FAIL will worsen the user experience.
 
-I also propose that self-awareness is in itself generalizable. That is, test and train datasets could be on completely different topics. For example, assume we use marketing for training, medicine for test and the two share a "not enough information" outcome - I would expect that the "not enough information" accuracy for both datasets would increase in test after training the model with just the marketing dataset. The hypothesis is that generalization can be achieved with diverse datasets promoting regularization, which in turn reduces variance. 
+2. **Self-awareness transfers across domains: training on dataset A improves NA recall on unrelated dataset B.** I also propose that self-awareness is in itself generalizable. That is, test and train datasets could be on completely different topics. For example, assume we use FEVER (Wikipedia facts) for training and ClimateFEVER (climate science) for test—I would expect that the NA accuracy for both datasets would increase after training the model with just the FEVER dataset. The hypothesis is that generalization can be achieved with diverse datasets promoting regularization, which in turn reduces variance. 
 
 ## Motivation
 
@@ -66,11 +66,11 @@ R_{\text{shape}} = 0.1 \cdot \log p(y)
 \]
 
 \[
-R_{\text{cal}} = -0.25 \cdot (c - \mathbb{1}[\hat{y} = y])^2
+R_{\text{cal}} = -0.25 \cdot (c_{\text{verbal}} - \mathbb{1}[\hat{y} = y])^2
 \]
 
 \[
-R_{\text{align}} = -0.15 \cdot |c - p(\hat{y})|
+R_{\text{align}} = -0.15 \cdot |c_{\text{verbal}} - p(\hat{y})|
 \]
 
 \[
@@ -90,7 +90,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 **Where:**
 - \(\hat{y}\) is the emitted label parsed from the model's output
 - \(y\) is the ground truth label
-- \(c \in [0, 1]\) is the model's stated confidence
+- \(c_{\text{verbal}} \in [0, 1]\) is the model's stated verbal confidence (the confidence score the model explicitly outputs)
 - \(p(\ell)\) is the model's probed probability for label \(\ell\), obtained by computing softmax over log-probabilities of each label token
 
 ---
@@ -183,4 +183,4 @@ Our results provide **partial support** for the original claims.
 
 **Claim 2: Self-awareness generalizes across domains.** ❌ **Not supported.** Despite our hypothesis that diverse training would promote regularization and transfer, neither training regime produced statistically significant improvements on out-of-domain datasets (VitaminC, ClimateFEVER). The p-values ranged from 0.40–0.53, indicating no detectable transfer. Mixed training did show improved confidence differentiation (Conf Std) on out-of-domain data, but this did not translate to accuracy or F1 gains.
 
-**Implications.** For researchers deploying LLMs, these results suggest that self-awareness calibration must be performed on in-domain data. A model trained to say "I don't know" on marketing claims will not reliably do so on medical claims. The good news: even with ~1,000 domain-specific examples and lightweight LoRA training, significant self-awareness gains are achievable. The path forward may require either (1) much larger and more diverse training mixtures, (2) explicit meta-learning objectives for uncertainty transfer, or (3) acceptance that calibration is inherently domain-specific. The specific, is unknown with this research and a possible path of exploration.
+**Implications.** For researchers deploying LLMs, these results suggest that self-awareness calibration must be performed on in-domain data. A model trained to say "I don't know" on Wikipedia-derived claims will not reliably do so on climate science claims. The good news: even with ~1,000 domain-specific examples and lightweight LoRA training, significant self-awareness gains are achievable. The path forward may require either (1) much larger and more diverse training mixtures, (2) explicit meta-learning objectives for uncertainty transfer, or (3) acceptance that calibration is inherently domain-specific. Which of these approaches would unlock cross-domain generalization remains an open question for future research.
