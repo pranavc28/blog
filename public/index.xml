@@ -9,7 +9,7 @@
     <lastBuildDate>Tue, 20 Jan 2026 07:07:07 +0100</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Dataset Distribution needed for Generalization: A case study for self-awareness</title>
+      <title>Dataset Distribution needed for Generalization: A case study in self-awareness</title>
       <link>http://localhost:1313/blog/posts/generalization-dataset-distribution/</link>
       <pubDate>Tue, 20 Jan 2026 07:07:07 +0100</pubDate>
       <guid>http://localhost:1313/blog/posts/generalization-dataset-distribution/</guid>

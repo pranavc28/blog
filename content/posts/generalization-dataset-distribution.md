@@ -1,5 +1,5 @@
 +++
-title = 'Dataset Distribution needed for Generalization: A case study for self-awareness'
+title = 'Dataset Distribution needed for Generalization: A case study in self-awareness'
 date = 2026-01-20T07:07:07+01:00
 draft = true
 math = true
