@@ -117,8 +117,13 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 ## Reference
 
 [1] Kadavath et al. "Language Models (Mostly) Know What They Know." 2022. arXiv:2207.05221
+
 [2] Xiong et al. "Can LLMs Express Their Uncertainty?" 2023. arXiv:2305.18153
+
 [3] Schuster et al. "Get Your Vitamin C! Robust Fact Verification with Contrastive Evidence." NAACL 2021. ACL Anthology
-VitaminC GitHub. github.com/TalSchuster/VitaminC
-[4] Aly et al. "FEVEROUS: Fact Extraction and VERification Over Unstructured and [5] Structured Information." 2021. arXiv:2106.05707
+
+[4] VitaminC GitHub. github.com/TalSchuster/VitaminC
+
+[5] Aly et al. "FEVEROUS: Fact Extraction and VERification Over Unstructured and Structured Information." 2021. arXiv:2106.05707
+
 [6] DeepSeek-AI. "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning." 2025. arXiv:2501.12948
