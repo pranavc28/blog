@@ -114,7 +114,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 
 ## Conclusion
 
-## Reference
+## References
 
 [1] Kadavath et al. "Language Models (Mostly) Know What They Know." 2022. arXiv:2207.05221
 
