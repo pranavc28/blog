@@ -13,7 +13,7 @@
       <link>http://localhost:1313/blog/posts/generalization-dataset-distribution/</link>
       <pubDate>Tue, 20 Jan 2026 07:07:07 +0100</pubDate>
       <guid>http://localhost:1313/blog/posts/generalization-dataset-distribution/</guid>
-      <description>&lt;p&gt;&lt;em&gt;&amp;ldquo;In all things the middle state is to be praised.&amp;rdquo; - Aristotle&lt;/em&gt;&lt;/p&gt;
+      <description>&lt;p&gt;&lt;em&gt;&amp;ldquo;In all things the middle state is to be praised.&amp;rdquo; - &lt;strong&gt;Aristotle&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Research code:&lt;/strong&gt; &lt;a href=&#34;https://github.com/pranavc28/self-awareness-grpo&#34;&gt;https://github.com/pranavc28/self-awareness-grpo&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;LLM:&lt;/strong&gt; openai/gpt-oss-20b&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Datasets:&lt;/strong&gt; &lt;a href=&#34;https://github.com/tdiggelm/climate-fever-dataset&#34;&gt;https://github.com/tdiggelm/climate-fever-dataset&lt;/a&gt;, &lt;a href=&#34;https://fever.ai/download/fever/train.jsonl&#34;&gt;https://fever.ai/download/fever/train.jsonl&lt;/a&gt;, &lt;a href=&#34;https://github.com/TalSchuster/VitaminC&#34;&gt;https://github.com/TalSchuster/VitaminC&lt;/a&gt;&lt;/p&gt;
