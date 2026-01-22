@@ -263,13 +263,13 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 <hr>
 <p><strong>Design Rationale.</strong> The asymmetric class weights (NA=0.15, PASS=2.5, FAIL=3.5) combat NA collapse—the model&rsquo;s tendency to default to the &ldquo;safe&rdquo; NA prediction. The large exploration bonus (+8.0) makes attempting PASS/FAIL predictions immediately rewarding, while the gentle incorrect penalty (0.5) reduces risk aversion during exploration.</p>
 <h2 id="training-curves">Training Curves<a hidden class="anchor" aria-hidden="true" href="#training-curves">#</a></h2>
-<h3 id="cumulative-rewards">Cumulative Rewards<a hidden class="anchor" aria-hidden="true" href="#cumulative-rewards">#</a></h3>
+<h3 id="cumulative-rewards-in-order-of-best-performing-to-worst">Cumulative Rewards (In order of best performing to worst)<a hidden class="anchor" aria-hidden="true" href="#cumulative-rewards-in-order-of-best-performing-to-worst">#</a></h3>
 <p>The cumulative reward curves reveal distinct learning dynamics across the three training configurations.</p>
 <h4 id="hard-weighted-best">Hard-Weighted (Best)<a hidden class="anchor" aria-hidden="true" href="#hard-weighted-best">#</a></h4>
 <p><img alt="Hard-Weighted Cumulative Rewards" loading="lazy" src="/blog/images/best_mixed%203%20datatset%20training/rewards_cumulative.png"></p>
 <h4 id="balanced-worse">Balanced (Worse)<a hidden class="anchor" aria-hidden="true" href="#balanced-worse">#</a></h4>
 <p><img alt="Balanced Cumulative Rewards" loading="lazy" src="/blog/images/worse%203%20mixed%20dataset%20training/rewards_cumulative.png"></p>
-<h4 id="hard-only-2-sets">Hard-Only (2 Sets)<a hidden class="anchor" aria-hidden="true" href="#hard-only-2-sets">#</a></h4>
+<h4 id="hard-only-2-sets---worst">Hard-Only (2 sets - worst)<a hidden class="anchor" aria-hidden="true" href="#hard-only-2-sets---worst">#</a></h4>
 <p><img alt="Hard-Only Cumulative Rewards" loading="lazy" src="/blog/images/two%20sets%20training%20dataset/rewards_cumulative.png"></p>
 <hr>
 <h3 id="per-reward-component">Per Reward Component<a hidden class="anchor" aria-hidden="true" href="#per-reward-component">#</a></h3>
@@ -278,7 +278,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 <p><img alt="Hard-Weighted Component Contribution" loading="lazy" src="/blog/images/best_mixed%203%20datatset%20training/component_contribution.png"></p>
 <h4 id="balanced-worse-1">Balanced (Worse)<a hidden class="anchor" aria-hidden="true" href="#balanced-worse-1">#</a></h4>
 <p><img alt="Balanced Component Contribution" loading="lazy" src="/blog/images/worse%203%20mixed%20dataset%20training/component_contribution.png"></p>
-<h4 id="hard-only-2-sets-1">Hard-Only (2 Sets)<a hidden class="anchor" aria-hidden="true" href="#hard-only-2-sets-1">#</a></h4>
+<h4 id="hard-only-2-sets">Hard-Only (2 Sets)<a hidden class="anchor" aria-hidden="true" href="#hard-only-2-sets">#</a></h4>
 <p><img alt="Hard-Only Component Contribution" loading="lazy" src="/blog/images/two%20sets%20training%20dataset/component_contribution.png"></p>
 <hr>
 <h2 id="results-training-dataset-distribution-and-self-aware-generalization">Results: Training Dataset Distribution and Self-Aware Generalization<a hidden class="anchor" aria-hidden="true" href="#results-training-dataset-distribution-and-self-aware-generalization">#</a></h2>
