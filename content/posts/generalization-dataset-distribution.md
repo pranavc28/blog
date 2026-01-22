@@ -174,38 +174,33 @@ Breaking down the reward signal into its constituent components shows how each c
 **Hard-Only (2 Sets)**: Complete training failure. All reward components remain flat throughout 200 steps—r_explore stays at zero, indicating the model never attempts PASS/FAIL predictions. The total reward is stuck at -1.7, demonstrating NA collapse where the model defaults to the safe neutral prediction.
 
 ---
-
-### Evaluation Performance (Key Metrics)
-
-All metrics show improvement from baseline unless marked with ⬇️
+### Evaluation Performance (Relative Gains from Baseline)
 
 #### Hard-Weighted (Best) - Skewed toward hard examples
 
 | Dataset | Accuracy | Macro F1 | NA_f1 | NA_recall |
 |---------|----------|----------|-------|-----------|
-| FEVER | 94.3% ⬆️✅ | 0.93 ⬆️✅ | 0.98 ⬆️❌ | 1.00 ⬆️✅ |
-| VitaminC | 56.9% ⬆️✅ | 0.57 ⬆️✅ | **0.50 ⬆️✅** | **0.36 ⬆️✅** |
-| ClimateFEVER | 51.2% ⬆️✅ | 0.52 ⬆️✅ | **0.47 ⬆️✅** | **0.36 ⬆️✅** |
+| FEVER | +18.4% ✅ | +0.34 ✅ | +0.01 ❌ | +0.01 ✅ |
+| VitaminC | +20.7% ✅ | +0.30 ✅ | **+0.16 ✅** | **+0.14 ✅** |
+| ClimateFEVER | +23.4% ✅ | +0.34 ✅ | **+0.37 ✅** | **+0.31 ✅** |
 
 #### Balanced (Worse) - Equal split across 3 datasets
 
 | Dataset | Accuracy | Macro F1 | NA_f1 | NA_recall |
 |---------|----------|----------|-------|-----------|
-| FEVER | 95.5% ⬆️✅ | 0.94 ⬆️✅ | 0.99 ⬆️✅ | 1.00 ⬆️✅ |
-| VitaminC | 49.8% ⬆️✅ | 0.49 ⬆️✅ | **0.31 ⬆️❌** | **0.19 ⬇️❌** |
-| ClimateFEVER | 41.2% ⬆️✅ | 0.39 ⬆️✅ | **0.11 ⬆️❌** | **0.06 ⬆️❌** |
+| FEVER | +19.6% ✅ | +0.35 ✅ | +0.03 ✅ | +0.01 ✅ |
+| VitaminC | +13.6% ✅ | +0.22 ✅ | **-0.04 ❌** | **-0.03 ❌** |
+| ClimateFEVER | +13.5% ✅ | +0.22 ✅ | **+0.02 ❌** | **+0.01 ❌** |
 
 #### Hard-Only (2 Sets) - No easy examples
 
 | Dataset | Accuracy | Macro F1 | NA_f1 | NA_recall |
 |---------|----------|----------|-------|-----------|
-| FEVER | **72.7% ⬇️✅** | **0.62 ⬆️❌** | **0.79 ⬇️✅** | 1.00 ⬆️✅ |
-| VitaminC | 63.2% ⬆️✅ | 0.58 ⬆️✅ | 0.71 ⬆️✅ | 0.79 ⬆️✅ |
-| ClimateFEVER | 57.4% ⬆️✅ | 0.45 ⬆️✅ | 0.69 ⬆️✅ | 0.94 ⬆️✅ |
+| FEVER | **-3.2% ✅** | **+0.03 ❌** | **-0.17 ✅** | +0.01 ✅ |
+| VitaminC | +27.1% ✅ | +0.31 ✅ | +0.36 ✅ | +0.57 ✅ |
+| ClimateFEVER | +29.7% ✅ | +0.27 ✅ | +0.60 ✅ | +0.89 ✅ |
 
 **Legend:**
-- ⬆️ = Improved from baseline
-- ⬇️ = Regressed from baseline  
 - ✅ = Statistically significant (p < 0.01)  
 - ❌ = Not statistically significant  
 - **Bold** = Key metrics supporting conclusion
@@ -224,7 +219,7 @@ The balanced configuration achieves the highest training rewards (+2.8) and best
 
 #### 3. Hard-Only Training Breaks Easy Domain Performance
 
-Excluding easy examples entirely causes training collapse—the reward curves show no learning. While evaluation shows strong hard-dataset accuracy (VitaminC 63.2%, ClimateFEVER 57.4%), the model **regresses on FEVER** (72.7%, down from 75.9% baseline). McNemar's test confirms the model introduced 32 more errors than it corrected on the easy dataset. Without easy anchors, the model cannot develop stable learning dynamics.
+Excluding easy examples entirely causes training collapse—the reward curves show no learning. While evaluation shows strong hard-dataset accuracy (VitaminC 63.2%, ClimateFEVER 57.4%), the model **regresses on FEVER** (72.7%, down from 75.9% baseline).
 
 ---
 
@@ -232,9 +227,9 @@ Excluding easy examples entirely causes training collapse—the reward curves sh
 
 | Configuration | Training Signal | Easy (FEVER) | Hard Datasets | NA Calibration |
 |--------------|-----------------|--------------|---------------|----------------|
-| **Hard-Weighted** | Moderate (+1.0) | Strong (94.3%) | **Best** (54.1% avg) | **Significant** |
-| **Balanced** | Highest (+2.8) | **Best** (95.5%) | Worst (45.5% avg) | Not significant |
-| **Hard-Only** | Failed (-1.7) | **Regressed** (72.7%) | Good (60.3% avg) | N/A |
+| **Hard-Weighted (all 3 datasets)** | Moderate (+1.0) | Strong (94.3%) | **Best** (54.1% avg) | **Significant** |
+| **Balanced (all 3 datasets)** | Highest (+2.8) | **Best** (95.5%) | Worst (45.5% avg) | Not significant |
+| **Hard-Only (2 datasets, without fever)** | Failed (-1.7) | **Regressed** (72.7%) | Good (60.3% avg) | N/A |
 
 ---
 

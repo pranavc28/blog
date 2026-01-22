@@ -351,8 +351,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 <p><strong>Balanced (Worse)</strong>: Despite achieving the highest training rewards (+2.8 total), the steep climb in r_correct (+1.8) and r_explore (+1.5) suggests aggressive optimization on the training distribution. The model learns to maximize the reward signal but overfits to the balanced mixture rather than developing robust cross-domain self-awareness.</p>
 <p><strong>Hard-Only (2 Sets)</strong>: Complete training failure. All reward components remain flat throughout 200 steps—r_explore stays at zero, indicating the model never attempts PASS/FAIL predictions. The total reward is stuck at -1.7, demonstrating NA collapse where the model defaults to the safe neutral prediction.</p>
 <hr>
-<h3 id="evaluation-performance-key-metrics">Evaluation Performance (Key Metrics)<a hidden class="anchor" aria-hidden="true" href="#evaluation-performance-key-metrics">#</a></h3>
-<p>All metrics show improvement from baseline unless marked with ⬇️</p>
+<h3 id="evaluation-performance-relative-gains-from-baseline">Evaluation Performance (Relative Gains from Baseline)<a hidden class="anchor" aria-hidden="true" href="#evaluation-performance-relative-gains-from-baseline">#</a></h3>
 <h4 id="hard-weighted-best---skewed-toward-hard-examples">Hard-Weighted (Best) - Skewed toward hard examples<a hidden class="anchor" aria-hidden="true" href="#hard-weighted-best---skewed-toward-hard-examples">#</a></h4>
 <table>
   <thead>
@@ -367,24 +366,24 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
   <tbody>
       <tr>
           <td>FEVER</td>
-          <td>94.3% ⬆️✅</td>
-          <td>0.93 ⬆️✅</td>
-          <td>0.98 ⬆️❌</td>
-          <td>1.00 ⬆️✅</td>
+          <td>+18.4% ✅</td>
+          <td>+0.34 ✅</td>
+          <td>+0.01 ❌</td>
+          <td>+0.01 ✅</td>
       </tr>
       <tr>
           <td>VitaminC</td>
-          <td>56.9% ⬆️✅</td>
-          <td>0.57 ⬆️✅</td>
-          <td><strong>0.50 ⬆️✅</strong></td>
-          <td><strong>0.36 ⬆️✅</strong></td>
+          <td>+20.7% ✅</td>
+          <td>+0.30 ✅</td>
+          <td><strong>+0.16 ✅</strong></td>
+          <td><strong>+0.14 ✅</strong></td>
       </tr>
       <tr>
           <td>ClimateFEVER</td>
-          <td>51.2% ⬆️✅</td>
-          <td>0.52 ⬆️✅</td>
-          <td><strong>0.47 ⬆️✅</strong></td>
-          <td><strong>0.36 ⬆️✅</strong></td>
+          <td>+23.4% ✅</td>
+          <td>+0.34 ✅</td>
+          <td><strong>+0.37 ✅</strong></td>
+          <td><strong>+0.31 ✅</strong></td>
       </tr>
   </tbody>
 </table>
@@ -402,24 +401,24 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
   <tbody>
       <tr>
           <td>FEVER</td>
-          <td>95.5% ⬆️✅</td>
-          <td>0.94 ⬆️✅</td>
-          <td>0.99 ⬆️✅</td>
-          <td>1.00 ⬆️✅</td>
+          <td>+19.6% ✅</td>
+          <td>+0.35 ✅</td>
+          <td>+0.03 ✅</td>
+          <td>+0.01 ✅</td>
       </tr>
       <tr>
           <td>VitaminC</td>
-          <td>49.8% ⬆️✅</td>
-          <td>0.49 ⬆️✅</td>
-          <td><strong>0.31 ⬆️❌</strong></td>
-          <td><strong>0.19 ⬇️❌</strong></td>
+          <td>+13.6% ✅</td>
+          <td>+0.22 ✅</td>
+          <td><strong>-0.04 ❌</strong></td>
+          <td><strong>-0.03 ❌</strong></td>
       </tr>
       <tr>
           <td>ClimateFEVER</td>
-          <td>41.2% ⬆️✅</td>
-          <td>0.39 ⬆️✅</td>
-          <td><strong>0.11 ⬆️❌</strong></td>
-          <td><strong>0.06 ⬆️❌</strong></td>
+          <td>+13.5% ✅</td>
+          <td>+0.22 ✅</td>
+          <td><strong>+0.02 ❌</strong></td>
+          <td><strong>+0.01 ❌</strong></td>
       </tr>
   </tbody>
 </table>
@@ -437,31 +436,29 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
   <tbody>
       <tr>
           <td>FEVER</td>
-          <td><strong>72.7% ⬇️✅</strong></td>
-          <td><strong>0.62 ⬆️❌</strong></td>
-          <td><strong>0.79 ⬇️✅</strong></td>
-          <td>1.00 ⬆️✅</td>
+          <td><strong>-3.2% ✅</strong></td>
+          <td><strong>+0.03 ❌</strong></td>
+          <td><strong>-0.17 ✅</strong></td>
+          <td>+0.01 ✅</td>
       </tr>
       <tr>
           <td>VitaminC</td>
-          <td>63.2% ⬆️✅</td>
-          <td>0.58 ⬆️✅</td>
-          <td>0.71 ⬆️✅</td>
-          <td>0.79 ⬆️✅</td>
+          <td>+27.1% ✅</td>
+          <td>+0.31 ✅</td>
+          <td>+0.36 ✅</td>
+          <td>+0.57 ✅</td>
       </tr>
       <tr>
           <td>ClimateFEVER</td>
-          <td>57.4% ⬆️✅</td>
-          <td>0.45 ⬆️✅</td>
-          <td>0.69 ⬆️✅</td>
-          <td>0.94 ⬆️✅</td>
+          <td>+29.7% ✅</td>
+          <td>+0.27 ✅</td>
+          <td>+0.60 ✅</td>
+          <td>+0.89 ✅</td>
       </tr>
   </tbody>
 </table>
 <p><strong>Legend:</strong></p>
 <ul>
-<li>⬆️ = Improved from baseline</li>
-<li>⬇️ = Regressed from baseline</li>
 <li>✅ = Statistically significant (p &lt; 0.01)</li>
 <li>❌ = Not statistically significant</li>
 <li><strong>Bold</strong> = Key metrics supporting conclusion</li>
@@ -473,7 +470,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 <h4 id="2-equal-distribution-overfits-to-easy-examples">2. Equal Distribution Overfits to Easy Examples<a hidden class="anchor" aria-hidden="true" href="#2-equal-distribution-overfits-to-easy-examples">#</a></h4>
 <p>The balanced configuration achieves the highest training rewards (+2.8) and best FEVER performance (95.5%), but <strong>fails to learn calibrated NA predictions on hard datasets</strong>. NA_f1 and NA_recall improvements are not statistically significant on VitaminC (0.31/0.19) or ClimateFEVER (0.11/0.06). The model optimizes aggressively for the training signal but doesn&rsquo;t develop robust self-awareness for challenging domains.</p>
 <h4 id="3-hard-only-training-breaks-easy-domain-performance">3. Hard-Only Training Breaks Easy Domain Performance<a hidden class="anchor" aria-hidden="true" href="#3-hard-only-training-breaks-easy-domain-performance">#</a></h4>
-<p>Excluding easy examples entirely causes training collapse—the reward curves show no learning. While evaluation shows strong hard-dataset accuracy (VitaminC 63.2%, ClimateFEVER 57.4%), the model <strong>regresses on FEVER</strong> (72.7%, down from 75.9% baseline). McNemar&rsquo;s test confirms the model introduced 32 more errors than it corrected on the easy dataset. Without easy anchors, the model cannot develop stable learning dynamics.</p>
+<p>Excluding easy examples entirely causes training collapse—the reward curves show no learning. While evaluation shows strong hard-dataset accuracy (VitaminC 63.2%, ClimateFEVER 57.4%), the model <strong>regresses on FEVER</strong> (72.7%, down from 75.9% baseline).</p>
 <hr>
 <h3 id="summary-table">Summary Table<a hidden class="anchor" aria-hidden="true" href="#summary-table">#</a></h3>
 <table>
@@ -488,21 +485,21 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
   </thead>
   <tbody>
       <tr>
-          <td><strong>Hard-Weighted</strong></td>
+          <td><strong>Hard-Weighted (all 3 datasets)</strong></td>
           <td>Moderate (+1.0)</td>
           <td>Strong (94.3%)</td>
           <td><strong>Best</strong> (54.1% avg)</td>
           <td><strong>Significant</strong></td>
       </tr>
       <tr>
-          <td><strong>Balanced</strong></td>
+          <td><strong>Balanced (all 3 datasets)</strong></td>
           <td>Highest (+2.8)</td>
           <td><strong>Best</strong> (95.5%)</td>
           <td>Worst (45.5% avg)</td>
           <td>Not significant</td>
       </tr>
       <tr>
-          <td><strong>Hard-Only</strong></td>
+          <td><strong>Hard-Only (2 datasets, without fever)</strong></td>
           <td>Failed (-1.7)</td>
           <td><strong>Regressed</strong> (72.7%)</td>
           <td>Good (60.3% avg)</td>
