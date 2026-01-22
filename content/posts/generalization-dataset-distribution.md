@@ -110,7 +110,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 
 ## Training Curves
 
-### Cumulative Rewards (In order of best performing to worst)
+### Cumulative Rewards (In order of best performing in results to worst)
 
 The cumulative reward curves reveal distinct learning dynamics across the three training configurations.
 

@@ -263,7 +263,7 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 <hr>
 <p><strong>Design Rationale.</strong> The asymmetric class weights (NA=0.15, PASS=2.5, FAIL=3.5) combat NA collapse—the model&rsquo;s tendency to default to the &ldquo;safe&rdquo; NA prediction. The large exploration bonus (+8.0) makes attempting PASS/FAIL predictions immediately rewarding, while the gentle incorrect penalty (0.5) reduces risk aversion during exploration.</p>
 <h2 id="training-curves">Training Curves<a hidden class="anchor" aria-hidden="true" href="#training-curves">#</a></h2>
-<h3 id="cumulative-rewards-in-order-of-best-performing-to-worst">Cumulative Rewards (In order of best performing to worst)<a hidden class="anchor" aria-hidden="true" href="#cumulative-rewards-in-order-of-best-performing-to-worst">#</a></h3>
+<h3 id="cumulative-rewards-in-order-of-best-performing-in-results-to-worst">Cumulative Rewards (In order of best performing in results to worst)<a hidden class="anchor" aria-hidden="true" href="#cumulative-rewards-in-order-of-best-performing-in-results-to-worst">#</a></h3>
 <p>The cumulative reward curves reveal distinct learning dynamics across the three training configurations.</p>
 <h4 id="hard-weighted-best">Hard-Weighted (Best)<a hidden class="anchor" aria-hidden="true" href="#hard-weighted-best">#</a></h4>
 <p><img alt="Hard-Weighted Cumulative Rewards" loading="lazy" src="/blog/images/best_mixed%203%20datatset%20training/rewards_cumulative.png"></p>
