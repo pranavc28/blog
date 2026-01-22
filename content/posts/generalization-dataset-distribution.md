@@ -1,7 +1,7 @@
 +++
 title = 'Dataset Distribution needed for Generalization: A case study in self-awareness'
 date = 2026-01-20T07:07:07+01:00
-draft = true
+draft = false
 math = true
 +++
 
@@ -107,6 +107,42 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 **Design Rationale.** The asymmetric class weights (NA=0.15, PASS=2.5, FAIL=3.5) combat NA collapse—the model's tendency to default to the "safe" NA prediction. The large exploration bonus (+8.0) makes attempting PASS/FAIL predictions immediately rewarding, while the gentle incorrect penalty (0.5) reduces risk aversion during exploration.
 
 ## Training Curves
+
+### Cumulative Rewards
+
+The cumulative reward curves reveal distinct learning dynamics across the three training configurations.
+
+#### Hard-Weighted (Best)
+
+![Hard-Weighted Cumulative Rewards](/blog/images/best_mixed%203%20datatset%20training/rewards_cumulative.png)
+
+#### Balanced (Worse)
+
+![Balanced Cumulative Rewards](/blog/images/worse%203%20mixed%20dataset%20training/rewards_cumulative.png)
+
+#### Hard-Only (2 Sets)
+
+![Hard-Only Cumulative Rewards](/blog/images/two%20sets%20training%20dataset/rewards_cumulative.png)
+
+---
+
+### Per Reward Component
+
+Breaking down the reward signal into its constituent components shows how each configuration balances accuracy, exploration, and format compliance.
+
+#### Hard-Weighted (Best)
+
+![Hard-Weighted Component Contribution](/blog/images/best_mixed%203%20datatset%20training/component_contribution.png)
+
+#### Balanced (Worse)
+
+![Balanced Component Contribution](/blog/images/worse%203%20mixed%20dataset%20training/component_contribution.png)
+
+#### Hard-Only (2 Sets)
+
+![Hard-Only Component Contribution](/blog/images/two%20sets%20training%20dataset/component_contribution.png)
+
+---
 
 ## Results: Training Dataset Distribution and Self-Aware Generalization
 

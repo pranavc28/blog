@@ -149,12 +149,6 @@ Generealization is starting to become a more spoken buzzword in ML and AI podcas
     
     <h1 class="post-title entry-hint-parent">
       Dataset Distribution needed for Generalization: A case study in self-awareness
-      <span class="entry-hint" title="Draft">
-        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
-          <path
-            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-        </svg>
-      </span>
     </h1>
     <div class="post-meta"><span title='2026-01-20 07:07:07 +0100 +0100'>January 20, 2026</span>
 
@@ -269,6 +263,24 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 <hr>
 <p><strong>Design Rationale.</strong> The asymmetric class weights (NA=0.15, PASS=2.5, FAIL=3.5) combat NA collapse—the model&rsquo;s tendency to default to the &ldquo;safe&rdquo; NA prediction. The large exploration bonus (+8.0) makes attempting PASS/FAIL predictions immediately rewarding, while the gentle incorrect penalty (0.5) reduces risk aversion during exploration.</p>
 <h2 id="training-curves">Training Curves<a hidden class="anchor" aria-hidden="true" href="#training-curves">#</a></h2>
+<h3 id="cumulative-rewards">Cumulative Rewards<a hidden class="anchor" aria-hidden="true" href="#cumulative-rewards">#</a></h3>
+<p>The cumulative reward curves reveal distinct learning dynamics across the three training configurations.</p>
+<h4 id="hard-weighted-best">Hard-Weighted (Best)<a hidden class="anchor" aria-hidden="true" href="#hard-weighted-best">#</a></h4>
+<p><img alt="Hard-Weighted Cumulative Rewards" loading="lazy" src="/blog/images/best_mixed%203%20datatset%20training/rewards_cumulative.png"></p>
+<h4 id="balanced-worse">Balanced (Worse)<a hidden class="anchor" aria-hidden="true" href="#balanced-worse">#</a></h4>
+<p><img alt="Balanced Cumulative Rewards" loading="lazy" src="/blog/images/worse%203%20mixed%20dataset%20training/rewards_cumulative.png"></p>
+<h4 id="hard-only-2-sets">Hard-Only (2 Sets)<a hidden class="anchor" aria-hidden="true" href="#hard-only-2-sets">#</a></h4>
+<p><img alt="Hard-Only Cumulative Rewards" loading="lazy" src="/blog/images/two%20sets%20training%20dataset/rewards_cumulative.png"></p>
+<hr>
+<h3 id="per-reward-component">Per Reward Component<a hidden class="anchor" aria-hidden="true" href="#per-reward-component">#</a></h3>
+<p>Breaking down the reward signal into its constituent components shows how each configuration balances accuracy, exploration, and format compliance.</p>
+<h4 id="hard-weighted-best-1">Hard-Weighted (Best)<a hidden class="anchor" aria-hidden="true" href="#hard-weighted-best-1">#</a></h4>
+<p><img alt="Hard-Weighted Component Contribution" loading="lazy" src="/blog/images/best_mixed%203%20datatset%20training/component_contribution.png"></p>
+<h4 id="balanced-worse-1">Balanced (Worse)<a hidden class="anchor" aria-hidden="true" href="#balanced-worse-1">#</a></h4>
+<p><img alt="Balanced Component Contribution" loading="lazy" src="/blog/images/worse%203%20mixed%20dataset%20training/component_contribution.png"></p>
+<h4 id="hard-only-2-sets-1">Hard-Only (2 Sets)<a hidden class="anchor" aria-hidden="true" href="#hard-only-2-sets-1">#</a></h4>
+<p><img alt="Hard-Only Component Contribution" loading="lazy" src="/blog/images/two%20sets%20training%20dataset/component_contribution.png"></p>
+<hr>
 <h2 id="results-training-dataset-distribution-and-self-aware-generalization">Results: Training Dataset Distribution and Self-Aware Generalization<a hidden class="anchor" aria-hidden="true" href="#results-training-dataset-distribution-and-self-aware-generalization">#</a></h2>
 <h3 id="experimental-configurations">Experimental Configurations<a hidden class="anchor" aria-hidden="true" href="#experimental-configurations">#</a></h3>
 <table>
