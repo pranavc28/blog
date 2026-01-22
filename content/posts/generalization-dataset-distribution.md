@@ -5,7 +5,7 @@ draft = false
 math = true
 +++
 
-"In all things the middle state is to be praised." - Aristotle
+*"In all things the middle state is to be praised." - Aristotle*
 
 **Research code:** https://github.com/pranavc28/self-awareness-grpo
 
