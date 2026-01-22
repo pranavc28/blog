@@ -114,11 +114,11 @@ R_{\text{fmt}} = \begin{cases} -0.25 & \text{if output format invalid} \\ 0 & \t
 
 The cumulative reward curves reveal distinct learning dynamics across the three training configurations.
 
-#### Hard-Weighted (Best)
+#### Hard-Weighted, all 3 datasets (Best)
 
 ![Hard-Weighted Cumulative Rewards](/blog/images/best_mixed%203%20datatset%20training/rewards_cumulative.png)
 
-#### Balanced (Worse)
+#### Balanced, all 3 datasets (Worse)
 
 ![Balanced Cumulative Rewards](/blog/images/worse%203%20mixed%20dataset%20training/rewards_cumulative.png)
 
@@ -132,11 +132,11 @@ The cumulative reward curves reveal distinct learning dynamics across the three 
 
 Breaking down the reward signal into its constituent components shows how each configuration balances accuracy, exploration, and format compliance.
 
-#### Hard-Weighted (Best)
+#### Hard-Weighted, all 3 datasets (Best)
 
 ![Hard-Weighted Component Contribution](/blog/images/best_mixed%203%20datatset%20training/component_contribution.png)
 
-#### Balanced (Worse)
+#### Balanced, all 3 datasets (Worse)
 
 ![Balanced Component Contribution](/blog/images/worse%203%20mixed%20dataset%20training/component_contribution.png)
 
