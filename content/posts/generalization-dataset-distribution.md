@@ -5,6 +5,8 @@ draft = false
 math = true
 +++
 
+"In all things the middle state is to be praised." - Aristotle
+
 **Research code:** https://github.com/pranavc28/self-awareness-grpo
 
 **LLM:** openai/gpt-oss-20b

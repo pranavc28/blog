@@ -13,14 +13,13 @@
       <link>http://localhost:1313/blog/posts/generalization-dataset-distribution/</link>
       <pubDate>Tue, 20 Jan 2026 07:07:07 +0100</pubDate>
       <guid>http://localhost:1313/blog/posts/generalization-dataset-distribution/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Research code:&lt;/strong&gt; &lt;a href=&#34;https://github.com/pranavc28/self-awareness-grpo&#34;&gt;https://github.com/pranavc28/self-awareness-grpo&lt;/a&gt;&lt;/p&gt;
+      <description>&lt;p&gt;&amp;ldquo;In all things the middle state is to be praised.&amp;rdquo; - Aristotle&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Research code:&lt;/strong&gt; &lt;a href=&#34;https://github.com/pranavc28/self-awareness-grpo&#34;&gt;https://github.com/pranavc28/self-awareness-grpo&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;LLM:&lt;/strong&gt; openai/gpt-oss-20b&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Datasets:&lt;/strong&gt; &lt;a href=&#34;https://github.com/tdiggelm/climate-fever-dataset&#34;&gt;https://github.com/tdiggelm/climate-fever-dataset&lt;/a&gt;, &lt;a href=&#34;https://fever.ai/download/fever/train.jsonl&#34;&gt;https://fever.ai/download/fever/train.jsonl&lt;/a&gt;, &lt;a href=&#34;https://github.com/TalSchuster/VitaminC&#34;&gt;https://github.com/TalSchuster/VitaminC&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;claim&#34;&gt;Claim&lt;/h2&gt;
 &lt;p&gt;Diverse training datasets improve generalization, with harder examples requiring stronger representation than easier ones to effectively shift model behavior. However, training exclusively on difficult examples fails to transfer to simpler domains—a mixture of both easy and hard examples is necessary for robust cross-domain performance.&lt;/p&gt;
-&lt;p&gt;The domain considered is self-awareness. Follow my previous blogs for motivation and background.&lt;/p&gt;
-&lt;h2 id=&#34;motivation&#34;&gt;Motivation&lt;/h2&gt;
-&lt;p&gt;Generealization is starting to become a more spoken buzzword in ML and AI podcasts. I wanted to give it a stab, and try to formulate my own theories especially in the area of self-awareness.&lt;/p&gt;</description>
+&lt;p&gt;The domain considered is self-awareness. Follow my previous blogs for motivation and background.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Self-Awareness Generalization in Large Language Models</title>
