@@ -176,7 +176,7 @@ Breaking down the reward signal into its constituent components shows how each c
 ---
 ### Evaluation Performance (Relative Gains from Baseline)
 
-#### Hard-Weighted (Best) - Skewed toward hard examples
+#### Hard-Weighted (Best) - Skewed toward hard examples for all 3 datasets
 
 | Dataset | Accuracy | Macro F1 | NA_f1 | NA_recall |
 |---------|----------|----------|-------|-----------|
