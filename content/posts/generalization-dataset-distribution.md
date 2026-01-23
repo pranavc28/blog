@@ -245,10 +245,8 @@ The optimal strategy for self-aware fact verification is to weight training data
 
 [2] Xiong et al. "Can LLMs Express Their Uncertainty?" 2023. arXiv:2305.18153
 
-[3] Schuster et al. "Get Your Vitamin C! Robust Fact Verification with Contrastive Evidence." NAACL 2021. ACL Anthology
+[3] Schuster et al. "Get Your Vitamin C! Robust Fact Verification with Contrastive Evidence." NAACL 2021. ACL Anthology. VitaminC GitHub. github.com/TalSchuster/VitaminC
 
-[4] VitaminC GitHub. github.com/TalSchuster/VitaminC
+[4] Aly et al. "FEVEROUS: Fact Extraction and VERification Over Unstructured and Structured Information." 2021. arXiv:2106.05707
 
-[5] Aly et al. "FEVEROUS: Fact Extraction and VERification Over Unstructured and Structured Information." 2021. arXiv:2106.05707
-
-[6] DeepSeek-AI. "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning." 2025. arXiv:2501.12948
+[5] DeepSeek-AI. "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning." 2025. arXiv:2501.12948
