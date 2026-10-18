@@ -5,10 +5,10 @@ draft = false
 math = true
 +++
 
-Research code: [github.com/pranavc28/vibe-tuning](https://github.com/pranavc28/vibe-tuning)  
-LLM: Qwen/Qwen2.5-7B-Instruct  
-Dataset: GSM8K  
-Training: GRPO with LoRA, running on Modal
+**Research code:** [github.com/pranavc28/vibe-tuning](https://github.com/pranavc28/vibe-tuning)  
+**LLM:** Qwen/Qwen2.5-7B-Instruct  
+**Dataset:** GSM8K  
+**Training:** GRPO with LoRA, running on Modal
 
 ## Purpose
 
