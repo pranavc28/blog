@@ -1,6 +1,6 @@
 +++
 title = 'Dataset Distribution for Generalization: A Case Study in Self-Awareness'
-date = 2026-01-20T07:07:07+01:00
+date = 2026-07-30T07:07:07+01:00
 draft = false
 math = true
 +++

@@ -1,6 +1,6 @@
 +++
 title = 'From Thinking to Knowing: Using Natural Language Confidence From LLM Thought Processes'
-date = 2025-10-19T07:07:07+01:00
+date = 2025-12-12T07:07:07+01:00
 draft = false
 math = true
 +++

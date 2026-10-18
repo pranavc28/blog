@@ -1,6 +1,6 @@
 +++
 title = 'Tinkering with Generative UI'
-date = 2025-11-14T07:07:07+01:00
+date = 2026-02-25T07:07:07+01:00
 draft = false
 math = true
 +++

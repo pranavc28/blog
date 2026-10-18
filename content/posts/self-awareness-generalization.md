@@ -1,6 +1,6 @@
 +++
 title = 'Self-Awareness Generalization in Large Language Models'
-date = 2026-01-05T07:07:07+01:00
+date = 2026-05-07T07:07:07+01:00
 draft = false
 math = true
 +++
