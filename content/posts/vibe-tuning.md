@@ -24,7 +24,7 @@ On the saved GSM8K run, accuracy improved from **81.8% to 89.2% across 500 test 
 
 ## What is vibe tuning?
 
-With vibe coding, a user describes software they want and iterates on the generated implementation. I think a similar interface could work for adapting models: describe the behavior you want, provide examples, inspect the results, and refine the training process through feedback. Sort of by **maintaining an building your own feedback loop** ;)
+With vibe coding, a user describes software they want and iterates on the generated implementation. I think a similar interface could work for adapting models: describe the behavior you want, provide examples, inspect the results, and refine the training process through feedback. Sort of by **maintaining and building your own feedback loop**.
 
 For example, a support team might ask:
 
