@@ -22,9 +22,9 @@ I wanted to bring these decisions into a reusable workflow. I built **Vibe-Tuner
 
 On the saved GSM8K run, accuracy improved from **81.8% to 89.2% across 500 test questions**, after training on 1,000 examples for 250 GRPO steps. This is an initial result for one task. The broader question I want to explore is how much of the work around that experiment can become accessible to someone who understands their problem but has never written a training loop.
 
-## What I mean by vibe tuning
+## What is vibe tuning?
 
-With vibe coding, a user describes software they want and iterates on the generated implementation. I think a similar interface could work for adapting models: describe the behavior you want, provide examples, inspect the results, and refine the training process through feedback.
+With vibe coding, a user describes software they want and iterates on the generated implementation. I think a similar interface could work for adapting models: describe the behavior you want, provide examples, inspect the results, and refine the training process through feedback. Sort of by **maintaining an building your own feedback loop** ;)
 
 For example, a support team might ask:
 
@@ -44,13 +44,13 @@ I separated the implementation into modules for data analysis, curation, strateg
 
 The augmentation branch requires both a dataset flagged for augmentation and an available API key. The core orchestrator runs these stages. The Modal workflow adds dataset loading and evaluation around it; platform advice is a recommendation, not a deployment step.
 
-### Start with the data
+### Dataset
 
 The analyzer detects chat, instruction, and preference-pair formats. It estimates sequence lengths, removes exact duplicates, and checks whether the dataset meets the pipeline's sample-count and quality heuristics.
 
 These checks are deliberately limited. A well-formatted answer can still be wrong, and a dataset with enough rows can still omit the situations a model needs to handle. The analyzer catches basic problems before training; it does not establish that the dataset is suitable for production.
 
-I also implemented an optional synthetic-data curator. It generates examples from seed data, then makes a second pass to review and refine them. Format checks, duplicate filtering, diversity scoring, and an estimated spending limit help constrain the process. This component needs further integration work across training methods; the GSM8K result below does not demonstrate a benefit from synthetic augmentation.
+I also implemented an optional synthetic-data curator. It generates examples from seed data, then makes a second pass to review and refine them. Format checks, duplicate filtering, diversity scoring, and an estimated spending limit help constrain the process. Note, the component for synthetic data creation needs further integration work across training methods, the GSM8K result below does not demonstrate a benefit from synthetic augmentation.
 
 ### Match the method to the feedback
 
@@ -100,8 +100,6 @@ I evaluated the base model and fine-tuned model on the same first 500 examples f
 The [saved per-question results](https://github.com/pranavc28/vibe-tuning/blob/main/run-results/eval_results.json) show more than the aggregate improvement. The fine-tuned model corrected 62 questions that the base model missed, but got 25 questions wrong that the base model had answered correctly.
 
 I find that breakdown more useful than accuracy alone. It gives me a set of regressions to inspect and asks a practical question: which behaviors did training improve, and which did it damage?
-
-There are several things this experiment does not establish yet. It covers a subset of one benchmark, with one saved training run and no SFT comparison or reward ablation. It also does not measure transfer to other kinds of reasoning. I would want those comparisons before making a broader claim about the recommended strategy.
 
 The evaluation took about 24 minutes for the base model and 52 minutes for the fine-tuned model, measured by the slowest shard in each evaluation. These are run-level timings, with possible execution differences, rather than a controlled serving-latency benchmark. They are still a reason to measure output length and latency alongside accuracy in the next experiment.
 
