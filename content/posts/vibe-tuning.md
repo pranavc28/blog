@@ -5,6 +5,8 @@ draft = false
 math = true
 +++
 
+*"For the things we have to learn before we can do them, we learn by doing them." - **Aristotle***
+
 **Research code:** [github.com/pranavc28/vibe-tuning](https://github.com/pranavc28/vibe-tuning)  
 **LLM:** Qwen/Qwen2.5-7B-Instruct  
 **Dataset:** GSM8K  
